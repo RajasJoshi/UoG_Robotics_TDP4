@@ -1,0 +1,1048 @@
+#VRML_SIM R2023b utf8
+# license: Apache License 2.0
+# license url: http://www.apache.org/licenses/LICENSE-2.0
+# This is a proto file for Webots for the NaoH25V50
+# Extracted from: /mnt/d/workspace/UoG/TDP/UoG_Robotics_TDP4/Wenao/protos/NAOH25V60.urdf
+
+PROTO NaoH25V50 [
+  field  SFVec3f     translation     0 0 0
+  field  SFRotation  rotation        0 0 1 0
+  field  SFString    name            "NaoH25V50"  # Is `Robot.name`.
+  field  SFString    controller      "void"       # Is `Robot.controller`.
+  field  MFString    controllerArgs  []           # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""           # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE        # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE         # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE        # Is `Robot.selfCollision`.
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    controller IS controller
+    controllerArgs IS controllerArgs
+    customData IS customData
+    supervisor IS supervisor
+    synchronization IS synchronization
+    selfCollision IS selfCollision
+    children [
+      Solid {
+        children [
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis 0.000000 0.000000 1.000000
+              anchor 0.000000 0.000000 0.126500
+            }
+            device [
+              RotationalMotor {
+                name "HeadYaw"
+                maxVelocity 8.26797
+                minPosition -2.08567
+                maxPosition 2.08567
+                maxTorque 1.547
+              }
+              PositionSensor {
+                name "HeadYaw_sensor"
+              }
+            ]
+            endPoint Solid {
+              translation 0.000000 0.000000 0.126500
+              children [
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    axis -0.000006 1.000000 0.000000
+                  }
+                  device [
+                    RotationalMotor {
+                      name "HeadPitch"
+                      maxVelocity 7.19407
+                      minPosition -0.671952
+                      maxPosition 0.514872
+                      maxTorque 1.532
+                    }
+                    PositionSensor {
+                      name "HeadPitch_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    rotation -0.577350 -0.577352 -0.577348 2.094389
+                    children [
+                      Solid {
+                        translation 0.053000 0.000000 0.000000
+                        rotation -0.000001 1.000000 -0.000001 3.141593
+                        name "HeadPitchBothCollision_shape"
+                        boundingObject Cylinder {
+                          radius 0.053
+                          height 0.141
+                        }
+                        physics Physics {
+                        }
+                      }
+                    ]
+                    name "HeadPitch_link"
+                    physics Physics {
+                      density -1
+                      mass 0.659730
+                      centerOfMass [ 0.057186 0.001089 0.001463 ]
+                      inertiaMatrix [
+                        6.803740e-04 7.147021e-04 7.709700e-04
+                        -1.857912e-05 4.767575e-06 9.624908e-06
+                      ]
+                    }
+                  }
+                }
+              ]
+              name "HeadYaw_link"
+              physics Physics {
+                density -1
+                mass 0.078420
+                centerOfMass [ -0.000010 0.000000 -0.027420 ]
+                inertiaMatrix [
+                  1.603240e-05 1.703940e-05 5.533720e-06
+                  1.570000e-09 3.162760e-09 -5.295000e-08
+                ]
+              }
+            }
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis 0.000000 1.000000 -0.000004
+              anchor 0.000000 0.098000 0.100000
+            }
+            device [
+              RotationalMotor {
+                name "LShoulderPitch"
+                maxVelocity 8.26797
+                minPosition -2.08567
+                maxPosition 2.08567
+                maxTorque 1.329
+              }
+              PositionSensor {
+                name "LShoulderPitch_sensor"
+              }
+            ]
+            endPoint Solid {
+              translation 0.000000 0.098000 0.100000
+              rotation -1.000000 -0.000000 0.000000 1.570800
+              children [
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    axis -0.000006 -1.000000 0.000000
+                  }
+                  device [
+                    RotationalMotor {
+                      name "LShoulderRoll"
+                      maxVelocity 7.19407
+                      minPosition -0.314159
+                      maxPosition 1.32645
+                      maxTorque 1.7835
+                    }
+                    PositionSensor {
+                      name "LShoulderRoll_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    rotation 0.577350 -0.577352 0.577348 2.094389
+                    children [
+                      HingeJoint {
+                        jointParameters HingeJointParameters {
+                          axis 0.000000 -1.000000 -0.000004
+                          anchor 0.015000 -0.105000 0.000000
+                        }
+                        device [
+                          RotationalMotor {
+                            name "LElbowYaw"
+                            maxVelocity 8.26797
+                            minPosition -2.08567
+                            maxPosition 2.08567
+                            maxTorque 1.547
+                          }
+                          PositionSensor {
+                            name "LElbowYaw_sensor"
+                          }
+                        ]
+                        endPoint Solid {
+                          translation 0.015000 -0.105000 0.000000
+                          rotation 1.000000 0.000000 0.000000 1.570800
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                position -0.789763
+                                axis 0.000000 1.000000 -0.000004
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "LElbowRoll"
+                                  maxVelocity 7.19407
+                                  minPosition -1.54462
+                                  maxPosition -0.0349066
+                                  maxTorque 1.532
+                                }
+                                PositionSensor {
+                                  name "LElbowRoll_sensor"
+                                }
+                              ]
+                              endPoint Solid {
+                                rotation -0.861494 -0.359047 -0.359046 1.719338
+                                children [
+                                  HingeJoint {
+                                    jointParameters HingeJointParameters {
+                                      axis 0.000000 -1.000000 -0.000004
+                                      anchor 0.000000 -0.055950 0.000000
+                                    }
+                                    device [
+                                      RotationalMotor {
+                                        name "LWristYaw"
+                                        maxVelocity 24.6229
+                                        minPosition -1.82387
+                                        maxPosition 1.82387
+                                        maxTorque 0.4075
+                                      }
+                                      PositionSensor {
+                                        name "LWristYaw_sensor"
+                                      }
+                                    ]
+                                    endPoint Solid {
+                                      translation 0.000000 -0.055950 0.000000
+                                      rotation 1.000000 0.000000 0.000000 1.570800
+                                      name "LWristYaw_link"
+                                      physics Physics {
+                                        density -1
+                                        mass 0.185330
+                                        centerOfMass [ -0.000880 0.003080 0.034340 ]
+                                        inertiaMatrix [
+                                          1.332280e-04 6.864772e-05 1.357560e-04
+                                          -2.872760e-06 2.675409e-06 1.158798e-07
+                                        ]
+                                      }
+                                    }
+                                  }
+                                  Solid {
+                                    translation 0.000000 -0.064850 0.000000
+                                    rotation 1.000000 0.000000 0.000000 1.570800
+                                    name "LElbowRollBothCollision_shape"
+                                    boundingObject Cylinder {
+                                      radius 0.036
+                                      height 0.1743
+                                    }
+                                    physics Physics {
+                                    }
+                                  }
+                                  Solid {
+                                    translation 0.000000 -0.116000 0.000000
+                                    rotation 0.000000 -0.000000 -1.000000 1.570800
+                                    name "LElbowRollSphereCollision_shape"
+                                    boundingObject Sphere {
+                                      radius 0.04
+                                    }
+                                    physics Physics {
+                                    }
+                                  }
+                                ]
+                                name "LElbowRoll_link"
+                                physics Physics {
+                                  density -1
+                                  mass 0.077610
+                                  centerOfMass [ 0.002810 -0.025560 0.000760 ]
+                                  inertiaMatrix [
+                                    3.838372e-05 2.467458e-05 3.597080e-05
+                                    -3.231470e-06 -1.391998e-07 1.582209e-06
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                          name "LElbowYaw_link"
+                          physics Physics {
+                            density -1
+                            mass 0.064830
+                            centerOfMass [ 0.000000 -0.000140 -0.027440 ]
+                            inertiaMatrix [
+                              2.762940e-05 5.595878e-06 2.661790e-05
+                              2.921601e-07 -1.841833e-09 4.343009e-09
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                    name "LShoulderRoll_link"
+                    physics Physics {
+                      density -1
+                      mass 0.157770
+                      centerOfMass [ 0.005630 -0.024550 0.003300 ]
+                      inertiaMatrix [
+                        2.747118e-04 8.718119e-05 2.418120e-04
+                        2.533879e-05 -4.713868e-07 -1.421300e-05
+                      ]
+                    }
+                  }
+                }
+              ]
+              name "LShoulderPitch_link"
+              physics Physics {
+                density -1
+                mass 0.093040
+                centerOfMass [ -0.001650 -0.000140 -0.026630 ]
+                inertiaMatrix [
+                  1.830250e-05 2.018620e-05 1.390050e-05
+                  1.880193e-09 -2.060110e-06 3.665689e-07
+                ]
+              }
+            }
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis -0.000005 0.707107 -0.707107
+              anchor 0.000000 0.050000 -0.085000
+            }
+            device [
+              RotationalMotor {
+                name "LHipYawPitch"
+                maxVelocity 4.16174
+                minPosition -1.14529
+                maxPosition 0.740718
+                maxTorque 3.348
+              }
+              PositionSensor {
+                name "LHipYawPitch_sensor"
+              }
+            ]
+            endPoint Solid {
+              translation 0.000000 0.050000 -0.085000
+              rotation -0.678597 -0.678600 -0.281083 2.593562
+              children [
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    axis -0.000003 1.000000 -0.000003
+                  }
+                  device [
+                    RotationalMotor {
+                      name "LHipRoll"
+                      maxVelocity 4.16174
+                      minPosition -0.379435
+                      maxPosition 0.79046
+                      maxTorque 3.348
+                    }
+                    PositionSensor {
+                      name "LHipRoll_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    rotation -0.862857 0.357406 0.357407 1.717775
+                    children [
+                      HingeJoint {
+                        jointParameters HingeJointParameters {
+                          axis 0.000000 -1.000000 -0.000004
+                        }
+                        device [
+                          RotationalMotor {
+                            name "LHipPitch"
+                            maxVelocity 6.40239
+                            minPosition -1.53589
+                            maxPosition 0.48398
+                            maxTorque 3.023
+                          }
+                          PositionSensor {
+                            name "LHipPitch_sensor"
+                          }
+                        ]
+                        endPoint Solid {
+                          rotation 1.000000 0.000000 0.000000 1.570800
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                axis 0.000000 0.000000 1.000000
+                                anchor -0.100000 0.000000 0.000000
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "LKneePitch"
+                                  maxVelocity 6.40239
+                                  minPosition -0.0923279
+                                  maxPosition 2.11255
+                                  maxTorque 3.023
+                                }
+                                PositionSensor {
+                                  name "LKneePitch_sensor"
+                                }
+                              ]
+                              endPoint Solid {
+                                translation -0.100000 0.000000 0.000000
+                                children [
+                                  HingeJoint {
+                                    jointParameters HingeJointParameters {
+                                      axis 0.000000 0.000000 1.000000
+                                      anchor -0.102900 0.000000 0.000000
+                                    }
+                                    device [
+                                      RotationalMotor {
+                                        name "LAnklePitch"
+                                        maxVelocity 6.40239
+                                        minPosition -1.18944
+                                        maxPosition 0.922581
+                                        maxTorque 3.023
+                                      }
+                                      PositionSensor {
+                                        name "LAnklePitch_sensor"
+                                      }
+                                    ]
+                                    endPoint Solid {
+                                      translation -0.102900 0.000000 0.000000
+                                      children [
+                                        HingeJoint {
+                                          jointParameters HingeJointParameters {
+                                            axis 0.000000 1.000000 -0.000004
+                                          }
+                                          device [
+                                            RotationalMotor {
+                                              name "LAnkleRoll"
+                                              maxVelocity 4.16174
+                                              minPosition -0.397761
+                                              maxPosition 0.768992
+                                              maxTorque 3.348
+                                            }
+                                            PositionSensor {
+                                              name "LAnkleRoll_sensor"
+                                            }
+                                          ]
+                                          endPoint Solid {
+                                            rotation -1.000000 -0.000000 0.000000 1.570800
+                                            children [
+                                              Solid {
+                                                translation -0.030000 -0.002500 0.082500
+                                                rotation 0.000001 -0.707108 -0.707105 3.141591
+                                                name "LAnkleRollBothCollision_shape"
+                                                boundingObject Cylinder {
+                                                  radius 0.02
+                                                  height 0.075
+                                                }
+                                                physics Physics {
+                                                }
+                                              }
+                                            ]
+                                            name "LAnkleRoll_link"
+                                            physics Physics {
+                                              density -1
+                                              mass 0.171840
+                                              centerOfMass [ -0.032390 -0.003300 0.025420 ]
+                                              inertiaMatrix [
+                                                4.128460e-04 3.530240e-04 8.729107e-05
+                                                -3.734856e-07 -2.106827e-06 -8.718567e-06
+                                              ]
+                                            }
+                                          }
+                                        }
+                                        Solid {
+                                          translation 0.010000 0.010000 -0.005000
+                                          rotation 0.577350 0.577352 0.577350 2.094399
+                                          name "LAnklePitchSphereCollision_shape"
+                                          boundingObject Sphere {
+                                            radius 0.05
+                                          }
+                                          physics Physics {
+                                          }
+                                        }
+                                      ]
+                                      name "LAnklePitch_link"
+                                      physics Physics {
+                                        density -1
+                                        mass 0.134160
+                                        centerOfMass [ 0.006850 0.000450 0.000290 ]
+                                        inertiaMatrix [
+                                          6.794300e-05 5.482693e-05 3.220337e-05
+                                          2.848333e-07 -8.701887e-09 4.275408e-06
+                                        ]
+                                      }
+                                    }
+                                  }
+                                  Solid {
+                                    translation -0.057500 -0.004000 0.004000
+                                    rotation 0.656310 -0.200917 -0.727248 2.429016
+                                    name "LKneePitchBothCollision_shape"
+                                    boundingObject Cylinder {
+                                      radius 0.047
+                                      height 0.1404
+                                    }
+                                    physics Physics {
+                                    }
+                                  }
+                                ]
+                                name "LKneePitch_link"
+                                physics Physics {
+                                  density -1
+                                  mass 0.301420
+                                  centerOfMass [ -0.049360 0.004530 0.002250 ]
+                                  inertiaMatrix [
+                                    3.880840e-04 1.855158e-04 4.461713e-04
+                                    6.019657e-06 3.705605e-06 -3.089982e-05
+                                  ]
+                                }
+                              }
+                            }
+                            Solid {
+                              translation -0.040000 0.002225 0.002000
+                              rotation -0.295390 -0.954440 -0.042292 1.666540
+                              name "LHipPitchBothCollision_shape"
+                              boundingObject Cylinder {
+                                radius 0.045
+                                height 0.132718
+                              }
+                              physics Physics {
+                              }
+                            }
+                            Solid {
+                              translation -0.043500 0.000000 0.006000
+                              rotation 0.577350 0.577352 0.577350 2.094399
+                              name "LHipPitchMidCollision_shape"
+                              boundingObject Sphere {
+                                radius 0.05
+                              }
+                              physics Physics {
+                              }
+                            }
+                          ]
+                          name "LHipPitch_link"
+                          physics Physics {
+                            density -1
+                            mass 0.389680
+                            centerOfMass [ -0.053730 0.001380 0.002210 ]
+                            inertiaMatrix [
+                              4.653580e-04 3.010984e-04 5.098436e-04
+                              -7.910489e-06 2.112826e-06 5.641364e-05
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                    name "LHipRoll_link"
+                    physics Physics {
+                      density -1
+                      mass 0.140530
+                      centerOfMass [ -0.005150 -0.000290 -0.015490 ]
+                      inertiaMatrix [
+                        5.436915e-05 6.082460e-05 2.384445e-05
+                        2.140561e-07 7.128818e-06 6.536991e-07
+                      ]
+                    }
+                  }
+                }
+                Solid {
+                  translation 0.003889 -0.022500 -0.007425
+                  rotation 0.678597 0.678599 0.281087 2.593562
+                  name "LHipYawPitchCollision_shape"
+                  boundingObject Sphere {
+                    radius 0.035
+                  }
+                  physics Physics {
+                  }
+                }
+              ]
+              name "LHipYawPitch_link"
+              physics Physics {
+                density -1
+                mass 0.069810
+                centerOfMass [ 0.010939 -0.007810 -0.026693 ]
+                inertiaMatrix [
+                  4.763549e-05 3.479465e-05 3.831446e-05
+                  2.715221e-06 -1.188831e-06 -1.314756e-05
+                ]
+              }
+            }
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis 0.000003 0.707107 0.707107
+              anchor 0.000000 -0.050000 -0.085000
+            }
+            device [
+              RotationalMotor {
+                name "RHipYawPitch"
+                maxVelocity 4.16174
+                minPosition -1.14529
+                maxPosition 0.740718
+                maxTorque 3.348
+              }
+              PositionSensor {
+                name "RHipYawPitch_sensor"
+              }
+            ]
+            endPoint Solid {
+              translation 0.000000 -0.050000 -0.085000
+              rotation -0.357407 -0.357406 -0.862857 1.717775
+              children [
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    axis 0.000003 1.000000 -0.000003
+                  }
+                  device [
+                    RotationalMotor {
+                      name "RHipRoll"
+                      maxVelocity 4.16174
+                      minPosition -0.79046
+                      maxPosition 0.379435
+                      maxTorque 3.348
+                    }
+                    PositionSensor {
+                      name "RHipRoll_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    rotation -0.862857 -0.357406 -0.357407 1.717775
+                    children [
+                      HingeJoint {
+                        jointParameters HingeJointParameters {
+                          axis 0.000000 -1.000000 -0.000004
+                        }
+                        device [
+                          RotationalMotor {
+                            name "RHipPitch"
+                            maxVelocity 6.40239
+                            minPosition -1.53589
+                            maxPosition 0.48398
+                            maxTorque 3.0226
+                          }
+                          PositionSensor {
+                            name "RHipPitch_sensor"
+                          }
+                        ]
+                        endPoint Solid {
+                          rotation 1.000000 0.000000 0.000000 1.570800
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                axis 0.000000 0.000000 1.000000
+                                anchor -0.100000 0.000000 0.000000
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "RKneePitch"
+                                  maxVelocity 6.40239
+                                  minPosition -0.0923279
+                                  maxPosition 2.11255
+                                  maxTorque 3.0226
+                                }
+                                PositionSensor {
+                                  name "RKneePitch_sensor"
+                                }
+                              ]
+                              endPoint Solid {
+                                translation -0.100000 0.000000 0.000000
+                                children [
+                                  HingeJoint {
+                                    jointParameters HingeJointParameters {
+                                      axis 0.000000 0.000000 1.000000
+                                      anchor -0.102900 0.000000 0.000000
+                                    }
+                                    device [
+                                      RotationalMotor {
+                                        name "RAnklePitch"
+                                        maxVelocity 6.40239
+                                        minPosition -1.1863
+                                        maxPosition 0.932006
+                                        maxTorque 3.0226
+                                      }
+                                      PositionSensor {
+                                        name "RAnklePitch_sensor"
+                                      }
+                                    ]
+                                    endPoint Solid {
+                                      translation -0.102900 0.000000 0.000000
+                                      children [
+                                        HingeJoint {
+                                          jointParameters HingeJointParameters {
+                                            axis 0.000000 1.000000 -0.000004
+                                          }
+                                          device [
+                                            RotationalMotor {
+                                              name "RAnkleRoll"
+                                              maxVelocity 4.16174
+                                              minPosition -0.768992
+                                              maxPosition 0.397761
+                                              maxTorque 3.348
+                                            }
+                                            PositionSensor {
+                                              name "RAnkleRoll_sensor"
+                                            }
+                                          ]
+                                          endPoint Solid {
+                                            rotation -1.000000 -0.000000 0.000000 1.570800
+                                            children [
+                                              Solid {
+                                                translation -0.030000 0.002500 0.082500
+                                                rotation 0.000001 -0.707108 -0.707105 3.141591
+                                                name "RAnkleRollBothCollision_shape"
+                                                boundingObject Cylinder {
+                                                  radius 0.02
+                                                  height 0.075
+                                                }
+                                                physics Physics {
+                                                }
+                                              }
+                                            ]
+                                            name "RAnkleRoll_link"
+                                            physics Physics {
+                                              density -1
+                                              mass 0.171840
+                                              centerOfMass [ -0.032390 0.003300 0.025420 ]
+                                              inertiaMatrix [
+                                                4.121250e-04 3.521560e-04 8.715136e-05
+                                                4.817454e-07 -2.353032e-06 8.540598e-06
+                                              ]
+                                            }
+                                          }
+                                        }
+                                        Solid {
+                                          translation 0.010000 0.010000 0.005000
+                                          rotation 0.577350 0.577352 0.577350 2.094399
+                                          name "RAnklePitchSphereCollision_shape"
+                                          boundingObject Sphere {
+                                            radius 0.05
+                                          }
+                                          physics Physics {
+                                          }
+                                        }
+                                      ]
+                                      name "RAnklePitch_link"
+                                      physics Physics {
+                                        density -1
+                                        mass 0.134160
+                                        centerOfMass [ 0.006850 0.000450 -0.000290 ]
+                                        inertiaMatrix [
+                                          6.798850e-05 5.487473e-05 3.220167e-05
+                                          -2.711046e-07 4.696455e-08 4.288126e-06
+                                        ]
+                                      }
+                                    }
+                                  }
+                                  Solid {
+                                    translation -0.057500 -0.004000 -0.004000
+                                    rotation -0.693988 -0.355155 0.626295 2.762742
+                                    name "RKneePitchBothCollision_shape"
+                                    boundingObject Cylinder {
+                                      radius 0.047
+                                      height 0.1404
+                                    }
+                                    physics Physics {
+                                    }
+                                  }
+                                ]
+                                name "RKneePitch_link"
+                                physics Physics {
+                                  density -1
+                                  mass 0.301420
+                                  centerOfMass [ -0.049360 0.004530 -0.002250 ]
+                                  inertiaMatrix [
+                                    3.877110e-04 1.837407e-04 4.469213e-04
+                                    -5.000210e-06 -3.968919e-06 -3.939995e-05
+                                  ]
+                                }
+                              }
+                            }
+                            Solid {
+                              translation -0.040000 0.002225 -0.002000
+                              rotation -0.044229 -0.950069 -0.308889 1.572757
+                              name "RHipPitchBothCollision_shape"
+                              boundingObject Cylinder {
+                                radius 0.045
+                                height 0.132718
+                              }
+                              physics Physics {
+                              }
+                            }
+                            Solid {
+                              translation -0.043500 0.000000 -0.006000
+                              rotation 0.577350 0.577352 0.577350 2.094399
+                              name "RHipPitchMidCollision_shape"
+                              boundingObject Sphere {
+                                radius 0.05
+                              }
+                              physics Physics {
+                              }
+                            }
+                          ]
+                          name "RHipPitch_link"
+                          physics Physics {
+                            density -1
+                            mass 0.389680
+                            centerOfMass [ -0.053730 0.001380 -0.002210 ]
+                            inertiaMatrix [
+                              4.665000e-04 3.013334e-04 5.106066e-04
+                              7.095413e-06 -2.028178e-06 5.699009e-05
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                    name "RHipRoll_link"
+                    physics Physics {
+                      density -1
+                      mass 0.140530
+                      centerOfMass [ -0.005150 0.000290 -0.015490 ]
+                      inertiaMatrix [
+                        5.437275e-05 6.082400e-05 2.384744e-05
+                        -2.124125e-07 7.102237e-06 -6.119893e-07
+                      ]
+                    }
+                  }
+                }
+                Solid {
+                  translation 0.003889 -0.022500 0.007425
+                  rotation 0.357406 0.357407 0.862857 1.717775
+                  name "RHipYawPitchCollision_shape"
+                  boundingObject Sphere {
+                    radius 0.035
+                  }
+                  physics Physics {
+                  }
+                }
+              ]
+              name "RHipYawPitch_link"
+              physics Physics {
+                density -1
+                mass 0.069810
+                centerOfMass [ 0.010939 -0.007810 0.026693 ]
+                inertiaMatrix [
+                  5.183611e-05 4.469412e-05 4.114817e-05
+                  -4.196810e-06 -5.712066e-06 1.104455e-05
+                ]
+              }
+            }
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis 0.000000 1.000000 -0.000004
+              anchor 0.000000 -0.098000 0.100000
+            }
+            device [
+              RotationalMotor {
+                name "RShoulderPitch"
+                maxVelocity 8.26797
+                minPosition -2.08567
+                maxPosition 2.08567
+                maxTorque 1.329
+              }
+              PositionSensor {
+                name "RShoulderPitch_sensor"
+              }
+            ]
+            endPoint Solid {
+              translation 0.000000 -0.098000 0.100000
+              rotation -1.000000 -0.000000 0.000000 1.570800
+              children [
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    axis -0.000006 -1.000000 0.000000
+                  }
+                  device [
+                    RotationalMotor {
+                      name "RShoulderRoll"
+                      maxVelocity 7.19407
+                      minPosition -1.32645
+                      maxPosition 0.314159
+                      maxTorque 1.783
+                    }
+                    PositionSensor {
+                      name "RShoulderRoll_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    rotation 0.577350 -0.577352 0.577348 2.094389
+                    children [
+                      HingeJoint {
+                        jointParameters HingeJointParameters {
+                          axis 0.000000 -1.000000 -0.000004
+                          anchor -0.015000 -0.105000 0.000000
+                        }
+                        device [
+                          RotationalMotor {
+                            name "RElbowYaw"
+                            maxVelocity 8.26797
+                            minPosition -2.08567
+                            maxPosition 2.08567
+                            maxTorque 1.547
+                          }
+                          PositionSensor {
+                            name "RElbowYaw_sensor"
+                          }
+                        ]
+                        endPoint Solid {
+                          translation -0.015000 -0.105000 0.000000
+                          rotation 1.000000 0.000000 0.000000 1.570800
+                          children [
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                position 0.789763
+                                axis 0.000000 1.000000 -0.000004
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "RElbowRoll"
+                                  maxVelocity 7.19407
+                                  minPosition 0.0349066
+                                  maxPosition 1.54462
+                                  maxTorque 1.532
+                                }
+                                PositionSensor {
+                                  name "RElbowRoll_sensor"
+                                }
+                              ]
+                              endPoint Solid {
+                                rotation -0.861494 0.359047 0.359046 1.719338
+                                children [
+                                  HingeJoint {
+                                    jointParameters HingeJointParameters {
+                                      axis 0.000000 -1.000000 -0.000004
+                                      anchor 0.000000 -0.055950 0.000000
+                                    }
+                                    device [
+                                      RotationalMotor {
+                                        name "RWristYaw"
+                                        maxVelocity 24.6229
+                                        minPosition -1.82387
+                                        maxPosition 1.82387
+                                        maxTorque 0.4075
+                                      }
+                                      PositionSensor {
+                                        name "RWristYaw_sensor"
+                                      }
+                                    ]
+                                    endPoint Solid {
+                                      translation 0.000000 -0.055950 0.000000
+                                      rotation 1.000000 0.000000 0.000000 1.570800
+                                      name "RWristYaw_link"
+                                      physics Physics {
+                                        density -1
+                                        mass 0.185330
+                                        centerOfMass [ 0.000880 0.003080 0.034340 ]
+                                        inertiaMatrix [
+                                          1.332280e-04 6.864786e-05 1.357559e-04
+                                          -2.872754e-06 3.680090e-06 1.131691e-05
+                                        ]
+                                      }
+                                    }
+                                  }
+                                  Solid {
+                                    translation 0.000000 -0.064850 0.000000
+                                    rotation 1.000000 0.000000 0.000000 1.570800
+                                    name "RElbowRollBothCollision_shape"
+                                    boundingObject Cylinder {
+                                      radius 0.036
+                                      height 0.1743
+                                    }
+                                    physics Physics {
+                                    }
+                                  }
+                                  Solid {
+                                    translation 0.000000 -0.116000 0.000000
+                                    rotation 0.000000 -0.000000 -1.000000 1.570800
+                                    name "RElbowRollSphereCollision_shape"
+                                    boundingObject Sphere {
+                                      radius 0.04
+                                    }
+                                    physics Physics {
+                                    }
+                                  }
+                                ]
+                                name "RElbowRoll_link"
+                                physics Physics {
+                                  density -1
+                                  mass 0.077610
+                                  centerOfMass [ -0.002810 -0.025560 0.000760 ]
+                                  inertiaMatrix [
+                                    3.847188e-05 2.473312e-05 3.593190e-05
+                                    3.241850e-06 1.388007e-07 9.064515e-07
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                          name "RElbowYaw_link"
+                          physics Physics {
+                            density -1
+                            mass 0.064830
+                            centerOfMass [ 0.000000 -0.000140 -0.027440 ]
+                            inertiaMatrix [
+                              2.762940e-05 5.595878e-06 2.661790e-05
+                              2.921601e-07 -1.841833e-09 4.343009e-09
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                    name "RShoulderRoll_link"
+                    physics Physics {
+                      density -1
+                      mass 0.157770
+                      centerOfMass [ -0.005630 -0.024550 0.003300 ]
+                      inertiaMatrix [
+                        2.707704e-04 1.034006e-04 2.545290e-04
+                        -5.488429e-05 -9.167021e-06 -1.326433e-05
+                      ]
+                    }
+                  }
+                }
+              ]
+              name "RShoulderPitch_link"
+              physics Physics {
+                density -1
+                mass 0.093040
+                centerOfMass [ -0.001650 -0.000140 0.026630 ]
+                inertiaMatrix [
+                  1.830250e-05 2.018620e-05 1.390050e-05
+                  1.895327e-09 2.060110e-06 -3.666151e-07
+                ]
+              }
+            }
+          }
+          Solid {
+            translation -0.030000 0.000000 -0.060000
+            name "TorsoDownBackCollision_shape"
+            boundingObject Sphere {
+              radius 0.04
+            }
+            physics Physics {
+            }
+          }
+          Solid {
+            translation 0.000600 0.000000 -0.015000
+            name "TorsoDownCollision_shape"
+            boundingObject Sphere {
+              radius 0.0453
+            }
+            physics Physics {
+            }
+          }
+          Solid {
+            translation -0.010000 0.000000 0.000000
+            name "TorsoUpBackCollision_shape"
+            boundingObject Sphere {
+              radius 0.06
+            }
+            physics Physics {
+            }
+          }
+          Solid {
+            translation 0.001900 0.000000 0.056000
+            name "TorsoUpCollision_shape"
+            boundingObject Sphere {
+              radius 0.0642
+            }
+            physics Physics {
+            }
+          }
+        ]
+        name "Torso_link"
+        physics Physics {
+          density -1
+          mass 1.049560
+          centerOfMass [ -0.004130 0.000000 0.043420 ]
+          inertiaMatrix [
+            3.083610e-03 2.883500e-03 1.592400e-03
+            1.431160e-05 -3.302110e-05 -2.707930e-05
+          ]
+        }
+      }
+    ]
+    name IS name
+  }
+}

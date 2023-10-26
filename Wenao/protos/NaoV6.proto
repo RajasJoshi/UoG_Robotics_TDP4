@@ -728,9 +728,9 @@ PROTO NaoV6 [
           RotationalMotor {
             name "HeadYaw"
             maxVelocity 8.26797
-            minPosition -2.0857
-            maxPosition 2.0857
-            maxTorque 4
+            minPosition -2.08567
+            maxPosition 2.08567
+            maxTorque 1.547
           }
           PositionSensor {
             name "HeadYawS"
@@ -740,9 +740,9 @@ PROTO NaoV6 [
           RotationalMotor {
             name "HeadPitch"
             maxVelocity 7.19407
-            minPosition -0.6720
-            maxPosition 0.5149
-            maxTorque 5
+            minPosition -0.671952
+            maxPosition 0.514872
+            maxTorque 1.532
           }
           PositionSensor {
             name "HeadPitchS"
@@ -1523,9 +1523,9 @@ PROTO NaoV6 [
           RotationalMotor {
             name "RShoulderPitch"
             maxVelocity 8.26797
-            minPosition -2.0857
-            maxPosition 2.0857
-            maxTorque 4
+            minPosition -2.08567
+            maxPosition 2.08567
+            maxTorque 1.329
           }
           PositionSensor {
             name "RShoulderPitchS"
@@ -1535,9 +1535,9 @@ PROTO NaoV6 [
           RotationalMotor {
             name "RShoulderRoll"
             maxVelocity 7.19407
-            minPosition -1.3265
-            maxPosition 0.3142
-            maxTorque 5
+            minPosition -1.32645
+            maxPosition 0.314159
+            maxTorque 1.783
           }
           PositionSensor {
             name "RShoulderRollS"
@@ -1936,9 +1936,9 @@ PROTO NaoV6 [
                 RotationalMotor {
                   name "RElbowYaw"
                   maxVelocity 8.26797
-                  minPosition -2.0857
-                  maxPosition 2.0857
-                  maxTorque 4
+                  minPosition -2.08567
+                  maxPosition 2.08567
+                  maxTorque 1.547
                 }
                 PositionSensor {
                   name "RElbowYawS"
@@ -1956,9 +1956,9 @@ PROTO NaoV6 [
                       RotationalMotor {
                         name "RElbowRoll"
                         maxVelocity 7.19407
-                        #minPosition 0.0349
-                        maxPosition 1.5446
-                        maxTorque 5
+                        minPosition 0.0349066
+                        maxPosition 1.54462
+                        maxTorque 1.532
                       }
                       PositionSensor {
                         name "RElbowRollS"
@@ -2023,9 +2023,9 @@ PROTO NaoV6 [
           RotationalMotor {
             name "LShoulderPitch"
             maxVelocity 8.26797
-            minPosition -2.0857
-            maxPosition 2.0857
-            maxTorque 4
+            minPosition -2.08567
+            maxPosition 2.08567
+            maxTorque 1.329
           }
           PositionSensor {
             name "LShoulderPitchS"
@@ -2035,9 +2035,9 @@ PROTO NaoV6 [
           RotationalMotor {
             name "LShoulderRoll"
             maxVelocity 7.19407
-            minPosition -0.3142
-            maxPosition 1.3265
-            maxTorque 5
+            minPosition -0.314159
+            maxPosition 1.32645
+            maxTorque 1.7835
           }
           PositionSensor {
             name "LShoulderRollS"
@@ -2433,9 +2433,9 @@ PROTO NaoV6 [
                 RotationalMotor {
                   name "LElbowYaw"
                   maxVelocity 8.26797
-                  minPosition -2.0857
-                  maxPosition 2.0857
-                  maxTorque 4
+                  minPosition -2.08567
+                  maxPosition 2.08567
+                  maxTorque 1.547
                 }
                 PositionSensor {
                   name "LElbowYawS"
@@ -2453,9 +2453,9 @@ PROTO NaoV6 [
                       RotationalMotor {
                         name "LElbowRoll"
                         maxVelocity 7.19407
-                        minPosition -1.5446
-                        #maxPosition -0.0349
-                        maxTorque 5
+                        minPosition -1.54462
+                        maxPosition -0.0349066
+                        maxTorque 1.532
                       }
                       PositionSensor {
                         name "LElbowRollS"
@@ -2515,9 +2515,9 @@ PROTO NaoV6 [
           RotationalMotor {
             name "RHipYawPitch"
             maxVelocity 4.16174
-            minPosition -1.145303
-            maxPosition 0.740810
-            maxTorque 14.8
+            minPosition -1.14529
+            maxPosition 0.740718
+            maxTorque 3.348
           }
           PositionSensor {
             name "RHipYawPitchS"
@@ -2809,9 +2809,9 @@ PROTO NaoV6 [
                 RotationalMotor {
                   name "RHipRoll"
                   maxVelocity 4.16174
-                  minPosition -0.790477
-                  maxPosition 0.379472
-                  maxTorque 14.8
+                  minPosition -0.79046
+                  maxPosition 0.379435
+                  maxTorque 3.348
                 }
                 PositionSensor {
                   name "RHipRollS"
@@ -2904,9 +2904,9 @@ PROTO NaoV6 [
                       RotationalMotor {
                         name "RHipPitch"
                         maxVelocity 6.40239
-                        minPosition -1.535889
-                        maxPosition 0.484090
-                        maxTorque 9.8
+                        minPosition -1.53589
+                        maxPosition 0.48398
+                        maxTorque 3.0226
                       }
                       PositionSensor {
                         name "RHipPitchS"
@@ -3160,9 +3160,9 @@ PROTO NaoV6 [
                             RotationalMotor {
                               name "RKneePitch"
                               maxVelocity 6.40239
-                              minPosition -0.103083
-                              maxPosition 2.120198
-                              maxTorque 9.8
+                              minPosition -0.0923279
+                              maxPosition 2.11255
+                              maxTorque 3.0226
                             }
                             PositionSensor {
                               name "RKneePitchS"
@@ -3551,9 +3551,9 @@ PROTO NaoV6 [
                                   RotationalMotor {
                                     name "RAnklePitch"
                                     maxVelocity 6.40239
-                                    minPosition -1.186448
-                                    maxPosition 0.932056
-                                    maxTorque 9.8
+                                    minPosition -1.1863
+                                    maxPosition 0.932006
+                                    maxTorque 3.0226
                                   }
                                   PositionSensor {
                                     name "RAnklePitchS"
@@ -3623,8 +3623,8 @@ PROTO NaoV6 [
                                           name "RAnkleRoll"
                                           maxVelocity 4.16174
                                           minPosition -0.768992
-                                          maxPosition 0.397935
-                                          maxTorque 14.8
+                                          maxPosition 0.397761
+                                          maxTorque 3.348
                                         }
                                         PositionSensor {
                                           name "RAnkleRollS"
@@ -4102,9 +4102,9 @@ PROTO NaoV6 [
           RotationalMotor {
             name "LHipYawPitch"
             maxVelocity 4.16174
-            minPosition -1.145303
-            maxPosition 0.740810
-            maxTorque 14.8
+            minPosition -1.14529
+            maxPosition 0.740718
+            maxTorque 3.348
           }
           PositionSensor {
             name "LHipYawPitchS"
@@ -4396,9 +4396,9 @@ PROTO NaoV6 [
                 RotationalMotor {
                   name "LHipRoll"
                   maxVelocity 4.16174
-                  minPosition -0.379472
-                  maxPosition 0.790477
-                  maxTorque 14.8
+                  minPosition -0.379435
+                  maxPosition 0.79046
+                  maxTorque 3.348
                 }
                 PositionSensor {
                   name "LHipRollS"
@@ -4416,9 +4416,9 @@ PROTO NaoV6 [
                       RotationalMotor {
                         name "LHipPitch"
                         maxVelocity 6.40239
-                        minPosition -1.535889
-                        maxPosition 0.484090
-                        maxTorque 9.8
+                        minPosition -1.53589
+                        maxPosition 0.48398
+                        maxTorque 3.023
                       }
                       PositionSensor {
                         name "LHipPitchS"
@@ -4672,9 +4672,9 @@ PROTO NaoV6 [
                             RotationalMotor {
                               name "LKneePitch"
                               maxVelocity 6.40239
-                              minPosition -0.092346
-                              maxPosition 2.112528
-                              maxTorque 9.8
+                              minPosition -0.0923279
+                              maxPosition 2.11255
+                              maxTorque 3.023
                             }
                             PositionSensor {
                               name "LKneePitchS"
@@ -4957,9 +4957,9 @@ PROTO NaoV6 [
                                   RotationalMotor {
                                     name "LAnklePitch"
                                     maxVelocity 6.40239
-                                    minPosition -1.189516
-                                    maxPosition 0.922747
-                                    maxTorque 9.8
+                                    minPosition -1.18944
+                                    maxPosition 0.922581
+                                    maxTorque 3.023
                                   }
                                   PositionSensor {
                                     name "LAnklePitchS"
@@ -4978,9 +4978,9 @@ PROTO NaoV6 [
                                         RotationalMotor {
                                           name "LAnkleRoll"
                                           maxVelocity 4.16174
-                                          minPosition -0.397880
-                                          maxPosition 0.769001
-                                          maxTorque 14.8
+                                          minPosition -0.397761
+                                          maxPosition 0.768992
+                                          maxTorque 3.348
                                         }
                                         PositionSensor {
                                           name "LAnkleRollS"
