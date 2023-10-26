@@ -4,13 +4,13 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/robotstadium/protos/RobotstadiumSoccerField.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/balls/protos/RobocupSoccerBall.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/softbank/nao/protos/Nao.proto"
+EXTERNPROTO "../protos/NaoV6.proto"
 
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.23027277637435312 0.8819371603018252 0.41129222426347856 1.1312798001040059
-  position -1.7965918530180252 -1.8163098851190804 4.165978429014416
+  orientation 0.17105104996926185 0.94212266894938 -0.28835120071903664 1.1238502005339883
+  position -4.306074076280733 -0.34028804546567704 7.5665926279653215
 }
 TexturedBackground {
 }
@@ -18,13 +18,11 @@ TexturedBackgroundLight {
 }
 RobotstadiumSoccerField {
 }
-RobocupSoccerBall {
-  translation -0.565895915424565 -0.0012511577777986522 0.0696782319802086
-  rotation 0.13918440271219673 0.9887620572860261 0.05456460494821254 -1.5984335586528076
+NaoV6 {
+  translation -0.216671613577745 -0.07666931512752548 0.304185348956178
+  rotation 0.001236373441983255 -0.00024964567986716457 0.9999992045285568 3.0163695038685643
 }
-Nao {
-  translation -0.18427951454744454 0.0633412344312644 0.30526628318282717
-  rotation -0.000691807499739791 -0.00047428582547579077 -0.9999996482276077 3.0423386214606034
-  controller "nao"
-  selfCollision TRUE
+RobocupSoccerBall {
+  translation -0.5654275850832596 -0.006517508033736435 0.06967828170749646
+  rotation -0.10348105899307093 -0.9903717940161844 -0.09195314049469405 1.5826775810007567
 }

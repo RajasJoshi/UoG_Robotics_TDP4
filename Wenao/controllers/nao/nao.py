@@ -24,7 +24,7 @@ class Nao(Robot):
     # load motion files
     def loadMotionFiles(self):
         self.handWave = Motion("../../motions/HandWave.motion")
-        self.forwards = Motion("../../motions/ForwardsSprint.motion")
+        self.forwards = Motion("../../motions/Forwards50.motion")
         self.backwards = Motion("../../motions/Backwards.motion")
         self.sideStepLeft = Motion("../../motions/SideStepLeft.motion")
         self.sideStepRight = Motion("../../motions/SideStepRight.motion")
