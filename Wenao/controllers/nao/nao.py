@@ -25,12 +25,17 @@ class Nao(Robot):
     def loadMotionFiles(self):
         self.handWave = Motion("../../motions/HandWave.motion")
         self.forwards = Motion("../../motions/Forwards50.motion")
+        self.forwardSprint = Motion("../../motions/ForwardsSprint.motion")
         self.backwards = Motion("../../motions/Backwards.motion")
         self.sideStepLeft = Motion("../../motions/SideStepLeft.motion")
         self.sideStepRight = Motion("../../motions/SideStepRight.motion")
         self.turnLeft60 = Motion("../../motions/TurnLeft60.motion")
         self.turnRight60 = Motion("../../motions/TurnRight60.motion")
         self.taiChi = Motion("../../motions/TaiChi.motion")
+        self.shoot = Motion("../../motions/Shoot.motion")
+        self.longPass = Motion("../../motions/LongPass.motion")
+        self.standUpFront = Motion("../../motions/StandUpFromFront.motion")
+        self.standUpBack = Motion("../../motions/StandUpFromBack.motion")
         self.wipeForhead = Motion("../../motions/WipeForehead.motion")
 
     def startMotion(self, motion):
@@ -220,6 +225,7 @@ class Nao(Robot):
         print("[Up][Down]: move one step forward/backwards")
         print("[<-][->]: side step left/right")
         print("[Shift] + [<-][->]: turn left/right")
+        print("[Shift] + [Up]: sprint forward")
         print("[U]: print ultrasound sensors")
         print("[A]: print accelerometers")
         print("[G]: print gyros")
@@ -233,6 +239,10 @@ class Nao(Robot):
         print("[0]: turn all leds off")
         print("[T]: perform Tai chi movements")
         print("[W]: wipe its forehead")
+        print("[K]: Kick")
+        print("[P]: Pass")
+        print("[Ctrl] + [Up]: stand up from front")
+        print("[Ctrl] + [Down]: stand up from back")
         print("[H]: print this help message")
 
     def findAndEnableDevices(self):
@@ -350,6 +360,8 @@ class Nao(Robot):
                 self.startMotion(self.sideStepRight)
             elif key == Keyboard.UP:
                 self.startMotion(self.forwards)
+            elif key == Keyboard.UP | Keyboard.SHIFT:
+                self.startMotion(self.forwardSprint)
             elif key == Keyboard.DOWN:
                 self.startMotion(self.backwards)
             elif key == Keyboard.LEFT | Keyboard.SHIFT:
@@ -374,6 +386,14 @@ class Nao(Robot):
                 self.startMotion(self.taiChi)
             elif key == ord("W"):
                 self.startMotion(self.wipeForhead)
+            elif key == ord("K"):
+                self.startMotion(self.shoot)
+            elif key == ord("P"):
+                self.startMotion(self.longPass)
+            elif key == Keyboard.UP | Keyboard.CONTROL:
+                self.startMotion(self.standUpFront)
+            elif key == Keyboard.DOWN | Keyboard.CONTROL:
+                self.startMotion(self.standUpBack)
             elif key == Keyboard.HOME:
                 self.printCameraImage(self.cameraTop)
             elif key == Keyboard.END:
