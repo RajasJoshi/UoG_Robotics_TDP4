@@ -27,12 +27,11 @@ This repository holds codebase for Robotics TDP Project of Team 4 for the year 2
 
 
 ### To launch the robocup world,
-<clipboard-copy for="blob-path" class="btn btn-sm BtnGroup-item">
-</clipboard-copy>
-<div id="blob-path">source /opt/ros/humble/setup.bash </div>
-<div id="blob-path">cd ~/rmf_ws </div>
-<div id="blob-path">source ~/rmf_ws/install/setup.bash </div>
-Launch Ignition:<div id="blob-path">ros2 launch nao_demos_gz nao.launch.xml</div>
-Launch Gazebo <div id="blob-path">ros2 launch nao_demos_gz_classic nao.launch.xml </div>
+1. source /opt/ros/humble/setup.bash
+2. cd ~/rmf_ws
+3. source ~/rmf_ws/install/setup.bash   
+4. Launch Robocup Simulation with Nao in Gazebo or Ignition,  
+   Ignition: ros2 launch nao_demos_gz nao.launch.xml  
+   Gazebo: ros2 launch nao_demos_gz_classic nao.launch.xml
 
 
