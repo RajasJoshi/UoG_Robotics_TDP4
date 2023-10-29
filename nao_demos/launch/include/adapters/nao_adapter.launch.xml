@@ -1,0 +1,52 @@
+<?xml version='1.0' ?>
+
+<launch>
+
+  <arg name="fleet_name" default="nao" description="Name of this fleet of Nao Robot"/>
+
+  <group>
+    <include file="$(find-pkg-share rmf_fleet_adapter)/fleet_adapter.launch.xml">
+
+      <!-- The name and control type of the fleet -->
+      <arg name="fleet_name" value="$(var fleet_name)"/>
+      <arg name="control_type" value="read_only"/>
+
+      <!-- The nominal linear and angular velocity of the caddy -->
+      <arg name="linear_velocity" value="1.0"/>
+      <arg name="angular_velocity" value="0.6"/>
+
+      <!-- The nominal linear and angular acceleration of the caddy -->
+      <arg name="linear_acceleration" value="0.7"/>
+      <arg name="angular_acceleration" value="1.5"/>
+
+      <!-- The radius of the circular footprint of the caddy -->
+      <arg name="footprint_radius" value="0.6"/>
+      <!-- Other robots are not allowed within this radius --> 
+      <arg name="vicinity_radius" value="1.0"/>
+
+      <!-- Give everything time to discover -->
+      <arg name="discovery_timeout" value="60.0"/>
+      <arg name="delay_threshold" value="1.0"/>
+
+      <!-- Battery parameters -->
+      <arg name="battery_voltage" value="24.0"/>
+      <arg name="battery_capacity" value="20.0"/>
+      <arg name="battery_charging_current" value="10.0"/>
+
+      <!-- Physical parameters -->
+      <arg name="mass" value="70.0"/>
+      <arg name="inertia" value="40.0"/>
+      <arg name="friction_coefficient" value="0.22"/>
+      
+      <!-- Power systems -->
+      <arg name="ambient_power_drain" value="20.0"/>
+      <arg name="tool_power_drain" value="0.0"/>
+      
+      <!-- Whether to consider battery drain for task planning -->
+      <arg name="drain_battery" value="true"/>
+  
+      <arg name="recharge_threshold" value="0.2"/>
+
+    </include>
+  </group>
+</launch>

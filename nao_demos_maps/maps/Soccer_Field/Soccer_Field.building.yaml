@@ -1,0 +1,62 @@
+coordinate_system: reference_image
+crowd_sim:
+  agent_groups:
+    - {agents_name: [naoRed_0, naoBlue_0, naoBlue_1, naoBlue_2, naoBlue_3, naoRed_1, naoRed_2, naoRed_3], agents_number: 8, group_id: 0, profile_selector: external_agent, state_selector: external_static, x: 0, y: 0}
+  agent_profiles:
+    - {ORCA_tau: 1, ORCA_tauObst: 0.40000000000000002, class: 1, max_accel: 0, max_angle_vel: 0, max_neighbors: 10, max_speed: 0, name: external_agent, neighbor_dist: 5, obstacle_set: 1, pref_speed: 0, r: 0.25}
+  enable: 0
+  goal_sets: []
+  model_types: []
+  obstacle_set: {class: 1, file_name: L1_navmesh.nav, type: nav_mesh}
+  states:
+    - {final: 1, goal_set: -1, name: external_static, navmesh_file_name: ""}
+  transitions: []
+  update_time_step: 0.10000000000000001
+graphs:
+  {}
+levels:
+  L1:
+    drawing:
+      filename: soccer_field.png
+    elevation: 0
+    lanes:
+      - [10, 4, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [11, 13, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [12, 14, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [8, 13, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 1], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [6, 15, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 1], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [7, 4, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 1], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [9, 14, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 1], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [5, 16, {bidirectional: [4, true], demo_mock_floor_name: [1, ""], demo_mock_lift_name: [1, ""], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+    layers:
+      {}
+    measurements:
+      - [0, 1, {distance: [3, 10.4]}]
+      - [1, 2, {distance: [3, 7.4000000000000004]}]
+    models:
+      - {dispensable: false, model_name: Soccer_Field, name: Soccer_Field, static: true, x: 632, y: 444, yaw: 0, z: 0}
+    vertices:
+      - [82.572999999999993, 834.27499999999998, 0, ""]
+      - [1181.5909999999999, 834.41399999999999, 0, ""]
+      - [1181.7660000000001, 52.588000000000001, 0, ""]
+      - [82.564999999999998, 52.654000000000003, 0, ""]
+      - [632, 444, 0, Centre]
+      - [1050, 444, 0, Nao_Red_Goal, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, naoRed_0], spawn_robot_type: [1, NaoRed]}]
+      - [214, 444, 0, Nao_Goal, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, naoBlue_0], spawn_robot_type: [1, NaoBlue]}]
+      - [520, 444, 0, Nao_1, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, naoBlue_1], spawn_robot_type: [1, NaoBlue]}]
+      - [420, 320, 0, Nao_2, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, naoBlue_2], spawn_robot_type: [1, NaoBlue]}]
+      - [420, 570, 0, Nao_3, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, naoBlue_3], spawn_robot_type: [1, NaoBlue]}]
+      - [740, 444, 0, Nao_Red_1, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, naoRed_1], spawn_robot_type: [1, NaoRed]}]
+      - [830, 320, 0, Nao_Red_2, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, naoRed_2], spawn_robot_type: [1, NaoRed]}]
+      - [830, 570, 0, Nao_Red_3, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, naoRed_3], spawn_robot_type: [1, NaoRed]}]
+      - [632, 320, 0, ""]
+      - [632, 570, 0, ""]
+      - [294, 444, 0, ""]
+      - [971, 444, 0, ""]
+    walls:
+      - [3, 2, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]
+      - [2, 1, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]
+      - [1, 0, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]
+      - [0, 3, {alpha: [3, 1], texture_height: [3, 2.5], texture_name: [1, default], texture_scale: [3, 1], texture_width: [3, 1]}]
+lifts: {}
+name: soccer_field

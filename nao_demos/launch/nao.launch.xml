@@ -1,0 +1,30 @@
+<?xml version='1.0' ?>
+
+<launch>
+  <arg name="use_sim_time" default="false"/>
+  <arg name="failover_mode" default="false"/>
+
+  <!-- Common launch -->
+  <include file="$(find-pkg-share nao_demos)/common.launch.xml">
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+    <arg name="viz_config_file" value ="$(find-pkg-share nao_demos)/include/Nao/nao.rviz"/>
+    <arg name="config_file" value="$(find-pkg-share nao_demos_maps)/Soccer_Field/Soccer_Field.building.yaml"/>
+    <arg name="dashboard_config_file" value="$(find-pkg-share rmf_demos_dashboard_resources)/airport_terminal/dashboard_config.json"/>
+  </include>
+  
+    <!-- Caddy fleet adapter and robot state aggregator needed for read_only plugin -->
+  <group>
+    <let name="fleet_name" value="nao"/>
+    <include file="$(find-pkg-share nao_demos)/include/adapters/nao_adapter.launch.xml">
+      <arg name="use_sim_time" value="$(var use_sim_time)"/>
+      <arg name="fleet_name" value="$(var fleet_name)"/>
+    </include>
+    <include file="$(find-pkg-share rmf_fleet_adapter)/robot_state_aggregator.launch.xml">
+      <arg name="robot_prefix" value="$(var fleet_name)"/>
+      <arg name="fleet_name" value="$(var fleet_name)"/>
+      <arg name="use_sim_time" value="$(var use_sim_time)"/>
+      <arg name="failover_mode" value="$(var failover_mode)"/>
+    </include>
+  </group>
+  
+</launch>
