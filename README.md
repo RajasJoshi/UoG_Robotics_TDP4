@@ -24,7 +24,7 @@ This repository holds codebase for Robotics TDP Project of Team 4 for the year 2
 └── ...  
 
 ### Load Soccer Field 3D Model into Gazebo
-
+Refer to the robocup_soccer_field branch to view the models and instructions.
 
 ### To launch the robocup world,
 1. source /opt/ros/humble/setup.bash
