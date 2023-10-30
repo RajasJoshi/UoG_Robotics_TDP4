@@ -22,10 +22,8 @@ PROTO NaoV6 [
   field SFBool                       synchronization       TRUE                  # Is `Robot.synchronization`.
   field SFBool                       selfCollision         FALSE                 # Is `Robot.selfCollision`.
   field SFFloat                      gpsAccuracy           0.0                   # Is `GPS.accuracy`.
-  field SFInt32                      TcameraWidth           2560                   # Is `Camera.width`.
-  field SFInt32                      TcameraHeight          1920                   # Is `Camera.height`.
-  field SFInt32                      BcameraWidth           1280                   # Is `Camera.width`.
-  field SFInt32                      BcameraHeight          960                   # Is `Camera.height`.
+  field SFInt32                      cameraWidth           640                   # Is `Camera.width`.
+  field SFInt32                      cameraHeight          480                   # Is `Camera.height`.
   field SFBool                       cameraAntiAliasing    FALSE                 # Is `Camera.antiAliasing`.
   field SFFloat                      cameraAmbientOcclusionRadius 0              # Is `Camera.ambientOcclusionRadius`.
   field SFFloat                      cameraBloomThreshold  -1                    # Is `Camera.bloomThreshold`.
@@ -782,8 +780,8 @@ PROTO NaoV6 [
               rotation -0.000190 1 0.000196 0.020946
               name "CameraTop"
               fieldOfView 0.982620
-              width IS TcameraWidth
-              height IS TcameraHeight
+              width IS cameraWidth
+              height IS cameraHeight
               antiAliasing IS cameraAntiAliasing
               ambientOcclusionRadius IS cameraAmbientOcclusionRadius
               bloomThreshold IS cameraBloomThreshold
@@ -795,8 +793,8 @@ PROTO NaoV6 [
               rotation 0 1 0 0.692901
               name "CameraBottom"
               fieldOfView 0.982620
-              width IS BcameraWidth
-              height IS BcameraHeight
+              width IS cameraWidth
+              height IS cameraHeight
               near 0.002
             }
             DEF CAP Shape {

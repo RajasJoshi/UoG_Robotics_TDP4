@@ -5,12 +5,14 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/robotstadium/protos/RobotstadiumSoccerField.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/balls/protos/RobocupSoccerBall.proto"
 EXTERNPROTO "../protos/NaoV6.proto"
+EXTERNPROTO "../protos/NaoJersey.proto"
 
 WorldInfo {
+  gpsCoordinateSystem "WGS84"
 }
 Viewpoint {
-  orientation 0.17105104996926185 0.94212266894938 -0.28835120071903664 1.1238502005339883
-  position -4.306074076280733 -0.34028804546567704 7.5665926279653215
+  orientation 0.13560160155812492 0.9783344250147741 -0.15644154974265295 1.450012526681594
+  position -1.894477101313869 0.6593977981303065 18.038309242831136
 }
 TexturedBackground {
 }
@@ -19,10 +21,91 @@ TexturedBackgroundLight {
 RobotstadiumSoccerField {
 }
 NaoV6 {
-  translation -0.216671613577745 -0.07666931512752548 0.304185348956178
-  rotation 0.001236373441983255 -0.00024964567986716457 0.9999992045285568 3.0163695038685643
+  translation -3.990443959812173 0.012622203902996329 0.3325666472777739
+  rotation -0.0017098361885331927 -0.044983598812168596 -0.9989862623170123 0.0760505123318066
+  name "NAOR1"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_1.png"
+    ]
+    jerseyColor 1 0 0
+  }
+}
+NaoV6 {
+  translation -2.5662219602696377 -1.8401404507286463 0.3306511200315239
+  rotation -0.22517952406476172 -0.26747938834933255 0.9368825746859819 0.012971300474068158
+  name "NAOR2"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_2.png"
+    ]
+    jerseyColor 1 0 0
+  }
+}
+NaoV6 {
+  translation -2.4490549426609642 1.862864166088582 0.3303905890951025
+  rotation -0.008301219292936724 -0.0994900579766167 -0.9950039286967965 0.03476258838254042
+  name "NAOR3"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_3.png"
+    ]
+    jerseyColor 1 0 0
+  }
+}
+NaoV6 {
+  translation -0.8750749241219539 0.014744117440385644 0.33141481033456355
+  rotation 0.0068342550483783794 -0.052734031528040536 -0.9985852066182102 0.06578972470267838
+  name "NAOR4"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_4.png"
+    ]
+    jerseyColor 1 0 0
+  }
+}
+NaoV6 {
+  translation 3.973606280015904 -0.024627684935285516 0.3325666472361093
+  rotation 0.001711329975990917 3.677776830927847e-05 0.9999985349974814 -3.098608211705527
+  name "NAOB1"
+  jersey NaoJersey {
+    jerseyColor 0 0 1
+  }
+}
+NaoV6 {
+  translation 2.443262221326932 -1.937358850757155 0.33256664723610985
+  rotation 0.0017113291520533258 -0.00013174875908831372 0.999998526996314 2.987933173695422
+  name "NAOB2"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_2.png"
+    ]
+    jerseyColor 0 0 1
+  }
+}
+NaoV6 {
+  translation 2.516033223782466 1.8098877414165424 0.3325666472361094
+  rotation 0.001711329421810767 -7.765633566498794e-05 0.9999985326594754 3.0509090517252933
+  name "NAOB3"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_3.png"
+    ]
+    jerseyColor 0 0 1
+  }
+}
+NaoV6 {
+  translation 0.8168643304426293 -0.05310351409701809 0.33256664723610946
+  rotation 0.0017113291974255678 -0.00012272018011043066 0.9999985281449847 2.9984266734771103
+  name "NAOB4"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_4.png"
+    ]
+    jerseyColor 0 0 1
+  }
 }
 RobocupSoccerBall {
-  translation -0.5654275850832596 -0.006517508033736435 0.06967828170749646
-  rotation -0.10348105899307093 -0.9903717940161844 -0.09195314049469405 1.5826775810007567
+  translation 0.04552930940066666 -0.0073844678593831484 0.06967828170755343
+  rotation 0.705202639217026 -0.052909790158746736 0.7070288478886125 3.0204116279412028
 }

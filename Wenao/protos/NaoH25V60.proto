@@ -4,7 +4,7 @@
 # This is a proto file for Webots for the NaoH25V50
 # Extracted from: /mnt/d/workspace/UoG/TDP/UoG_Robotics_TDP4/Wenao/protos/NAOH25V60.urdf
 
-PROTO NaoH25V50 [
+PROTO NaoH25V60 [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 0 1 0
   field  SFString    name            "NaoH25V50"  # Is `Robot.name`.
