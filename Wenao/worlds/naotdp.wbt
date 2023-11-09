@@ -30,6 +30,7 @@ NaoV6 {
     ]
     jerseyColor 1 0 0
   }
+  controller "Team1"
 }
 NaoV6 {
   translation -2.5662219602696377 -1.8401404507286463 0.3306511200315239
@@ -41,6 +42,7 @@ NaoV6 {
     ]
     jerseyColor 1 0 0
   }
+  controller "Team1"
 }
 NaoV6 {
   translation -2.4490549426609642 1.862864166088582 0.3303905890951025
@@ -52,6 +54,7 @@ NaoV6 {
     ]
     jerseyColor 1 0 0
   }
+  controller "Team1"
 }
 NaoV6 {
   translation -0.8750749241219539 0.014744117440385644 0.33141481033456355
@@ -63,14 +66,19 @@ NaoV6 {
     ]
     jerseyColor 1 0 0
   }
+  controller "Team1"
 }
 NaoV6 {
   translation 3.973606280015904 -0.024627684935285516 0.3325666472361093
   rotation 0.001711329975990917 3.677776830927847e-05 0.9999985349974814 -3.098608211705527
   name "NAOB1"
   jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_1.png"
+    ]
     jerseyColor 0 0 1
   }
+  controller "Team2"
 }
 NaoV6 {
   translation 2.443262221326932 -1.937358850757155 0.33256664723610985
@@ -82,6 +90,7 @@ NaoV6 {
     ]
     jerseyColor 0 0 1
   }
+  controller "Team2"
 }
 NaoV6 {
   translation 2.516033223782466 1.8098877414165424 0.3325666472361094
@@ -93,6 +102,7 @@ NaoV6 {
     ]
     jerseyColor 0 0 1
   }
+  controller "Team2"
 }
 NaoV6 {
   translation 0.8168643304426293 -0.05310351409701809 0.33256664723610946
@@ -104,6 +114,7 @@ NaoV6 {
     ]
     jerseyColor 0 0 1
   }
+  controller "Team2"
 }
 RobocupSoccerBall {
   translation 0.04552930940066666 -0.0073844678593831484 0.06967828170755343

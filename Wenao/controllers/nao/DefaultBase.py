@@ -15,7 +15,7 @@
 """Example of Python controller for Nao robot.
    This demonstrates how to access sensors and actuators"""
 
-from controller import Robot, Keyboard, Motion
+from controller import Keyboard, Motion, Robot
 
 
 class Nao(Robot):
@@ -31,12 +31,10 @@ class Nao(Robot):
         self.sideStepRight = Motion("../../motions/SideStepRight.motion")
         self.turnLeft60 = Motion("../../motions/TurnLeft60.motion")
         self.turnRight60 = Motion("../../motions/TurnRight60.motion")
-        self.taiChi = Motion("../../motions/TaiChi.motion")
         self.shoot = Motion("../../motions/Shoot.motion")
         self.longPass = Motion("../../motions/LongPass.motion")
         self.standUpFront = Motion("../../motions/StandUpFromFront.motion")
         self.standUpBack = Motion("../../motions/StandUpFromBack.motion")
-        self.wipeForhead = Motion("../../motions/WipeForehead.motion")
 
     def startMotion(self, motion):
         # interrupt current motion
@@ -354,69 +352,63 @@ class Nao(Robot):
         while True:
             key = self.keyboard.getKey()
 
-            if key == Keyboard.LEFT:
-                self.startMotion(self.sideStepLeft)
-            elif key == Keyboard.RIGHT:
-                self.startMotion(self.sideStepRight)
-            elif key == Keyboard.UP:
-                self.startMotion(self.forwards)
-            elif key == Keyboard.UP | Keyboard.SHIFT:
-                self.startMotion(self.forwardSprint)
-            elif key == Keyboard.DOWN:
-                self.startMotion(self.backwards)
-            elif key == Keyboard.LEFT | Keyboard.SHIFT:
-                self.startMotion(self.turnLeft60)
-            elif key == Keyboard.RIGHT | Keyboard.SHIFT:
-                self.startMotion(self.turnRight60)
-            elif key == ord("A"):
-                self.printAcceleration()
-            elif key == ord("G"):
-                self.printGyro()
-            elif key == ord("S"):
-                self.printGps()
-            elif key == ord("I"):
-                self.printInertialUnit()
-            elif key == ord("F"):
-                self.printFootSensors()
-            elif key == ord("B"):
-                self.printFootBumpers()
-            elif key == ord("U"):
-                self.printUltrasoundSensors()
-            elif key == ord("T"):
-                self.startMotion(self.taiChi)
-            elif key == ord("W"):
-                self.startMotion(self.wipeForhead)
-            elif key == ord("K"):
-                self.startMotion(self.shoot)
-            elif key == ord("P"):
-                self.startMotion(self.longPass)
-            elif key == Keyboard.UP | Keyboard.CONTROL:
-                self.startMotion(self.standUpFront)
-            elif key == Keyboard.DOWN | Keyboard.CONTROL:
-                self.startMotion(self.standUpBack)
-            elif key == Keyboard.HOME:
-                self.printCameraImage(self.cameraTop)
-            elif key == Keyboard.END:
-                self.printCameraImage(self.cameraBottom)
-            elif key == Keyboard.PAGEUP:
-                self.setHandsAngle(0.96)
-            elif key == Keyboard.PAGEDOWN:
-                self.setHandsAngle(0.0)
-            elif key == ord("7"):
-                self.setAllLedsColor(0xFF0000)  # red
-            elif key == ord("8"):
-                self.setAllLedsColor(0x00FF00)  # green
-            elif key == ord("9"):
-                self.setAllLedsColor(0x0000FF)  # blue
-            elif key == ord("0"):
-                self.setAllLedsColor(0x000000)  # off
-            elif key == ord("H"):
-                self.printHelp()
+            match key:
+                case Keyboard.LEFT:
+                    self.startMotion(self.sideStepLeft)
+                case Keyboard.RIGHT:
+                    self.startMotion(self.sideStepRight)
+                case Keyboard.UP:
+                    self.startMotion(self.forwards)
+                case Keyboard.UP | Keyboard.SHIFT:
+                    self.startMotion(self.forwardSprint)
+                case Keyboard.DOWN:
+                    self.startMotion(self.backwards)
+                case Keyboard.LEFT | Keyboard.SHIFT:
+                    self.startMotion(self.turnLeft60)
+                case Keyboard.RIGHT | Keyboard.SHIFT:
+                    self.startMotion(self.turnRight60)
+                case ord("A"):
+                    self.printAcceleration()
+                case ord("G"):
+                    self.printGyro()
+                case ord("S"):
+                    self.printGps()
+                case ord("I"):
+                    self.printInertialUnit()
+                case ord("F"):
+                    self.printFootSensors()
+                case ord("B"):
+                    self.printFootBumpers()
+                case ord("U"):
+                    self.printUltrasoundSensors()
+                case ord("K"):
+                    self.startMotion(self.shoot)
+                case ord("P"):
+                    self.startMotion(self.longPass)
+                case Keyboard.UP | Keyboard.CONTROL:
+                    self.startMotion(self.standUpFront)
+                case Keyboard.DOWN | Keyboard.CONTROL:
+                    self.startMotion(self.standUpBack)
+                case Keyboard.HOME:
+                    self.printCameraImage(self.cameraTop)
+                case Keyboard.END:
+                    self.printCameraImage(self.cameraBottom)
+                case Keyboard.PAGEUP:
+                    self.setHandsAngle(0.96)
+                case Keyboard.PAGEDOWN:
+                    self.setHandsAngle(0.0)
+                case ord("7"):
+                    self.setAllLedsColor(0xFF0000)  # red
+                case ord("8"):
+                    self.setAllLedsColor(0x00FF00)  # green
+                case ord("9"):
+                    self.setAllLedsColor(0x0000FF)  # blue
+                case ord("0"):
+                    self.setAllLedsColor(0x000000)  # off
+                case ord("H"):
+                    self.printHelp()
+                case _:
+                    print("Wrong Key")
 
             if robot.step(self.timeStep) == -1:
                 break
-
-
-# create the Robot instance and run main loop
-robot = Nao()
-robot.run()
