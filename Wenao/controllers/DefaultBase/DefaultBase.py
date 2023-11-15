@@ -9,14 +9,45 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
-import logging
-
+from PIL import Image
+import queue
+import time
+from threading import Thread
 from controller import Keyboard, Motion, Robot
 
-# setup logging
-logging.basicConfig()
-logger = logging.getLogger(__name__)
-logger.setLevel("INFO")
+
+class ImageServer:
+    def __init__(self, width, height, camera):
+        self.camera = camera  # camera
+        self.width = width
+        self.height = height
+        self.running = True
+
+        self.queue = queue.Queue(maxsize=3)
+        self.thread = Thread(target=self.run, daemon=True)
+        self.thread.start()
+
+    def send(self, image):
+        self.queue.put(image)
+
+    def stop(self):
+        self.running = False
+        self.thread.join()
+
+    def run(self):
+        while self.running:
+            try:
+                img = self.queue.get(timeout=0.1)
+                self.save_image(img, "output_image.jpg")
+                self.queue.task_done()
+            except queue.Empty:
+                continue
+
+            time.sleep(1 / 30.0)
+
+    def save_image(self, img, filename):
+        image = Image.frombytes("RGB", (self.width, self.height), bytes(img))
+        image.save(filename)
 
 
 class SoccerRobot(Robot):
@@ -30,19 +61,23 @@ class SoccerRobot(Robot):
         self.enableDevices()
         self.loadMotionFiles()
 
+        self.TopCamServer = ImageServer(
+            self.cameraTop.getWidth(), self.cameraTop.getHeight(), self.cameraTop
+        )
+        self.BottomCamServer = ImageServer(
+            self.cameraBottom.getWidth(),
+            self.cameraBottom.getHeight(),
+            self.cameraBottom,
+        )
+
     def run(self):
         self.handWave.setLoop(True)
         self.handWave.play()
         self.currentlyPlaying = self.handWave
 
         # until a key is pressed
-        key = -1
-        while self.step(self.timeStep) != -1:
-            key = self.keyboard.getKey()
-            if key > 0:
-                break
 
-        while True:
+        while self.step(self.timeStep) != -1:
             key = self.keyboard.getKey()
 
             if key == Keyboard.LEFT:
@@ -71,6 +106,17 @@ class SoccerRobot(Robot):
                 self.startMotion(self.standUpFront)
             elif key == Keyboard.DOWN | Keyboard.CONTROL:
                 self.startMotion(self.standUpBack)
+
+            try:
+                top_image = self.cameraTop.getImage()
+                bottom_image = self.cameraBottom.getImage()
+
+                self.TopCamServer.send(top_image)
+                self.BottomCamServer.send(bottom_image)
+
+            except ValueError as e:
+                # Handle the exception (e.g., print an error message)
+                print(f"Error getting camera image: {e}")
 
             if self.step(self.timeStep) == -1:
                 break
