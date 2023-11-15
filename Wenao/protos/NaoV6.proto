@@ -15,6 +15,7 @@ PROTO NaoV6 [
   field SFRotation                   rotation              0 0 1 0               # Is `Transform.rotation`.
   field SFString                     name                  "NAO"                 # Is `Solid.name`.
   field SFColor                      color                 0.15 0.15 0.15        # Defines the diffuseColor of the secondary `Material`.
+  field SFString                     controller            "void"                # Is `Robot.controller`.
   field MFString                     controllerArgs        []                    # Is `Robot.controllerArgs`.
   field SFString                     customData            ""                    # Is `Robot.customData`.
   field SFBool                       supervisor            FALSE                 # Is `Robot.supervisor`.

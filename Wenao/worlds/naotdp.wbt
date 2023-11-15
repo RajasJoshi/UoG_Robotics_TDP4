@@ -8,6 +8,7 @@ EXTERNPROTO "../protos/NaoV6.proto"
 EXTERNPROTO "../protos/NaoJersey.proto"
 
 WorldInfo {
+  optimalThreadCount 8
   gpsCoordinateSystem "WGS84"
 }
 Viewpoint {
@@ -17,106 +18,104 @@ Viewpoint {
 TexturedBackground {
 }
 TexturedBackgroundLight {
+  castShadows FALSE
 }
 RobotstadiumSoccerField {
 }
 NaoV6 {
-  translation -3.990443959812173 0.012622203902996329 0.3325666472777739
-  rotation -0.0017098361885331927 -0.044983598812168596 -0.9989862623170123 0.0760505123318066
-  name "NAOR1"
+  translation -3.990627263767298 0.011872947358006798 0.3325529253640347
+  rotation 0.028006784280288816 -0.050893462777210574 -0.9983113119066727 0.0763077355744061
+  name "RedGoalkeeper"
+  controller "DefaultBase"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_1.png"
     ]
     jerseyColor 1 0 0
   }
-  controller "Team1"
 }
 NaoV6 {
-  translation -2.5662219602696377 -1.8401404507286463 0.3306511200315239
-  rotation -0.22517952406476172 -0.26747938834933255 0.9368825746859819 0.012971300474068158
-  name "NAOR2"
+  translation -2.5663169869315925 -1.8418848175688594 0.3325529254559288
+  rotation 0.18093054757443403 -0.297007444738834 0.9375770446870614 0.012742951542012902
+  name "DefenderLeft"
+  controller "DefaultBase"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_2.png"
     ]
     jerseyColor 1 0 0
   }
-  controller "Team1"
 }
 NaoV6 {
-  translation -2.4490549426609642 1.862864166088582 0.3303905890951025
-  rotation -0.008301219292936724 -0.0994900579766167 -0.9950039286967965 0.03476258838254042
-  name "NAOR3"
+  translation -2.449196333041875 1.8620312023522683 0.3325529254834274
+  rotation 0.06319540387692567 -0.10941554143411114 -0.9919851713717864 0.03507546008869544
+  name "RedDefenderRight"
+  controller "DefaultBase"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_3.png"
     ]
     jerseyColor 1 0 0
   }
-  controller "Team1"
 }
 NaoV6 {
-  translation -0.8750749241219539 0.014744117440385644 0.33141481033456355
-  rotation 0.0068342550483783794 -0.052734031528040536 -0.9985852066182102 0.06578972470267838
-  name "NAOR4"
+  translation -0.8752283648410119 0.014179989819684482 0.33255292536403486
+  rotation 0.032655458888289836 -0.05862575056720372 -0.9977457804346893 0.066051124793929
+  name "RedForward"
+  controller "DefaultBase"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_4.png"
     ]
     jerseyColor 1 0 0
   }
-  controller "Team1"
 }
 NaoV6 {
-  translation 3.973606280015904 -0.024627684935285516 0.3325666472361093
-  rotation 0.001711329975990917 3.677776830927847e-05 0.9999985349974814 -3.098608211705527
-  name "NAOB1"
+  translation 3.97369937242453 -0.023861969685234227 0.3325529253640343
+  rotation 0.0018748028717235237 0.001182088343494394 0.9999975438876539 -3.098813762864694
+  name "BlueGoalkeeper"
+  controller "DefaultBase"
   jersey NaoJersey {
-    jerseyTexture [
-      "../protos/textures/nao_jersey_dark_1.png"
-    ]
     jerseyColor 0 0 1
   }
-  controller "Team2"
 }
 NaoV6 {
-  translation 2.443262221326932 -1.937358850757155 0.33256664723610985
-  rotation 0.0017113291520533258 -0.00013174875908831372 0.999998526996314 2.987933173695422
-  name "NAOB2"
+  translation 2.443503124560938 -1.936626080893864 0.33255292536403497
+  rotation 0.001987210855806425 0.0009950577008402033 0.9999975304235439 2.987727817653976
+  name "BlueDefenderLeft"
+  controller "DefaultBase"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_2.png"
     ]
     jerseyColor 0 0 1
   }
-  controller "Team2"
 }
 NaoV6 {
-  translation 2.516033223782466 1.8098877414165424 0.3325666472361094
-  rotation 0.001711329421810767 -7.765633566498794e-05 0.9999985326594754 3.0509090517252933
-  name "NAOB3"
+  translation 2.5162275330699795 1.8106342197762455 0.33255292536403463
+  rotation 0.0019511307179318768 0.0010550898590780554 0.9999975399341295 3.0507036330553965
+  name "BlueDefenderRight"
+  controller "DefaultBase"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_3.png"
     ]
     jerseyColor 0 0 1
   }
-  controller "Team2"
 }
 NaoV6 {
-  translation 0.8168643304426293 -0.05310351409701809 0.33256664723610946
-  rotation 0.0017113291974255678 -0.00012272018011043066 0.9999985281449847 2.9984266734771103
-  name "NAOB4"
+  translation 0.8170975312227741 -0.05236825670205542 0.33255292536403463
+  rotation 0.0019811886960015663 0.0010050777097870794 0.9999975323520294 2.9982213069822397
+  name "BlueForward"
+  controller "DefaultBase"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_4.png"
     ]
     jerseyColor 0 0 1
   }
-  controller "Team2"
 }
 RobocupSoccerBall {
-  translation 0.04552930940066666 -0.0073844678593831484 0.06967828170755343
-  rotation 0.705202639217026 -0.052909790158746736 0.7070288478886125 3.0204116279412028
+  translation 0.04553494604386554 -0.007421506115418406 0.0696782320487456
+  rotation 0.705239250931117 -0.05309380456428783 0.706978533523477 3.020780507326204
 }
