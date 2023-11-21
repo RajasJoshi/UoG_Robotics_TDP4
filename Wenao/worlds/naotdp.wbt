@@ -26,7 +26,7 @@ NaoV6 {
   translation -3.990627263767298 0.011872947358006798 0.3325529253640347
   rotation 0.028006784280288816 -0.050893462777210574 -0.9983113119066727 0.0763077355744061
   name "RedGoalkeeper"
-  controller "DefaultBase"
+  controller "RedGoalkeeper"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_1.png"
@@ -37,8 +37,8 @@ NaoV6 {
 NaoV6 {
   translation -2.5663169869315925 -1.8418848175688594 0.3325529254559288
   rotation 0.18093054757443403 -0.297007444738834 0.9375770446870614 0.012742951542012902
-  name "DefenderLeft"
-  controller "DefaultBase"
+  name "RedDefenderLeft"
+  controller "RedDefenderLeft"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_2.png"
@@ -50,7 +50,7 @@ NaoV6 {
   translation -2.449196333041875 1.8620312023522683 0.3325529254834274
   rotation 0.06319540387692567 -0.10941554143411114 -0.9919851713717864 0.03507546008869544
   name "RedDefenderRight"
-  controller "DefaultBase"
+  controller "RedDefenderRight"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_3.png"
@@ -62,7 +62,7 @@ NaoV6 {
   translation -0.8752283648410119 0.014179989819684482 0.33255292536403486
   rotation 0.032655458888289836 -0.05862575056720372 -0.9977457804346893 0.066051124793929
   name "RedForward"
-  controller "DefaultBase"
+  controller "RedForward"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_4.png"
@@ -74,7 +74,7 @@ NaoV6 {
   translation 3.97369937242453 -0.023861969685234227 0.3325529253640343
   rotation 0.0018748028717235237 0.001182088343494394 0.9999975438876539 -3.098813762864694
   name "BlueGoalkeeper"
-  controller "DefaultBase"
+  controller "BlueGoalkeeper"
   jersey NaoJersey {
     jerseyColor 0 0 1
   }
@@ -83,7 +83,7 @@ NaoV6 {
   translation 2.443503124560938 -1.936626080893864 0.33255292536403497
   rotation 0.001987210855806425 0.0009950577008402033 0.9999975304235439 2.987727817653976
   name "BlueDefenderLeft"
-  controller "DefaultBase"
+  controller "BlueDefenderLeft"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_2.png"
@@ -95,7 +95,7 @@ NaoV6 {
   translation 2.5162275330699795 1.8106342197762455 0.33255292536403463
   rotation 0.0019511307179318768 0.0010550898590780554 0.9999975399341295 3.0507036330553965
   name "BlueDefenderRight"
-  controller "DefaultBase"
+  controller "BlueDefenderRight"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_3.png"
@@ -107,7 +107,7 @@ NaoV6 {
   translation 0.8170975312227741 -0.05236825670205542 0.33255292536403463
   rotation 0.0019811886960015663 0.0010050777097870794 0.9999975323520294 2.9982213069822397
   name "BlueForward"
-  controller "DefaultBase"
+  controller "BlueForward"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_4.png"

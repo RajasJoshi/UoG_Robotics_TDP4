@@ -13,7 +13,8 @@ from PIL import Image
 import queue
 import time
 from threading import Thread
-from controller import Keyboard, Motion, Robot
+from controller import Robot
+from Utils.Consts import Motions
 
 
 class ImageServer:
@@ -55,14 +56,21 @@ class SoccerRobot(Robot):
 
     def __init__(self):
         Robot.__init__(self)
+        self.robotName = self.getName()
         self.currentlyPlaying = False
         self.supervisorData = None
-
         self.enableDevices()
-        self.loadMotionFiles()
+        # Load motion files
+        self.motions = Motions()
+
+        self.currentlyMoving = False
+        self.motionQueue = [self.motions.standInit]
+        self.startMotion()
 
         self.TopCamServer = ImageServer(
-            self.cameraTop.getWidth(), self.cameraTop.getHeight(), self.cameraTop
+            self.cameraTop.getWidth(),
+            self.cameraTop.getHeight(),
+            self.cameraTop,
         )
         self.BottomCamServer = ImageServer(
             self.cameraBottom.getWidth(),
@@ -71,41 +79,20 @@ class SoccerRobot(Robot):
         )
 
     def run(self):
-        self.handWave.setLoop(True)
-        self.handWave.play()
-        self.currentlyPlaying = self.handWave
-
         # until a key is pressed
 
         while self.step(self.timeStep) != -1:
-            key = self.keyboard.getKey()
+            self.clearMotionQueue()
+            self.addMotionToQueue(self.motions.handWave)
+            self.startMotion()
+            message_to_send = f"Hello from {self.robotName}!"
+            self.emitter.send(message_to_send.encode("utf-8"))
 
-            if key == Keyboard.LEFT:
-                self.startMotion(self.sideStepLeft)
-            elif key == Keyboard.RIGHT:
-                self.startMotion(self.sideStepRight)
-            elif key == Keyboard.UP:
-                self.startMotion(self.forwards)
-            elif key == Keyboard.UP | Keyboard.SHIFT:
-                self.startMotion(self.forwardSprint)
-            elif key == Keyboard.DOWN:
-                self.startMotion(self.backwards)
-            elif key == Keyboard.LEFT | Keyboard.SHIFT:
-                self.startMotion(self.turnLeft60)
-            elif key == Keyboard.RIGHT | Keyboard.SHIFT:
-                self.startMotion(self.turnRight60)
-            elif key == ord("T"):
-                self.startMotion(self.taiChi)
-            elif key == ord("W"):
-                self.startMotion(self.wipeForhead)
-            elif key == ord("K"):
-                self.startMotion(self.shoot)
-            elif key == ord("P"):
-                self.startMotion(self.longPass)
-            elif key == Keyboard.UP | Keyboard.CONTROL:
-                self.startMotion(self.standUpFront)
-            elif key == Keyboard.DOWN | Keyboard.CONTROL:
-                self.startMotion(self.standUpBack)
+            # Receive messages
+            while self.receiver.getQueueLength() > 0:
+                message_received = str(self.receiver.getString())
+                # print(f"{self.robotName} received: {message_received}")
+                self.receiver.nextPacket()
 
             try:
                 top_image = self.cameraTop.getImage()
@@ -168,42 +155,79 @@ class SoccerRobot(Robot):
         self.keyboard = self.getKeyboard()
         self.keyboard.enable(10 * self.timeStep)
 
-    # load motion files
-    def loadMotionFiles(self):
-        self.handWave = Motion("../../motions/HandWave.motion")
-        self.forwards = Motion("../../motions/Forwards.motion")
-        self.forwardsSprint = Motion("../../motions/ForwardsSprint.motion")
-        self.forwards50 = Motion("../../motions/Forwards50.motion")
-        self.backwards = Motion("../../motions/Backwards.motion")
-        self.shoot = Motion("../../motions/Shoot.motion")
-        self.rightShoot = Motion("../../motions/RightShoot.motion")
-        self.longShoot = Motion("../../motions/LongPass.motion")
-        self.leftSidePass = Motion("../../motions/SidePass_Left.motion")
-        self.rightSidePass = Motion("../../motions/SidePass_Right.motion")
-        self.sideStepLeft = Motion("../../motions/SideStepLeft.motion")
-        self.sideStepRight = Motion("../../motions/SideStepRight.motion")
-        self.standUpFromFront = Motion("../../motions/StandUpFromFront.motion")
-        self.standUpFromBack = Motion("../../motions/StandUpFromBack.motion")
-        self.turnLeft10 = Motion("../../motions/TurnLeft10.motion")
-        self.turnLeft20 = Motion("../../motions/TurnLeft20.motion")
-        self.turnLeft30 = Motion("../../motions/TurnLeft30.motion")
-        self.turnLeft40 = Motion("../../motions/TurnLeft40.motion")
-        self.turnLeft60 = Motion("../../motions/TurnLeft60.motion")
-        self.turnLeft180 = Motion("../../motions/TurnLeft180.motion")
-        self.turnRight10 = Motion("../../motions/TurnRight10.motion")
-        self.turnRight10_V2 = Motion("../../motions/TurnRight10_V2.motion")
-        self.turnRight40 = Motion("../../motions/TurnRight40.motion")
-        self.turnRight60 = Motion("../../motions/TurnRight60.motion")
-        self.standInit = Motion("../../motions/StandInit.motion")
+    def interruptMotion(self) -> None:
+        """Interrupt if the robot is moving."""
+        if self.currentlyMoving:
+            self.currentlyMoving.stop()
+            self.currentlyMoving = False
 
-    def startMotion(self, motion):
-        # interrupt current motion
-        if self.currentlyPlaying:
-            self.currentlyPlaying.stop()
+    def interruptForwardsSprint(self) -> None:
+        """Interrupt if the robot is moving forward."""
+        if (
+            self.currentlyMoving
+            and self.currentlyMoving.name == "forwardsSprint"
+            and self.currentlyMoving.getTime() == 1360
+        ):  # we reached the end of forward.motion
+            self.currentlyMoving.stop()
+            self.currentlyMoving = False
 
-        # start new motion
-        motion.play()
-        self.currentlyPlaying = motion
+    def startMotion(self) -> None:
+        """Start a motion from the queue if the previous one completed."""
+        if self.currentlyMoving == False or self.currentlyMoving.isOver():
+            if len(self.motionQueue) > 0:
+                currentMotion = self.motionQueue.pop(0)
+                currentMotion.play()
+                self.currentlyMoving = currentMotion
+
+    def addMotionToQueue(self, motion) -> None:
+        """Add the next motion of the robot to the queue.
+
+        Args:
+            motion (Motion): Loaded motion variable.
+        """
+        self.motionQueue.append(motion)
+
+    def clearMotionQueue(self) -> None:
+        """Clear the motion queue."""
+        self.motionQueue.clear()
+
+    def isNewMotionValid(self, newMotion) -> bool:
+        """Compare the new motion and current motion.
+
+        Args:
+            newMotion (Motion): New motion
+
+        Returns:
+            bool: Is the new motion valid?
+        """
+        if newMotion == None or (
+            self.currentlyMoving != False
+            and self.currentlyMoving.isOver() != True
+            and newMotion.name == self.currentlyMoving.name
+        ):
+            return False
+
+        return True
+
+    def getTurningMotion(self, turningAngle):
+        """Decide the motion according to the turning angle.
+
+        Args:
+            turningAngle (double): Turning angle in degrees.
+
+        Returns:
+            Motion: Decided motion.
+        """
+        if turningAngle > 50:
+            return self.motions.turnLeft60
+        elif turningAngle > 20:
+            return self.motions.turnLeft30
+        elif turningAngle < -50:
+            return self.motions.turnRight60
+        elif turningAngle < -30:
+            return self.motions.turnRight40
+        else:
+            return None
 
 
 def main():
