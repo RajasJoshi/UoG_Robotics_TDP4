@@ -15,9 +15,10 @@ from threading import Thread
 
 import cv2  # Import OpenCV library
 import numpy as np
-from controller import Robot
+from controller import Keyboard, Robot
 from PIL import Image
 from Utils.Consts import Motions
+import matplotlib.pyplot as plt
 
 
 class ImageServer:
@@ -49,7 +50,6 @@ class ImageServer:
                 )
                 # Display the image using OpenCV
                 cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
-                # self.save_image(cvimg, "output_image.jpg")
                 cv2.waitKey(1)
                 self.queue.task_done()
             except queue.Empty:
@@ -99,8 +99,30 @@ class SoccerRobot(Robot):
 
         while self.step(self.timeStep) != -1:
             self.clearMotionQueue()
-            self.addMotionToQueue(self.motions.handWave)
+
+            key = self.keyboard.getKey()
+
+            if key == Keyboard.LEFT:
+                self.addMotionToQueue(self.motions.sideStepLeft)
+            elif key == Keyboard.RIGHT:
+                self.addMotionToQueue(self.motions.sideStepRight)
+            elif key == Keyboard.UP:
+                self.addMotionToQueue(self.motions.forwards)
+            elif key == Keyboard.DOWN:
+                self.addMotionToQueue(self.motions.backwards)
+            elif key == Keyboard.LEFT | Keyboard.SHIFT:
+                self.addMotionToQueue(self.motions.turnLeft60)
+            elif key == Keyboard.RIGHT | Keyboard.SHIFT:
+                self.addMotionToQueue(self.motions.turnRight60)
+            elif key == Keyboard.UP | Keyboard.CONTROL:
+                self.addMotionToQueue(self.motions.standUpFromFront)
+            elif key == Keyboard.DOWN | Keyboard.CONTROL:
+                self.addMotionToQueue(self.motions.standUpFromBack)
+            # else:
+            #     self.addMotionToQueue(self.motions.handWave)
+
             self.startMotion()
+
             message_to_send = f"Hello from {self.robotName}!"
             self.emitter.send(message_to_send.encode("utf-8"))
 
@@ -133,6 +155,10 @@ class SoccerRobot(Robot):
         self.cameraBottom = self.getDevice("CameraBottom")
         self.cameraTop.enable(4 * self.timeStep)
         self.cameraBottom.enable(4 * self.timeStep)
+
+        # GPS
+        self.gps = self.getDevice("gps")
+        self.gps.enable(self.timeStep)
 
         # ultrasound sensors
         self.us = []
