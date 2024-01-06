@@ -9,11 +9,12 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
-from PIL import Image
 import queue
 import time
 from threading import Thread
+
 from controller import Keyboard, Motion, Robot
+from PIL import Image
 
 
 class ImageServer:

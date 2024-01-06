@@ -23,17 +23,17 @@ class SupervisorBase(Supervisor):
 
         self.emitter = self.getDevice("emitter")
 
-        self.ball = self.getFromDef("SOCCERBALL")
+        self.ball = self.getDevice("RobocupSoccerBall")
 
         self.robots = {
-            "RED_GK": self.getFromDef("RED_GK"),
-            "RED_DEF_L": self.getFromDef("RED_DEF_L"),
-            "RED_DEF_R": self.getFromDef("RED_DEF_R"),
-            "RED_FW": self.getFromDef("RED_FW"),
-            "BLUE_GK": self.getFromDef("BLUE_GK"),
-            "BLUE_DEF": self.getFromDef("BLUE_DEF"),
-            "BLUE_FW_L": self.getFromDef("BLUE_FW_L"),
-            "BLUE_FW_R": self.getFromDef("BLUE_FW_R"),
+            "RedGoalkeeper": self.getDevice("RedGoalkeeper"),
+            "RedDefenderLeft": self.getDevice("RedDefenderLeft"),
+            "RedDefenderRight": self.getDevice("RedDefenderRight"),
+            "RedForward": self.getDevice("RedForward"),
+            "BlueGoalkeeper": self.getDevice("BlueGoalkeeper"),
+            "BlueDefenderLeft": self.getDevice("BlueDefenderLeft"),
+            "BlueDefenderRight": self.getDevice("BlueDefenderRight"),
+            "BlueForward": self.getDevice("BlueForward"),
         }
 
         self.ballPriority = "R"
@@ -89,7 +89,7 @@ class SupervisorBase(Supervisor):
         """
 
         ballPosition = self.getBallPosition()
-        ballOwnerRobotName = "RED_GK"
+        ballOwnerRobotName = "RedGoalkeeper"
         minDistance = Functions.calculateDistance(
             ballPosition, self.getRobotPosition(ballOwnerRobotName)
         )
@@ -114,14 +114,14 @@ class SupervisorBase(Supervisor):
         ballOwner = bytes(self.getBallOwner(), "utf-8")
         ballPriority = bytes(self.ballPriority, "utf-8")
 
-        redGk = self.getRobotPosition("RED_GK")
-        redDefLeft = self.getRobotPosition("RED_DEF_L")
-        redDefRight = self.getRobotPosition("RED_DEF_R")
-        redFw = self.getRobotPosition("RED_FW")
-        blueGk = self.getRobotPosition("BLUE_GK")
-        blueDef = self.getRobotPosition("BLUE_DEF")
-        blueFwLeft = self.getRobotPosition("BLUE_FW_L")
-        blueFwRight = self.getRobotPosition("BLUE_FW_R")
+        redGk = self.getRobotPosition("RedGoalkeeper")
+        redDefLeft = self.getRobotPosition("RedDefenderLeft")
+        redDefRight = self.getRobotPosition("RedDefenderRight")
+        redFw = self.getRobotPosition("RedForward")
+        blueGk = self.getRobotPosition("BlueGoalkeeper")
+        blueDef = self.getRobotPosition("BlueDefenderLeft")
+        blueFwLeft = self.getRobotPosition("BlueDefenderRight")
+        blueFwRight = self.getRobotPosition("BlueForward")
 
         data = struct.pack(
             "dd9ss24d",

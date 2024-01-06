@@ -9,19 +9,25 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
-from PIL import Image
 import queue
 import time
 from threading import Thread
+
+import cv2  # Import OpenCV library
+import numpy as np
 from controller import Robot
+from PIL import Image
 from Utils.Consts import Motions
+import matplotlib.pyplot as plt
 
 
 class ImageServer:
-    def __init__(self, width, height, camera):
+    def __init__(self, width, height, camera, robot_name, position):
         self.camera = camera  # camera
         self.width = width
         self.height = height
+        self.robot_name = robot_name
+        self.position = position
         self.running = True
 
         self.queue = queue.Queue(maxsize=3)
@@ -39,7 +45,13 @@ class ImageServer:
         while self.running:
             try:
                 img = self.queue.get(timeout=0.1)
-                self.save_image(img, "output_image.jpg")
+                cvimg = np.frombuffer(img, dtype=np.uint8).reshape(
+                    (self.height, self.width, 4)
+                )
+                # Display the image using OpenCV
+                cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
+                # self.save_image(cvimg, "output_image.jpg")
+                cv2.waitKey(1)
                 self.queue.task_done()
             except queue.Empty:
                 continue
@@ -48,7 +60,8 @@ class ImageServer:
 
     def save_image(self, img, filename):
         image = Image.frombytes("RGB", (self.width, self.height), bytes(img))
-        image.save(filename)
+        save_path = f"{self.robot_name}_{self.position}_{filename}"  # Modify this line
+        image.save(save_path)
 
 
 class SoccerRobot(Robot):
@@ -71,11 +84,15 @@ class SoccerRobot(Robot):
             self.cameraTop.getWidth(),
             self.cameraTop.getHeight(),
             self.cameraTop,
+            self.robotName,  # Pass robot name to ImageServer
+            "Top",
         )
         self.BottomCamServer = ImageServer(
             self.cameraBottom.getWidth(),
             self.cameraBottom.getHeight(),
             self.cameraBottom,
+            self.robotName,  # Pass robot name to ImageServer
+            "Bottom",
         )
 
     def run(self):
@@ -87,6 +104,9 @@ class SoccerRobot(Robot):
             self.startMotion()
             message_to_send = f"Hello from {self.robotName}!"
             self.emitter.send(message_to_send.encode("utf-8"))
+            gps_values = self.gps.getValues()
+
+            # print([gps_values[0], gps_values[1], gps_values[2]])
 
             # Receive messages
             while self.receiver.getQueueLength() > 0:
@@ -117,6 +137,10 @@ class SoccerRobot(Robot):
         self.cameraBottom = self.getDevice("CameraBottom")
         self.cameraTop.enable(4 * self.timeStep)
         self.cameraBottom.enable(4 * self.timeStep)
+
+        # GPS
+        self.gps = self.getDevice("gps")
+        self.gps.enable(self.timeStep)
 
         # ultrasound sensors
         self.us = []
