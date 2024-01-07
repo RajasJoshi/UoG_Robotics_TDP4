@@ -118,6 +118,10 @@ class SoccerRobot(Robot):
                 self.addMotionToQueue(self.motions.standUpFromFront)
             elif key == Keyboard.DOWN | Keyboard.CONTROL:
                 self.addMotionToQueue(self.motions.standUpFromBack)
+            elif key == Keyboard.ALT:
+                self.addMotionToQueue(self.motions.shoot)
+            elif key == Keyboard.ALT | Keyboard.SHIFT:
+                self.addMotionToQueue(self.motions.longpass)
             # else:
             #     self.addMotionToQueue(self.motions.handWave)
 
