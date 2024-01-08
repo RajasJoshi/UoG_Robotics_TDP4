@@ -10,6 +10,7 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
 import queue
+import struct
 import time
 from threading import Thread
 
@@ -56,11 +57,6 @@ class ImageServer:
                 continue
 
             time.sleep(1 / 30.0)
-
-    def save_image(self, img, filename):
-        image = Image.frombytes("RGB", (self.width, self.height), bytes(img))
-        save_path = f"{self.robot_name}_{self.position}_{filename}"  # Modify this line
-        image.save(save_path)
 
 
 class SoccerRobot(Robot):
@@ -121,20 +117,11 @@ class SoccerRobot(Robot):
             elif key == Keyboard.ALT:
                 self.addMotionToQueue(self.motions.shoot)
             elif key == Keyboard.ALT | Keyboard.SHIFT:
-                self.addMotionToQueue(self.motions.longpass)
+                self.addMotionToQueue(self.motions.longShoot)
             # else:
             #     self.addMotionToQueue(self.motions.handWave)
 
             self.startMotion()
-
-            message_to_send = f"Hello from {self.robotName}!"
-            self.emitter.send(message_to_send.encode("utf-8"))
-
-            # Receive messages
-            while self.receiver.getQueueLength() > 0:
-                message_received = str(self.receiver.getString())
-                # print(f"{self.robotName} received: {message_received}")
-                self.receiver.nextPacket()
 
             try:
                 top_image = self.cameraTop.getImage()
@@ -274,6 +261,70 @@ class SoccerRobot(Robot):
             return self.motions.turnRight40
         else:
             return None
+
+    def printSelf(self) -> None:
+        print("Hello! This is robot ", self.name)
+
+    def getSelfCoordinate(self) -> list:
+        """Get the robot coordinate on the field.
+
+        Returns:
+            list: x, y coordinates.
+        """
+        gps_values = self.gps.getValues()
+        return [gps_values[0], gps_values[1], gps_values[2]]
+
+    def getRollPitchYaw(self) -> list:
+        """Get the Roll, Pitch and Yaw angles of robot.
+
+        Returns:
+            list: Roll, Pitch and Yaw angles.
+        """
+        return self.inertialUnit.getRollPitchYaw()
+
+    def isNewBallDataAvailable(self) -> bool:
+        """Check if there is a new ball data available.
+
+        Returns:
+            bool: Is there any new ball data available?
+        """
+        return self.receiver.getQueueLength() > 0
+
+    def getSupervisorData(self) -> None:
+        """Get the latest supervisor data."""
+        message = self.receiver.getData()
+        self.supervisorData = struct.unpack("dd9cc24d", message)
+        self.receiver.nextPacket()
+
+    def getBallData(self) -> list:
+        """Get the latest coordinates of the ball and robots.
+
+        Returns:
+            list: x, y coordinates.
+        """
+
+        return [self.supervisorData[0], self.supervisorData[1]]
+
+    def getBallOwner(self) -> str:
+        """Get the ball owner team player.
+
+        Returns:
+            str: Ball owner team player.
+        """
+        ballOwner = ""
+        for i in range(2, 11):
+            ballOwner = ballOwner + self.supervisorData[i].decode("utf-8")
+
+        return ballOwner.strip("*")
+
+    def getBallPriority(self) -> str:
+        """Get the ball prior team first letter.
+
+        Returns:
+            str: Ball prior team first letter.
+        """
+
+        return self.supervisorData[11].decode("utf-8")
 
 
 def main():

@@ -12,8 +12,8 @@ WorldInfo {
   gpsCoordinateSystem "WGS84"
 }
 Viewpoint {
-  orientation -0.37267408961923143 0.6185234762871435 0.691767831145786 1.4331150626925215
-  position -3.799750909784539 -3.141020620885895 5.425378065379342
+  orientation -0.37260875301471996 0.7117612170540043 0.5954483076427526 1.442385504585589
+  position 3.7567581152715492 -2.8851984963413555 6.918160563492743
 }
 TexturedBackground {
 }
@@ -22,20 +22,107 @@ TexturedBackgroundLight {
 }
 RobotstadiumSoccerField {
 }
-NaoV6 {
-  translation -3.990627263767298 0.011872947358006798 0.3325529253640347
-  rotation 0.028006784280288816 -0.050893462777210574 -0.9983113119066727 0.0763077355744061
+DEF RedGoalkeeper NaoV6 {
+  translation -4.366480151801764 0.057539156067585404 0.3197032125624308
+  rotation 0.030084283733009906 0.7892179466704543 -0.6133758786629481 0.1240328249952499
   name "RedGoalkeeper"
   controller "RedGoalkeeper"
   jersey NaoJersey {
+    jerseyColor 1 0 0
+  }
+}
+DEF RedDefenderLeft NaoV6 {
+  translation -2.603420414381743 -1.8417749970992363 0.3202959785009802
+  rotation -0.006287061294595251 0.9917133972072779 0.1283160576852253 0.09875118872607049
+  name "RedDefenderLeft"
+  controller "RedDefenderLeft"
+  jersey NaoJersey {
     jerseyTexture [
-      "../protos/textures/nao_jersey_dark_1.png"
+      "../protos/textures/nao_jersey_dark_2.png"
     ]
     jerseyColor 1 0 0
   }
 }
-RobocupSoccerBall {
-  translation 0.016063603269649587 -0.003387944152098204 0.0696782319998707
-  rotation 0.7034643891659695 -0.05724892788109036 0.708421070714173 3.0262787480157196
+DEF RedDefenderRight NaoV6 {
+  translation -2.4862559032167155 1.8638576796159037 0.3202959783044286
+  rotation 0.01603677106265586 0.9448151681495439 -0.3272111245181514 0.10364439158847812
+  name "RedDefenderRight"
+  controller "RedDefenderRight"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_3.png"
+    ]
+    jerseyColor 1 0 0
+  }
+}
+DEF RedForward NaoV6 {
+  translation -0.9122132708972759 0.017135574570700633 0.32029597752050276
+  rotation 0.027071936939679547 0.8331385115694666 -0.5524014217669502 0.11750722981206295
+  name "RedForward"
+  controller "RedForward"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_4.png"
+    ]
+    jerseyColor 1 0 0
+  }
+}
+DEF BlueGoalkeeper NaoV6 {
+  translation 4.398579886381056 -0.005985829446341034 0.3198806930564433
+  rotation -0.04894775263353321 -0.00106291036005865 0.9988007747963019 -3.0982182233115476
+  name "BlueGoalkeeper"
+  controller "BlueGoalkeeper"
+  jersey NaoJersey {
+    jerseyColor 0 0 1
+  }
+}
+DEF BlueDefenderLeft NaoV6 {
+  translation 2.4800866489969065 -1.9427833494757105 0.32029597546491695
+  rotation -0.04894727136743679 0.0037457160523837914 0.9987943403108257 2.9890251567397157
+  name "BlueDefenderLeft"
+  controller "BlueDefenderLeft"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_2.png"
+    ]
+    jerseyColor 0 0 1
+  }
+}
+DEF BlueDefenderRight NaoV6 {
+  translation 2.5531271807273765 1.8067763758432578 0.3202959752202129
+  rotation -0.04894749034026018 0.0022015677835416757 0.9987989268559937 3.0518073129394767
+  name "BlueDefenderRight"
+  controller "BlueDefenderRight"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_3.png"
+    ]
+    jerseyColor 0 0 1
+  }
+}
+DEF BlueForward NaoV6 {
+  translation 0.8537437331388491 -0.05814318321955188 0.3202959746647585
+  rotation -0.04894733740655543 0.0034878990760273255 0.9987952706740477 2.99949042315891
+  name "BlueForward"
+  controller "BlueForward"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_4.png"
+    ]
+    jerseyColor 0 0 1
+  }
+}
+DEF BALL RobocupSoccerBall {
+  translation 0.04068272089088857 -0.017697212149457228 0.06967823204737623
+  rotation 0.7061171684562897 0.08214359694419121 0.7033142781803466 -3.0337383834214533
   name "RobocupSoccerBall"
+}
+DEF SUPERVISOR Robot {
+  children [
+    DEF EMITTER Emitter {
+    }
+  ]
+  name "supervisor"
+  controller "supervisor"
+  supervisor TRUE
 }

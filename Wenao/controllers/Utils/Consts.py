@@ -11,7 +11,7 @@ PI = math.pi
 class Motions:
     def __init__(self):
         self.handWave = MotionBase("handWave", "../../motions/HandWave.motion")
-        self.forwards = MotionBase("forwards", "../../motions/Forwards50")
+        self.forwards = MotionBase("forwards", "../../motions/Forwards50.motion")
         self.forwardsSprint = MotionBase(
             "forwardsSprint", "../../motions/ForwardsSprint.motion"
         )

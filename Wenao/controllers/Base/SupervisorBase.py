@@ -14,7 +14,6 @@ import struct
 
 from controller import Supervisor
 from Utils import Functions
-from Utils.Consts import TIME_STEP
 
 
 class SupervisorBase(Supervisor):
@@ -23,17 +22,17 @@ class SupervisorBase(Supervisor):
 
         self.emitter = self.getDevice("emitter")
 
-        self.ball = self.getDevice("RobocupSoccerBall")
+        self.ball = self.getFromDef("BALL")
 
         self.robots = {
-            "RedGoalkeeper": self.getDevice("RedGoalkeeper"),
-            "RedDefenderLeft": self.getDevice("RedDefenderLeft"),
-            "RedDefenderRight": self.getDevice("RedDefenderRight"),
-            "RedForward": self.getDevice("RedForward"),
-            "BlueGoalkeeper": self.getDevice("BlueGoalkeeper"),
-            "BlueDefenderLeft": self.getDevice("BlueDefenderLeft"),
-            "BlueDefenderRight": self.getDevice("BlueDefenderRight"),
-            "BlueForward": self.getDevice("BlueForward"),
+            "RedGoalkeeper": self.getFromDef("RedGoalkeeper"),
+            "RedDefenderLeft": self.getFromDef("RedDefenderLeft"),
+            "RedDefenderRight": self.getFromDef("RedDefenderRight"),
+            "RedForward": self.getFromDef("RedForward"),
+            "BlueGoalkeeper": self.getFromDef("BlueGoalkeeper"),
+            "BlueDefenderLeft": self.getFromDef("BlueDefenderLeft"),
+            "BlueDefenderRight": self.getFromDef("BlueDefenderRight"),
+            "BlueForward": self.getFromDef("BlueForward"),
         }
 
         self.ballPriority = "R"
@@ -46,8 +45,7 @@ class SupervisorBase(Supervisor):
         Returns:
             list: x, y, z coordinates.
         """
-        ballTranslation = self.ball.getField("translation")
-        newBallLocation = ballTranslation.getSFVec3f()
+        newBallLocation = self.ball.getPosition()
 
         if abs(newBallLocation[0]) < 4.5 and abs(newBallLocation[1]) < 3:
             if (
@@ -78,8 +76,8 @@ class SupervisorBase(Supervisor):
         Returns:
             list: x, y, z coordinates.
         """
-        robotTranslation = self.robots[robotName].getField("translation")
-        return robotTranslation.getSFVec3f()
+        robotTranslation = self.robots[robotName].getPosition()
+        return robotTranslation
 
     def getBallOwner(self) -> str:
         """Calculate the ball owner team from the distances from the ball.
@@ -114,14 +112,14 @@ class SupervisorBase(Supervisor):
         ballOwner = bytes(self.getBallOwner(), "utf-8")
         ballPriority = bytes(self.ballPriority, "utf-8")
 
-        redGk = self.getRobotPosition("RedGoalkeeper")
-        redDefLeft = self.getRobotPosition("RedDefenderLeft")
-        redDefRight = self.getRobotPosition("RedDefenderRight")
-        redFw = self.getRobotPosition("RedForward")
-        blueGk = self.getRobotPosition("BlueGoalkeeper")
-        blueDef = self.getRobotPosition("BlueDefenderLeft")
-        blueFwLeft = self.getRobotPosition("BlueDefenderRight")
-        blueFwRight = self.getRobotPosition("BlueForward")
+        RedGoalkeeper = self.getRobotPosition("RedGoalkeeper")
+        RedDefenderLeft = self.getRobotPosition("RedDefenderLeft")
+        RedDefenderRight = self.getRobotPosition("RedDefenderRight")
+        RedDefenderRight = self.getRobotPosition("RedForward")
+        BlueGoalkeeper = self.getRobotPosition("BlueGoalkeeper")
+        BlueDefenderLeft = self.getRobotPosition("BlueDefenderLeft")
+        BlueDefenderRight = self.getRobotPosition("BlueDefenderRight")
+        BlueForward = self.getRobotPosition("BlueForward")
 
         data = struct.pack(
             "dd9ss24d",
@@ -129,30 +127,30 @@ class SupervisorBase(Supervisor):
             ballPosition[1],
             ballOwner,
             ballPriority,
-            redGk[0],
-            redGk[1],
-            redGk[2],
-            redDefLeft[0],
-            redDefLeft[1],
-            redDefLeft[2],
-            redDefRight[0],
-            redDefRight[1],
-            redDefRight[2],
-            redFw[0],
-            redFw[1],
-            redFw[2],
-            blueGk[0],
-            blueGk[1],
-            blueGk[2],
-            blueDef[0],
-            blueDef[1],
-            blueDef[2],
-            blueFwLeft[0],
-            blueFwLeft[1],
-            blueFwLeft[2],
-            blueFwRight[0],
-            blueFwRight[1],
-            blueFwRight[2],
+            RedGoalkeeper[0],
+            RedGoalkeeper[1],
+            RedGoalkeeper[2],
+            RedDefenderLeft[0],
+            RedDefenderLeft[1],
+            RedDefenderLeft[2],
+            RedDefenderRight[0],
+            RedDefenderRight[1],
+            RedDefenderRight[2],
+            RedDefenderRight[0],
+            RedDefenderRight[1],
+            RedDefenderRight[2],
+            BlueGoalkeeper[0],
+            BlueGoalkeeper[1],
+            BlueGoalkeeper[2],
+            BlueDefenderLeft[0],
+            BlueDefenderLeft[1],
+            BlueDefenderLeft[2],
+            BlueDefenderRight[0],
+            BlueDefenderRight[1],
+            BlueDefenderRight[2],
+            BlueForward[0],
+            BlueForward[1],
+            BlueForward[2],
         )
         self.emitter.send(data)
 

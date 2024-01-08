@@ -6,10 +6,9 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
 from Base.SupervisorBase import SupervisorBase
-from Utils.Consts import TIME_STEP
 
 while True:
     supervisor = SupervisorBase()
-
-    while supervisor.step(TIME_STEP) != -1:
+    timeStep = int(supervisor.getBasicTimeStep())
+    while supervisor.step(supervisor.timeStep) != -1:
         supervisor.sendSupervisorData()
