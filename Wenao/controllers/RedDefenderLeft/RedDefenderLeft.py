@@ -10,7 +10,7 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
 import queue
-import struct
+
 import time
 from threading import Thread
 
@@ -66,7 +66,19 @@ class SoccerRobot(Robot):
         Robot.__init__(self)
         self.robotName = self.getName()
         self.currentlyPlaying = False
-        self.supervisorData = None
+        self.supervisorData = {
+            "ballPosition": [0.0, 0.0],
+            "RedGoalkeeper": [0.0, 0.0, 0.0],
+            "RedDefenderLeft": [0.0, 0.0, 0.0],
+            "RedDefenderRight": [0.0, 0.0, 0.0],
+            "RedForward": [0.0, 0.0, 0.0],
+            "BlueGoalkeeper": [0.0, 0.0, 0.0],
+            "BlueDefenderLeft": [0.0, 0.0, 0.0],
+            "BlueDefenderRight": [0.0, 0.0, 0.0],
+            "BlueForward": [0.0, 0.0, 0.0],
+            # Add more keys for other data as needed
+        }
+
         self.enableDevices()
         # Load motion files
         self.motions = Motions()
@@ -122,6 +134,10 @@ class SoccerRobot(Robot):
             #     self.addMotionToQueue(self.motions.handWave)
 
             self.startMotion()
+
+            if self.isNewBallDataAvailable():
+                self.getSupervisorData()
+                # print("my location:", self.getSelfCoordinate(self.robotName))
 
             try:
                 top_image = self.cameraTop.getImage()
@@ -265,14 +281,16 @@ class SoccerRobot(Robot):
     def printSelf(self) -> None:
         print("Hello! This is robot ", self.name)
 
-    def getSelfCoordinate(self) -> list:
+    def getSelfCoordinate(self, robotName) -> list:
         """Get the robot coordinate on the field.
 
         Returns:
             list: x, y coordinates.
         """
-        gps_values = self.gps.getValues()
-        return [gps_values[0], gps_values[1], gps_values[2]]
+        for key, value in self.supervisorData.items():
+            # Compare search_string with the keys (case-insensitive)
+            if robotName.lower() == key.lower():
+                return value
 
     def getRollPitchYaw(self) -> list:
         """Get the Roll, Pitch and Yaw angles of robot.
@@ -292,9 +310,72 @@ class SoccerRobot(Robot):
 
     def getSupervisorData(self) -> None:
         """Get the latest supervisor data."""
-        message = self.receiver.getData()
-        self.supervisorData = struct.unpack("dd9cc24d", message)
+        data = self.receiver.getString()
+
+        if isinstance(data, bytes):
+            message = data.decode("utf-8")
+        else:
+            message = data
         self.receiver.nextPacket()
+
+        # Split the received string into individual values
+        values = message.split(",")
+
+        # Extract and process received values
+        self.supervisorData["ballPosition"] = [
+            float(values[0]),
+            float(values[1]),
+        ]
+        self.supervisorData["RedGoalkeeper"] = [
+            float(values[2]),
+            float(values[3]),
+            float(values[4]),
+        ]
+        self.supervisorData["RedDefenderLeft"] = [
+            float(values[5]),
+            float(values[6]),
+            float(values[7]),
+        ]
+        self.supervisorData["RedDefenderRight"] = [
+            float(values[8]),
+            float(values[9]),
+            float(values[10]),
+        ]
+        self.supervisorData["RedForward"] = [
+            float(values[11]),
+            float(values[12]),
+            float(values[13]),
+        ]
+        self.supervisorData["BlueGoalkeeper"] = [
+            float(values[14]),
+            float(values[15]),
+            float(values[16]),
+        ]
+        self.supervisorData["BlueDefenderLeft"] = [
+            float(values[17]),
+            float(values[18]),
+            float(values[19]),
+        ]
+        self.supervisorData["BlueDefenderRight"] = [
+            float(values[20]),
+            float(values[21]),
+            float(values[22]),
+        ]
+        self.supervisorData["BlueForward"] = [
+            float(values[23]),
+            float(values[24]),
+            float(values[25]),
+        ]
+
+        # print("Ball Position:", self.supervisorData["ballPosition"])
+        # print("Red Goalkeeper:", self.supervisorData["RedGoalkeeper"])
+        # print("Red Defender Left:", self.supervisorData["RedDefenderLeft"])
+        # print("Red Defender Right:", self.supervisorData["RedDefenderRight"])
+        # print("Red Forward:", self.supervisorData["RedForward"])
+        # print("Blue Goalkeeper:", self.supervisorData["BlueGoalkeeper"])
+        # print("Blue Defender Left:", self.supervisorData["BlueDefenderLeft"])
+        # print("Blue Defender Right:", self.supervisorData["BlueDefenderRight"])
+        # print("Blue Forward:", self.supervisorData["BlueForward"])
 
     def getBallData(self) -> list:
         """Get the latest coordinates of the ball and robots.

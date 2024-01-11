@@ -10,7 +10,6 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
-import struct
 
 from controller import Supervisor
 from Utils import Functions
@@ -109,50 +108,34 @@ class SupervisorBase(Supervisor):
         """Send Data (ballPosition, ballOwner, ballPriority, ...) to Robots. Channel is '0'."""
 
         ballPosition = self.getBallPosition()
-        ballOwner = bytes(self.getBallOwner(), "utf-8")
-        ballPriority = bytes(self.ballPriority, "utf-8")
-
         RedGoalkeeper = self.getRobotPosition("RedGoalkeeper")
         RedDefenderLeft = self.getRobotPosition("RedDefenderLeft")
         RedDefenderRight = self.getRobotPosition("RedDefenderRight")
-        RedDefenderRight = self.getRobotPosition("RedForward")
+        RedForward = self.getRobotPosition("RedForward")
         BlueGoalkeeper = self.getRobotPosition("BlueGoalkeeper")
         BlueDefenderLeft = self.getRobotPosition("BlueDefenderLeft")
         BlueDefenderRight = self.getRobotPosition("BlueDefenderRight")
         BlueForward = self.getRobotPosition("BlueForward")
 
-        data = struct.pack(
-            "dd9ss24d",
-            ballPosition[0],
-            ballPosition[1],
-            ballOwner,
-            ballPriority,
-            RedGoalkeeper[0],
-            RedGoalkeeper[1],
-            RedGoalkeeper[2],
-            RedDefenderLeft[0],
-            RedDefenderLeft[1],
-            RedDefenderLeft[2],
-            RedDefenderRight[0],
-            RedDefenderRight[1],
-            RedDefenderRight[2],
-            RedDefenderRight[0],
-            RedDefenderRight[1],
-            RedDefenderRight[2],
-            BlueGoalkeeper[0],
-            BlueGoalkeeper[1],
-            BlueGoalkeeper[2],
-            BlueDefenderLeft[0],
-            BlueDefenderLeft[1],
-            BlueDefenderLeft[2],
-            BlueDefenderRight[0],
-            BlueDefenderRight[1],
-            BlueDefenderRight[2],
-            BlueForward[0],
-            BlueForward[1],
-            BlueForward[2],
+        # Pack the values into a string to transmit
+
+        message = ",".join(
+            map(
+                str,
+                ballPosition
+                + RedGoalkeeper
+                + RedDefenderLeft
+                + RedDefenderRight
+                + RedForward
+                + BlueGoalkeeper
+                + BlueDefenderLeft
+                + BlueDefenderRight
+                + BlueForward,
+            )
         )
-        self.emitter.send(data)
+
+        # Send the message using the emitter
+        self.emitter.send(message.encode())
 
     def setBallPriority(self, priority):
         self.ballPriority = priority
