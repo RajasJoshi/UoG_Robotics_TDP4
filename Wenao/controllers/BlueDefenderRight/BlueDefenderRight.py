@@ -10,16 +10,13 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
 import queue
-
 import time
 from threading import Thread
 
 import cv2  # Import OpenCV library
 import numpy as np
 from controller import Keyboard, Robot
-from PIL import Image
 from Utils.Consts import Motions
-import matplotlib.pyplot as plt
 
 
 class ImageServer:
@@ -66,8 +63,20 @@ class SoccerRobot(Robot):
         Robot.__init__(self)
         self.robotName = self.getName()
         self.currentlyPlaying = False
-        self.supervisorData = {
-            "ballPosition": [0.0, 0.0],
+        self.supervisorDataPos = {
+            "ballPosition": [0.0, 0.0, 0.0],
+            "RedGoalkeeper": [0.0, 0.0, 0.0],
+            "RedDefenderLeft": [0.0, 0.0, 0.0],
+            "RedDefenderRight": [0.0, 0.0, 0.0],
+            "RedForward": [0.0, 0.0, 0.0],
+            "BlueGoalkeeper": [0.0, 0.0, 0.0],
+            "BlueDefenderLeft": [0.0, 0.0, 0.0],
+            "BlueDefenderRight": [0.0, 0.0, 0.0],
+            "BlueForward": [0.0, 0.0, 0.0],
+            # Add more keys for other data as needed
+        }
+
+        self.supervisorDataRot = {
             "RedGoalkeeper": [0.0, 0.0, 0.0],
             "RedDefenderLeft": [0.0, 0.0, 0.0],
             "RedDefenderRight": [0.0, 0.0, 0.0],
@@ -137,6 +146,10 @@ class SoccerRobot(Robot):
 
             if self.isNewBallDataAvailable():
                 self.getSupervisorData()
+                amIfalling = self.detectFall()
+                if self.isNewMotionValid(amIfalling):
+                    self.addMotionToQueue(amIfalling)
+                    self.startMotion()
                 # print("my location:", self.getSelfCoordinate(self.robotName))
 
             try:
@@ -168,11 +181,11 @@ class SoccerRobot(Robot):
         self.gps.enable(self.timeStep)
 
         # ultrasound sensors
-        self.us = []
-        usNames = ["Sonar/Left", "Sonar/Right"]
-        for i in range(0, len(usNames)):
-            self.us.append(self.getDevice(usNames[i]))
-            self.us[i].enable(self.timeStep)
+        self.ultrasound = []
+        self.ultrasound.append(self.getDevice("Sonar/Left"))
+        self.ultrasound.append(self.getDevice("Sonar/Right"))
+        self.ultrasound[0].enable(self.timeStep)
+        self.ultrasound[1].enable(self.timeStep)
 
         # get phalanx motor tags
         # the real Nao has only 2 motors for RHand/LHand
@@ -287,7 +300,18 @@ class SoccerRobot(Robot):
         Returns:
             list: x, y coordinates.
         """
-        for key, value in self.supervisorData.items():
+        for key, value in self.supervisorDataPos.items():
+            # Compare search_string with the keys (case-insensitive)
+            if robotName.lower() == key.lower():
+                return value
+
+    def getSelfOrientation(self, robotName) -> list:
+        """Get the robot coordinate on the field.
+
+        Returns:
+            list: x, y coordinates.
+        """
+        for key, value in self.supervisorDataRot.items():
             # Compare search_string with the keys (case-insensitive)
             if robotName.lower() == key.lower():
                 return value
@@ -322,60 +346,91 @@ class SoccerRobot(Robot):
         values = message.split(",")
 
         # Extract and process received values
-        self.supervisorData["ballPosition"] = [
+        self.supervisorDataPos["ballPosition"] = [
             float(values[0]),
             float(values[1]),
-        ]
-        self.supervisorData["RedGoalkeeper"] = [
             float(values[2]),
+        ]
+        self.supervisorDataPos["RedGoalkeeper"] = [
             float(values[3]),
             float(values[4]),
-        ]
-        self.supervisorData["RedDefenderLeft"] = [
             float(values[5]),
+        ]
+        self.supervisorDataPos["RedDefenderLeft"] = [
             float(values[6]),
             float(values[7]),
-        ]
-        self.supervisorData["RedDefenderRight"] = [
             float(values[8]),
+        ]
+        self.supervisorDataPos["RedDefenderRight"] = [
             float(values[9]),
             float(values[10]),
-        ]
-        self.supervisorData["RedForward"] = [
             float(values[11]),
+        ]
+        self.supervisorDataPos["RedForward"] = [
             float(values[12]),
             float(values[13]),
-        ]
-        self.supervisorData["BlueGoalkeeper"] = [
             float(values[14]),
+        ]
+        self.supervisorDataPos["BlueGoalkeeper"] = [
             float(values[15]),
             float(values[16]),
-        ]
-        self.supervisorData["BlueDefenderLeft"] = [
             float(values[17]),
+        ]
+        self.supervisorDataPos["BlueDefenderLeft"] = [
             float(values[18]),
             float(values[19]),
-        ]
-        self.supervisorData["BlueDefenderRight"] = [
             float(values[20]),
+        ]
+        self.supervisorDataPos["BlueDefenderRight"] = [
             float(values[21]),
             float(values[22]),
-        ]
-        self.supervisorData["BlueForward"] = [
             float(values[23]),
+        ]
+        self.supervisorDataPos["BlueForward"] = [
             float(values[24]),
             float(values[25]),
+            float(values[26]),
         ]
-
-        # print("Ball Position:", self.supervisorData["ballPosition"])
-        # print("Red Goalkeeper:", self.supervisorData["RedGoalkeeper"])
-        # print("Red Defender Left:", self.supervisorData["RedDefenderLeft"])
-        # print("Red Defender Right:", self.supervisorData["RedDefenderRight"])
-        # print("Red Forward:", self.supervisorData["RedForward"])
-        # print("Blue Goalkeeper:", self.supervisorData["BlueGoalkeeper"])
-        # print("Blue Defender Left:", self.supervisorData["BlueDefenderLeft"])
-        # print("Blue Defender Right:", self.supervisorData["BlueDefenderRight"])
-        # print("Blue Forward:", self.supervisorData["BlueForward"])
+        self.supervisorDataRot["RedGoalkeeper"] = [
+            float(values[27]),
+            float(values[28]),
+            float(values[29]),
+        ]
+        self.supervisorDataRot["RedDefenderLeft"] = [
+            float(values[30]),
+            float(values[31]),
+            float(values[32]),
+        ]
+        self.supervisorDataRot["RedDefenderRight"] = [
+            float(values[33]),
+            float(values[34]),
+            float(values[35]),
+        ]
+        self.supervisorDataRot["RedForward"] = [
+            float(values[36]),
+            float(values[37]),
+            float(values[38]),
+        ]
+        self.supervisorDataRot["BlueGoalkeeper"] = [
+            float(values[39]),
+            float(values[40]),
+            float(values[41]),
+        ]
+        self.supervisorDataRot["BlueDefenderLeft"] = [
+            float(values[42]),
+            float(values[43]),
+            float(values[44]),
+        ]
+        self.supervisorDataRot["BlueDefenderRight"] = [
+            float(values[45]),
+            float(values[46]),
+            float(values[47]),
+        ]
+        self.supervisorDataRot["BlueForward"] = [
+            float(values[48]),
+            float(values[49]),
+            float(values[50]),
+        ]
 
     def getBallData(self) -> list:
         """Get the latest coordinates of the ball and robots.
@@ -406,6 +461,20 @@ class SoccerRobot(Robot):
         """
 
         return self.supervisorData[11].decode("utf-8")
+
+    def detectFall(self):
+        # Fall Detection
+        robotHeightFromGround = self.getSelfCoordinate(self.robotName)[2]
+        if robotHeightFromGround < 0.2:
+            if (
+                self.ultrasound[0].getValue() == 2.55
+                and self.ultrasound[1].getValue() == 2.55
+            ):
+                print("standup from back")
+                return self.motions.standUpFromBack
+            else:
+                print("standup from front")
+                return self.motions.standUpFromFront
 
 
 def main():

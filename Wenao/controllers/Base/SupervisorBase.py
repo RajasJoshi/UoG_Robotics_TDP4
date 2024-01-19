@@ -78,6 +78,15 @@ class SupervisorBase(Supervisor):
         robotTranslation = self.robots[robotName].getPosition()
         return robotTranslation
 
+    def getRobotOrientation(self, robotName) -> list:
+        """Get the robot coordinate on the field.
+
+        Returns:
+            list: x, y, z coordinates.
+        """
+        robotRotation = self.robots[robotName].getOrientation()
+        return robotRotation
+
     def getBallOwner(self) -> str:
         """Calculate the ball owner team from the distances from the ball.
 
@@ -108,14 +117,23 @@ class SupervisorBase(Supervisor):
         """Send Data (ballPosition, ballOwner, ballPriority, ...) to Robots. Channel is '0'."""
 
         ballPosition = self.getBallPosition()
-        RedGoalkeeper = self.getRobotPosition("RedGoalkeeper")
-        RedDefenderLeft = self.getRobotPosition("RedDefenderLeft")
-        RedDefenderRight = self.getRobotPosition("RedDefenderRight")
-        RedForward = self.getRobotPosition("RedForward")
-        BlueGoalkeeper = self.getRobotPosition("BlueGoalkeeper")
-        BlueDefenderLeft = self.getRobotPosition("BlueDefenderLeft")
-        BlueDefenderRight = self.getRobotPosition("BlueDefenderRight")
-        BlueForward = self.getRobotPosition("BlueForward")
+        RedGoalkeeperPos = self.getRobotPosition("RedGoalkeeper")
+        RedDefenderLeftPos = self.getRobotPosition("RedDefenderLeft")
+        RedDefenderRightPos = self.getRobotPosition("RedDefenderRight")
+        RedForwardPos = self.getRobotPosition("RedForward")
+        BlueGoalkeeperPos = self.getRobotPosition("BlueGoalkeeper")
+        BlueDefenderLeftPos = self.getRobotPosition("BlueDefenderLeft")
+        BlueDefenderRightPos = self.getRobotPosition("BlueDefenderRight")
+        BlueForwardPos = self.getRobotPosition("BlueForward")
+
+        RedGoalkeeperRot = self.getRobotOrientation("RedGoalkeeper")
+        RedDefenderLeftRot = self.getRobotOrientation("RedDefenderLeft")
+        RedDefenderRightRot = self.getRobotOrientation("RedDefenderRight")
+        RedForwardRot = self.getRobotOrientation("RedForward")
+        BlueGoalkeeperRot = self.getRobotOrientation("BlueGoalkeeper")
+        BlueDefenderLeftRot = self.getRobotOrientation("BlueDefenderLeft")
+        BlueDefenderRightRot = self.getRobotOrientation("BlueDefenderRight")
+        BlueForwardRot = self.getRobotOrientation("BlueForward")
 
         # Pack the values into a string to transmit
 
@@ -123,14 +141,22 @@ class SupervisorBase(Supervisor):
             map(
                 str,
                 ballPosition
-                + RedGoalkeeper
-                + RedDefenderLeft
-                + RedDefenderRight
-                + RedForward
-                + BlueGoalkeeper
-                + BlueDefenderLeft
-                + BlueDefenderRight
-                + BlueForward,
+                + RedGoalkeeperPos
+                + RedDefenderLeftPos
+                + RedDefenderRightPos
+                + RedForwardPos
+                + BlueGoalkeeperPos
+                + BlueDefenderLeftPos
+                + BlueDefenderRightPos
+                + BlueForwardPos
+                + RedGoalkeeperRot
+                + RedDefenderLeftRot
+                + RedDefenderRightRot
+                + RedForwardRot
+                + BlueGoalkeeperRot
+                + BlueDefenderLeftRot
+                + BlueDefenderRightRot
+                + BlueForwardRot,
             )
         )
 

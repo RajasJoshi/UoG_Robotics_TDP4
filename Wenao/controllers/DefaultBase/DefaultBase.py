@@ -14,7 +14,6 @@ import time
 from threading import Thread
 
 from controller import Keyboard, Motion, Robot
-from PIL import Image
 
 
 class ImageServer:
