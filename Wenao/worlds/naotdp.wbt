@@ -16,6 +16,7 @@ Viewpoint {
   position -0.13822713151077515 -14.77816869988081 7.129375153925527
 }
 TexturedBackground {
+  texture "stadium"
 }
 TexturedBackgroundLight {
   castShadows FALSE

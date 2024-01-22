@@ -11,12 +11,14 @@ sys.path.append(parentdir)
 
 import queue
 import time
+import math
 from threading import Thread
 
 import cv2  # Import OpenCV library
 import numpy as np
 from controller import Keyboard, Robot
 from Utils.Consts import Motions
+from Utils import Functions
 
 
 class ImageServer:
@@ -113,58 +115,58 @@ class SoccerRobot(Robot):
 
     def run(self):
         # until a key is pressed
+        try:
+            while self.step(self.timeStep) != -1:
+                self.clearMotionQueue()
 
-        while self.step(self.timeStep) != -1:
-            self.clearMotionQueue()
+                key = self.keyboard.getKey()
 
-            key = self.keyboard.getKey()
+                if key == Keyboard.LEFT:
+                    self.addMotionToQueue(self.motions.sideStepLeft)
+                elif key == Keyboard.RIGHT:
+                    self.addMotionToQueue(self.motions.sideStepRight)
+                elif key == Keyboard.UP:
+                    self.addMotionToQueue(self.motions.forwards)
+                elif key == Keyboard.DOWN:
+                    self.addMotionToQueue(self.motions.backwards)
+                elif key == Keyboard.LEFT | Keyboard.SHIFT:
+                    self.addMotionToQueue(self.motions.turnLeft60)
+                elif key == Keyboard.RIGHT | Keyboard.SHIFT:
+                    self.addMotionToQueue(self.motions.turnRight60)
+                elif key == Keyboard.UP | Keyboard.CONTROL:
+                    self.addMotionToQueue(self.motions.standUpFromFront)
+                elif key == Keyboard.DOWN | Keyboard.CONTROL:
+                    self.addMotionToQueue(self.motions.standUpFromBack)
+                elif key == Keyboard.ALT:
+                    self.addMotionToQueue(self.motions.shoot)
+                elif key == Keyboard.ALT | Keyboard.SHIFT:
+                    self.addMotionToQueue(self.motions.longShoot)
 
-            if key == Keyboard.LEFT:
-                self.addMotionToQueue(self.motions.sideStepLeft)
-            elif key == Keyboard.RIGHT:
-                self.addMotionToQueue(self.motions.sideStepRight)
-            elif key == Keyboard.UP:
-                self.addMotionToQueue(self.motions.forwards)
-            elif key == Keyboard.DOWN:
-                self.addMotionToQueue(self.motions.backwards)
-            elif key == Keyboard.LEFT | Keyboard.SHIFT:
-                self.addMotionToQueue(self.motions.turnLeft60)
-            elif key == Keyboard.RIGHT | Keyboard.SHIFT:
-                self.addMotionToQueue(self.motions.turnRight60)
-            elif key == Keyboard.UP | Keyboard.CONTROL:
-                self.addMotionToQueue(self.motions.standUpFromFront)
-            elif key == Keyboard.DOWN | Keyboard.CONTROL:
-                self.addMotionToQueue(self.motions.standUpFromBack)
-            elif key == Keyboard.ALT:
-                self.addMotionToQueue(self.motions.shoot)
-            elif key == Keyboard.ALT | Keyboard.SHIFT:
-                self.addMotionToQueue(self.motions.longShoot)
-            # else:
-            #     self.addMotionToQueue(self.motions.handWave)
+                self.startMotion()
 
-            self.startMotion()
+                if self.isNewDataAvailable():
+                    self.getNewSupervisorData()
+                    whatToDoNext = self.NextMotion()
 
-            if self.isNewBallDataAvailable():
-                self.getSupervisorData()
-                amIfalling = self.detectFall()
-                if self.isNewMotionValid(amIfalling):
-                    self.addMotionToQueue(amIfalling)
-                    self.startMotion()
-                # print("my location:", self.getSelfCoordinate(self.robotName))
+                    if self.isNewMotionValid(whatToDoNext):
+                        self.addMotionToQueue(whatToDoNext)
+                        self.startMotion()
 
-            try:
-                top_image = self.cameraTop.getImage()
-                bottom_image = self.cameraBottom.getImage()
+                try:
+                    top_image = self.cameraTop.getImage()
+                    bottom_image = self.cameraBottom.getImage()
 
-                self.TopCamServer.send(top_image)
-                self.BottomCamServer.send(bottom_image)
+                    self.TopCamServer.send(top_image)
+                    self.BottomCamServer.send(bottom_image)
 
-            except ValueError as e:
-                # Handle the exception (e.g., print an error message)
-                print(f"Error getting camera image: {e}")
+                except ValueError as e:
+                    # Handle the exception (e.g., print an error message)
+                    print(f"Error getting camera image: {e}")
 
-            if self.step(self.timeStep) == -1:
-                break
+                if self.step(self.timeStep) == -1:
+                    break
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     def enableDevices(self):
         # get the time step of the current world.
@@ -178,7 +180,15 @@ class SoccerRobot(Robot):
 
         # GPS
         self.gps = self.getDevice("gps")
-        self.gps.enable(self.timeStep)
+        self.gps.enable(4 * self.timeStep)
+
+        # accelerometer
+        self.accelerometer = self.getDevice("accelerometer")
+        self.accelerometer.enable(4 * self.timeStep)
+        
+        # inertial unit
+        self.inertialUnit = self.getDevice('inertial unit')
+        self.inertialUnit.enable(self.timeStep)
 
         # ultrasound sensors
         self.ultrasound = []
@@ -294,7 +304,7 @@ class SoccerRobot(Robot):
     def printSelf(self) -> None:
         print("Hello! This is robot ", self.name)
 
-    def getSelfCoordinate(self, robotName) -> list:
+    def getSelfPosition(self, robotName) -> list:
         """Get the robot coordinate on the field.
 
         Returns:
@@ -324,7 +334,7 @@ class SoccerRobot(Robot):
         """
         return self.inertialUnit.getRollPitchYaw()
 
-    def isNewBallDataAvailable(self) -> bool:
+    def isNewDataAvailable(self) -> bool:
         """Check if there is a new ball data available.
 
         Returns:
@@ -332,7 +342,7 @@ class SoccerRobot(Robot):
         """
         return self.receiver.getQueueLength() > 0
 
-    def getSupervisorData(self) -> None:
+    def getNewSupervisorData(self) -> None:
         """Get the latest supervisor data."""
         data = self.receiver.getString()
 
@@ -439,7 +449,7 @@ class SoccerRobot(Robot):
             list: x, y coordinates.
         """
 
-        return [self.supervisorData[0], self.supervisorData[1]]
+        return self.getSelfPosition("ballPosition")
 
     def getBallOwner(self) -> str:
         """Get the ball owner team player.
@@ -462,19 +472,21 @@ class SoccerRobot(Robot):
 
         return self.supervisorData[11].decode("utf-8")
 
-    def detectFall(self):
+    def NextMotion(self):
         # Fall Detection
-        robotHeightFromGround = self.getSelfCoordinate(self.robotName)[2]
-        if robotHeightFromGround < 0.2:
-            if (
-                self.ultrasound[0].getValue() == 2.55
-                and self.ultrasound[1].getValue() == 2.55
-            ):
-                print("standup from back")
-                return self.motions.standUpFromBack
-            else:
-                print("standup from front")
-                return self.motions.standUpFromFront
+        acc = self.accelerometer.getValues()
+        if (
+            math.fabs(acc[0]) > math.fabs(acc[1])
+            and math.fabs(acc[0]) > math.fabs(acc[2])
+            and acc[0] < -5
+        ):
+            return self.motions.standUpFromFront
+        elif (
+            math.fabs(acc[0]) > math.fabs(acc[1])
+            and math.fabs(acc[0]) > math.fabs(acc[2])
+            and acc[2] > 0
+        ):
+            return self.motions.standUpFromBack
 
 
 def main():
