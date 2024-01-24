@@ -147,7 +147,6 @@ class SoccerRobot(Robot):
                 if self.isNewDataAvailable():
                     self.getNewSupervisorData()
                     whatToDoNext = self.NextMotion()
-
                     if self.isNewMotionValid(whatToDoNext):
                         self.addMotionToQueue(whatToDoNext)
                         self.startMotion()
@@ -185,9 +184,9 @@ class SoccerRobot(Robot):
         # accelerometer
         self.accelerometer = self.getDevice("accelerometer")
         self.accelerometer.enable(4 * self.timeStep)
-        
+
         # inertial unit
-        self.inertialUnit = self.getDevice('inertial unit')
+        self.inertialUnit = self.getDevice("inertial unit")
         self.inertialUnit.enable(self.timeStep)
 
         # ultrasound sensors
@@ -487,6 +486,11 @@ class SoccerRobot(Robot):
             and acc[2] > 0
         ):
             return self.motions.standUpFromBack
+
+        if self.ultrasound[0].getValue() < 0.75:
+            return self.motions.sideStepRight
+        elif self.ultrasound[1].getValue() < 0.75:
+            return self.motions.sideStepLeft
 
 
 def main():
