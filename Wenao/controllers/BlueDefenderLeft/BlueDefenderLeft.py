@@ -441,6 +441,9 @@ class SoccerRobot(Robot):
             float(values[50]),
         ]
 
+        # Extract additional string (assuming it's the last element)
+        ballOwner = values[-1]
+
     def getBallData(self) -> list:
         """Get the latest coordinates of the ball and robots.
 
@@ -487,10 +490,10 @@ class SoccerRobot(Robot):
         ):
             return self.motions.standUpFromBack
 
-        if self.ultrasound[0].getValue() < 0.75:
-            return self.motions.sideStepRight
-        elif self.ultrasound[1].getValue() < 0.75:
-            return self.motions.sideStepLeft
+        if self.ultrasound[0].getValue() < 0.5:
+            return self.motions.sideStepRightLoop
+        elif self.ultrasound[1].getValue() < 0.5:
+            return self.motions.sideStepLeftLoop
 
 
 def main():

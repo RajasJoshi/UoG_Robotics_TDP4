@@ -147,6 +147,7 @@ class SoccerRobot(Robot):
                 if self.isNewDataAvailable():
                     self.getNewSupervisorData()
                     whatToDoNext = self.NextMotion()
+
                     if self.isNewMotionValid(whatToDoNext):
                         self.addMotionToQueue(whatToDoNext)
                         self.startMotion()
@@ -441,6 +442,9 @@ class SoccerRobot(Robot):
             float(values[50]),
         ]
 
+        # Extract additional string (assuming it's the last element)
+        ballOwner = values[-1]
+
     def getBallData(self) -> list:
         """Get the latest coordinates of the ball and robots.
 
@@ -487,10 +491,40 @@ class SoccerRobot(Robot):
         ):
             return self.motions.standUpFromBack
 
-        if self.ultrasound[0].getValue() < 0.75:
-            return self.motions.sideStepRight
-        elif self.ultrasound[1].getValue() < 0.75:
-            return self.motions.sideStepLeft
+        if self.ultrasound[0].getValue() < 0.5:
+            return self.motions.sideStepRightLoop
+        elif self.ultrasound[1].getValue() < 0.5:
+            return self.motions.sideStepLeftLoop
+
+        # Calculate the difference between the current and target positions
+        difference_x = self.getBallData()[0] - self.getSelfPosition(self.robotName)[0]
+        difference_y = self.getBallData()[1] - self.getSelfPosition(self.robotName)[1]
+
+        # Calculate the angle to the target position
+        targetAngle = math.degrees(math.atan2(difference_y, difference_x))
+        robotAngle = math.degrees(self.getRollPitchYaw()[2])
+        turnAngle = targetAngle - robotAngle
+        turnAngle = (turnAngle + 180) % 360 - 180
+
+        if abs(turnAngle) > 10:
+            if turnAngle > 90:
+                return self.motions.turnLeft180
+            elif turnAngle > 50:
+                return self.motions.turnLeft60
+            elif turnAngle > 30:
+                return self.motions.turnLeft40
+            elif turnAngle > 20:
+                return self.motions.turnLeft30
+            elif turnAngle > 10:
+                return self.motions.turnLeft20
+            elif turnAngle < -50:
+                return self.motions.turnRight60
+            elif turnAngle < -30:
+                return self.motions.turnRight40
+            elif turnAngle < -10:
+                return self.motions.turnRight20
+
+        return self.motions.standInit
 
 
 def main():

@@ -442,6 +442,9 @@ class SoccerRobot(Robot):
             float(values[50]),
         ]
 
+        # Extract additional string (assuming it's the last element)
+        self.ballOwner = values[-1]
+
     def getBallData(self) -> list:
         """Get the latest coordinates of the ball and robots.
 
@@ -487,11 +490,11 @@ class SoccerRobot(Robot):
             and acc[2] > 0
         ):
             return self.motions.standUpFromBack
-        
-        if self.ultrasound[0].getValue() < 0.75:
-            return self.motions.sideStepRight
-        elif self.ultrasound[1].getValue() < 0.75:
-            return self.motions.sideStepLeft
+
+        if self.ultrasound[0].getValue() < 0.5:
+            return self.motions.sideStepRightLoop
+        elif self.ultrasound[1].getValue() < 0.5:
+            return self.motions.sideStepLeftLoop
 
         # Calculate the difference between the current and target positions
         difference_x = self.getBallData()[0] - self.getSelfPosition(self.robotName)[0]
@@ -512,19 +515,24 @@ class SoccerRobot(Robot):
                 return self.motions.turnLeft40
             elif turnAngle > 20:
                 return self.motions.turnLeft30
+            elif turnAngle > 10:
+                return self.motions.turnLeft20
             elif turnAngle < -50:
                 return self.motions.turnRight60
             elif turnAngle < -30:
                 return self.motions.turnRight40
+            elif turnAngle < -10:
+                return self.motions.turnRight20
 
         # Calculate the distance to the goal position
         distance = Functions.calculateDistance(
             self.getBallData(), self.getSelfPosition(self.robotName)
         )
-        if distance <= 0.25:
-            return self.motions.longShoot
 
-        return self.motions.forwards50
+        if distance <= 0.25:
+            return self.motions.standInit
+
+        return self.motions.forwardLoop
 
 
 def main():

@@ -116,47 +116,29 @@ class SupervisorBase(Supervisor):
     def sendSupervisorData(self) -> None:
         """Send Data (ballPosition, ballOwner, ballPriority, ...) to Robots. Channel is '0'."""
 
-        ballPosition = self.getBallPosition()
-        RedGoalkeeperPos = self.getRobotPosition("RedGoalkeeper")
-        RedDefenderLeftPos = self.getRobotPosition("RedDefenderLeft")
-        RedDefenderRightPos = self.getRobotPosition("RedDefenderRight")
-        RedForwardPos = self.getRobotPosition("RedForward")
-        BlueGoalkeeperPos = self.getRobotPosition("BlueGoalkeeper")
-        BlueDefenderLeftPos = self.getRobotPosition("BlueDefenderLeft")
-        BlueDefenderRightPos = self.getRobotPosition("BlueDefenderRight")
-        BlueForwardPos = self.getRobotPosition("BlueForward")
-
-        RedGoalkeeperRot = self.getRobotOrientation("RedGoalkeeper")
-        RedDefenderLeftRot = self.getRobotOrientation("RedDefenderLeft")
-        RedDefenderRightRot = self.getRobotOrientation("RedDefenderRight")
-        RedForwardRot = self.getRobotOrientation("RedForward")
-        BlueGoalkeeperRot = self.getRobotOrientation("BlueGoalkeeper")
-        BlueDefenderLeftRot = self.getRobotOrientation("BlueDefenderLeft")
-        BlueDefenderRightRot = self.getRobotOrientation("BlueDefenderRight")
-        BlueForwardRot = self.getRobotOrientation("BlueForward")
-
         # Pack the values into a string to transmit
 
         message = ",".join(
             map(
                 str,
-                ballPosition
-                + RedGoalkeeperPos
-                + RedDefenderLeftPos
-                + RedDefenderRightPos
-                + RedForwardPos
-                + BlueGoalkeeperPos
-                + BlueDefenderLeftPos
-                + BlueDefenderRightPos
-                + BlueForwardPos
-                + RedGoalkeeperRot
-                + RedDefenderLeftRot
-                + RedDefenderRightRot
-                + RedForwardRot
-                + BlueGoalkeeperRot
-                + BlueDefenderLeftRot
-                + BlueDefenderRightRot
-                + BlueForwardRot,
+                self.getBallPosition()
+                + self.getRobotPosition("RedGoalkeeper")
+                + self.getRobotPosition("RedDefenderLeft")
+                + self.getRobotPosition("RedDefenderRight")
+                + self.getRobotPosition("RedForward")
+                + self.getRobotPosition("BlueGoalkeeper")
+                + self.getRobotPosition("BlueDefenderLeft")
+                + self.getRobotPosition("BlueDefenderRight")
+                + self.getRobotPosition("BlueForward")
+                + self.getRobotOrientation("RedGoalkeeper")
+                + self.getRobotOrientation("RedDefenderLeft")
+                + self.getRobotOrientation("RedDefenderRight")
+                + self.getRobotOrientation("RedForward")
+                + self.getRobotOrientation("BlueGoalkeeper")
+                + self.getRobotOrientation("BlueDefenderLeft")
+                + self.getRobotOrientation("BlueDefenderRight")
+                + self.getRobotOrientation("BlueForward")
+                + [self.getBallOwner()],
             )
         )
 

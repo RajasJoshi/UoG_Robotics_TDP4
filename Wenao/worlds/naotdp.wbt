@@ -22,6 +22,8 @@ TexturedBackgroundLight {
   castShadows FALSE
 }
 RobotstadiumSoccerField {
+  frame1Color 0 0 1
+  frame2Color 1 0 0
 }
 DEF RedGoalkeeper NaoV6 {
   translation -4.366480151801764 0.057539156067585404 0.3197032125624308
