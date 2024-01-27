@@ -13,6 +13,7 @@ import queue
 import time
 import math
 from threading import Thread
+from enum import Enum
 
 import cv2  # Import OpenCV library
 import numpy as np
@@ -49,11 +50,19 @@ class ImageServer:
                     (self.height, self.width, 4)
                 )
                 # Display the image using OpenCV
-                cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
-                cv2.waitKey(1)
+                # cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
+                # cv2.waitKey(1)
                 self.queue.task_done()
             except queue.Empty:
                 continue
+
+
+class RobotState(Enum):
+    INIT = 0
+    MOVE_TO_GOAL = 1
+    MOVE_TO_BALL = 2
+    SAVE_THE_BALL = 3
+    LOOK_THE_BALL = 3
 
 
 class SoccerRobot(Robot):
@@ -76,17 +85,9 @@ class SoccerRobot(Robot):
             # Add more keys for other data as needed
         }
 
-        self.supervisorDataRot = {
-            "RedGoalkeeper": [0.0, 0.0, 0.0],
-            "RedDefenderLeft": [0.0, 0.0, 0.0],
-            "RedDefenderRight": [0.0, 0.0, 0.0],
-            "RedForward": [0.0, 0.0, 0.0],
-            "BlueGoalkeeper": [0.0, 0.0, 0.0],
-            "BlueDefenderLeft": [0.0, 0.0, 0.0],
-            "BlueDefenderRight": [0.0, 0.0, 0.0],
-            "BlueForward": [0.0, 0.0, 0.0],
-            # Add more keys for other data as needed
-        }
+        self.AppState = RobotState.INIT
+        self.nextAppState = RobotState.INIT
+        self.StartLocation = [2.5531271807273765, 1.8067763758432578]
 
         self.enableDevices()
         # Load motion files
@@ -145,6 +146,7 @@ class SoccerRobot(Robot):
                 if self.isNewDataAvailable():
                     self.getNewSupervisorData()
                     whatToDoNext = self.NextMotion()
+
                     if self.isNewMotionValid(whatToDoNext):
                         self.addMotionToQueue(whatToDoNext)
                         self.startMotion()
@@ -312,17 +314,6 @@ class SoccerRobot(Robot):
             if robotName.lower() == key.lower():
                 return value
 
-    def getSelfOrientation(self, robotName) -> list:
-        """Get the robot coordinate on the field.
-
-        Returns:
-            list: x, y coordinates.
-        """
-        for key, value in self.supervisorDataRot.items():
-            # Compare search_string with the keys (case-insensitive)
-            if robotName.lower() == key.lower():
-                return value
-
     def getRollPitchYaw(self) -> list:
         """Get the Roll, Pitch and Yaw angles of robot.
 
@@ -398,46 +389,6 @@ class SoccerRobot(Robot):
             float(values[25]),
             float(values[26]),
         ]
-        self.supervisorDataRot["RedGoalkeeper"] = [
-            float(values[27]),
-            float(values[28]),
-            float(values[29]),
-        ]
-        self.supervisorDataRot["RedDefenderLeft"] = [
-            float(values[30]),
-            float(values[31]),
-            float(values[32]),
-        ]
-        self.supervisorDataRot["RedDefenderRight"] = [
-            float(values[33]),
-            float(values[34]),
-            float(values[35]),
-        ]
-        self.supervisorDataRot["RedForward"] = [
-            float(values[36]),
-            float(values[37]),
-            float(values[38]),
-        ]
-        self.supervisorDataRot["BlueGoalkeeper"] = [
-            float(values[39]),
-            float(values[40]),
-            float(values[41]),
-        ]
-        self.supervisorDataRot["BlueDefenderLeft"] = [
-            float(values[42]),
-            float(values[43]),
-            float(values[44]),
-        ]
-        self.supervisorDataRot["BlueDefenderRight"] = [
-            float(values[45]),
-            float(values[46]),
-            float(values[47]),
-        ]
-        self.supervisorDataRot["BlueForward"] = [
-            float(values[48]),
-            float(values[49]),
-            float(values[50]),
-        ]
 
         # Extract additional string (assuming it's the last element)
         ballOwner = values[-1]
@@ -492,6 +443,93 @@ class SoccerRobot(Robot):
             return self.motions.sideStepRightLoop
         elif self.ultrasound[1].getValue() < 0.5:
             return self.motions.sideStepLeftLoop
+
+        # Get the current position
+        currentPosition = self.getSelfPosition(self.robotName)
+
+        match self.AppState:
+            case RobotState.INIT:
+                # Calculate the distance to the goal position
+                distance = Functions.calculateDistance(
+                    self.StartLocation, self.getSelfPosition(self.robotName)
+                )
+
+                if distance <= 0.2:
+                    self.AppState = RobotState.LOOK_THE_BALL
+                    return self.motions.standInit
+                else:
+                    # Calculate the angle to the target position
+                    dx, dy = (
+                        self.StartLocation[0] - currentPosition[0],
+                        self.StartLocation[1] - currentPosition[1],
+                    )
+                    targetAngle = math.degrees(math.atan2(dy, dx))
+
+                    # Get the robot's orientation angle
+                    robotAngle = math.degrees(self.getRollPitchYaw()[2])
+
+                    # Calculate the turn angle in the range [-180, 180)
+                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+                    if abs(turnAngle) > 10:
+                        if turnAngle > 90:
+                            return self.motions.turnLeft180
+                        elif turnAngle > 50:
+                            return self.motions.turnLeft60
+                        elif turnAngle > 30:
+                            return self.motions.turnLeft40
+                        elif turnAngle > 20:
+                            return self.motions.turnLeft30
+                        elif turnAngle > 10:
+                            return self.motions.turnLeft20
+                        elif turnAngle < -50:
+                            return self.motions.turnRight60
+                        elif turnAngle < -30:
+                            return self.motions.turnRight40
+                        elif turnAngle < -10:
+                            return self.motions.turnRight20
+
+                return self.motions.forwardsSprint
+
+            case RobotState.LOOK_THE_BALL:
+                # Calculate the angle to the target position
+                dx, dy = (
+                    self.getBallData()[0] - currentPosition[0],
+                    self.getBallData()[1] - currentPosition[1],
+                )
+                targetAngle = math.degrees(math.atan2(dy, dx))
+
+                # Get the robot's orientation angle
+                robotAngle = math.degrees(self.getRollPitchYaw()[2])
+
+                # Calculate the turn angle in the range [-180, 180)
+                turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+
+                if abs(turnAngle) > 10:
+                    if turnAngle > 90:
+                        return self.motions.turnLeft180
+                    elif turnAngle > 50:
+                        return self.motions.turnLeft60
+                    elif turnAngle > 30:
+                        return self.motions.turnLeft40
+                    elif turnAngle > 20:
+                        return self.motions.turnLeft30
+                    elif turnAngle > 10:
+                        return self.motions.turnLeft20
+                    elif turnAngle < -50:
+                        return self.motions.turnRight60
+                    elif turnAngle < -30:
+                        return self.motions.turnRight40
+                    elif turnAngle < -10:
+                        return self.motions.turnRight20
+
+                return self.motions.standInit
+
+            case RobotState.MOVE_TO_GOAL:
+                print("Move to the ball")
+            case _:
+                self.nextAppState = RobotState.INIT
+
+        self.AppState = self.nextAppState
 
 
 def main():
