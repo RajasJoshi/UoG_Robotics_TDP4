@@ -19,6 +19,7 @@ import numpy as np
 from controller import Keyboard, Robot
 from Utils.Consts import Motions
 from Utils import Functions
+from ultralytics import YOLO
 
 
 class ImageServer:
@@ -29,7 +30,7 @@ class ImageServer:
         self.robot_name = robot_name
         self.position = position
         self.running = True
-
+        self.model = YOLO("../Utils/best.pt")
         self.queue = queue.Queue(maxsize=3)
         self.thread = Thread(target=self.run, daemon=True)
         self.thread.start()
@@ -44,18 +45,46 @@ class ImageServer:
     def run(self):
         while self.running:
             try:
-                img = self.queue.get(timeout=0.1)
-                cvimg = np.frombuffer(img, dtype=np.uint8).reshape(
+                frame = self.queue.get(timeout=0.1)
+                frame = np.frombuffer(frame, dtype=np.uint8).reshape(
                     (self.height, self.width, 4)
                 )
+
+                # Perform some OpenCV operations (e.g., grayscale conversion)
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+                results = self.model.predict(frame)[
+                    0
+                ]  # Example: Display the grayscale image
+                threshold = 0.5
+
+                for result in results.boxes.data.tolist():
+                    x1, y1, x2, y2, score, class_id = result
+
+                    if score > threshold:
+                        cv2.rectangle(
+                            frame,
+                            (int(x1), int(y1)),
+                            (int(x2), int(y2)),
+                            (0, 255, 0),
+                            4,
+                        )
+                        cv2.putText(
+                            frame,
+                            results.names[int(class_id)].upper(),
+                            (int(x1), int(y1 - 10)),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            1.3,
+                            (0, 255, 0),
+                            3,
+                            cv2.LINE_AA,
+                        )
                 # Display the image using OpenCV
-                cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
+                cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", frame)
                 cv2.waitKey(1)
                 self.queue.task_done()
             except queue.Empty:
                 continue
-
-            time.sleep(1 / 30.0)
 
 
 class SoccerRobot(Robot):

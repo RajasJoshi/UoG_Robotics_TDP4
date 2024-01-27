@@ -55,8 +55,6 @@ class ImageServer:
             except queue.Empty:
                 continue
 
-            time.sleep(1 / 30.0)
-
 
 class SoccerRobot(Robot):
     PHALANX_MAX = 8
