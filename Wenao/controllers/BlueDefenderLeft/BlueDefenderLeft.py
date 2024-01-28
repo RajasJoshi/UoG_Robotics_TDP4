@@ -17,7 +17,7 @@ from enum import Enum
 
 import cv2  # Import OpenCV library
 import numpy as np
-from controller import Keyboard, Robot
+from controller import Robot
 from Utils.Consts import Motions
 from Utils import Functions
 
@@ -72,18 +72,30 @@ class SoccerRobot(Robot):
         Robot.__init__(self)
         self.robotName = self.getName()
         self.currentlyPlaying = False
-        self.supervisorDataPos = {
-            "ballPosition": [0.0, 0.0, 0.0],
-            "RedGoalkeeper": [0.0, 0.0, 0.0],
-            "RedDefenderLeft": [0.0, 0.0, 0.0],
-            "RedDefenderRight": [0.0, 0.0, 0.0],
-            "RedForward": [0.0, 0.0, 0.0],
-            "BlueGoalkeeper": [0.0, 0.0, 0.0],
-            "BlueDefenderLeft": [0.0, 0.0, 0.0],
-            "BlueDefenderRight": [0.0, 0.0, 0.0],
-            "BlueForward": [0.0, 0.0, 0.0],
-            # Add more keys for other data as needed
+        self.supervisorData = {
+            "time": 0,
+            "ballPriority": "",
+            "ballOwner": "",
+            "ballPosition": [0, 0, 0],
+            "RedGoalkeeper": [0, 0, 0],
+            "RedDefenderLeft": [0, 0, 0],
+            "RedDefenderRight": [0, 0, 0],
+            "RedForward": [0, 0, 0],
+            "BlueGoalkeeper": [0, 0, 0],
+            "BlueDefenderLeft": [0, 0, 0],
+            "BlueDefenderRight": [0, 0, 0],
+            "BlueForward": [0, 0, 0],
         }
+        self.ROassistantS = [
+            "RedGoalkeeper",
+            "RedDefenderLeft",
+            "RedDefenderRight",
+            "RedForward",
+            "BlueGoalkeeper",
+            "BlueDefenderLeft",
+            "BlueDefenderRight",
+            "BlueForward",
+        ]
 
         self.AppState = RobotState.INIT
         self.nextAppState = RobotState.INIT
@@ -113,35 +125,9 @@ class SoccerRobot(Robot):
         )
 
     def run(self):
-        # until a key is pressed
         try:
             while self.step(self.timeStep) != -1:
                 self.clearMotionQueue()
-
-                key = self.keyboard.getKey()
-
-                if key == Keyboard.LEFT:
-                    self.addMotionToQueue(self.motions.sideStepLeft)
-                elif key == Keyboard.RIGHT:
-                    self.addMotionToQueue(self.motions.sideStepRight)
-                elif key == Keyboard.UP:
-                    self.addMotionToQueue(self.motions.forwards)
-                elif key == Keyboard.DOWN:
-                    self.addMotionToQueue(self.motions.backwards)
-                elif key == Keyboard.LEFT | Keyboard.SHIFT:
-                    self.addMotionToQueue(self.motions.turnLeft60)
-                elif key == Keyboard.RIGHT | Keyboard.SHIFT:
-                    self.addMotionToQueue(self.motions.turnRight60)
-                elif key == Keyboard.UP | Keyboard.CONTROL:
-                    self.addMotionToQueue(self.motions.standUpFromFront)
-                elif key == Keyboard.DOWN | Keyboard.CONTROL:
-                    self.addMotionToQueue(self.motions.standUpFromBack)
-                elif key == Keyboard.ALT:
-                    self.addMotionToQueue(self.motions.shoot)
-                elif key == Keyboard.ALT | Keyboard.SHIFT:
-                    self.addMotionToQueue(self.motions.longShoot)
-
-                self.startMotion()
 
                 if self.isNewDataAvailable():
                     self.getNewSupervisorData()
@@ -289,19 +275,24 @@ class SoccerRobot(Robot):
         Returns:
             Motion: Decided motion.
         """
-        if turningAngle > 50:
+        if turningAngle > 90:
+            return self.motions.turnLeft180
+        elif turningAngle > 50:
             return self.motions.turnLeft60
+        elif turningAngle > 30:
+            return self.motions.turnLeft40
         elif turningAngle > 20:
             return self.motions.turnLeft30
+        elif turningAngle > 10:
+            return self.motions.turnLeft20
         elif turningAngle < -50:
             return self.motions.turnRight60
         elif turningAngle < -30:
             return self.motions.turnRight40
+        elif turningAngle < -10:
+            return self.motions.turnRight20
         else:
             return None
-
-    def printSelf(self) -> None:
-        print("Hello! This is robot ", self.name)
 
     def getSelfPosition(self, robotName) -> list:
         """Get the robot coordinate on the field.
@@ -309,7 +300,7 @@ class SoccerRobot(Robot):
         Returns:
             list: x, y coordinates.
         """
-        for key, value in self.supervisorDataPos.items():
+        for key, value in self.supervisorData.items():
             # Compare search_string with the keys (case-insensitive)
             if robotName.lower() == key.lower():
                 return value
@@ -344,54 +335,15 @@ class SoccerRobot(Robot):
         values = message.split(",")
 
         # Extract and process received values
-        self.supervisorDataPos["ballPosition"] = [
-            float(values[0]),
-            float(values[1]),
-            float(values[2]),
-        ]
-        self.supervisorDataPos["RedGoalkeeper"] = [
-            float(values[3]),
-            float(values[4]),
-            float(values[5]),
-        ]
-        self.supervisorDataPos["RedDefenderLeft"] = [
-            float(values[6]),
-            float(values[7]),
-            float(values[8]),
-        ]
-        self.supervisorDataPos["RedDefenderRight"] = [
-            float(values[9]),
-            float(values[10]),
-            float(values[11]),
-        ]
-        self.supervisorDataPos["RedForward"] = [
-            float(values[12]),
-            float(values[13]),
-            float(values[14]),
-        ]
-        self.supervisorDataPos["BlueGoalkeeper"] = [
-            float(values[15]),
-            float(values[16]),
-            float(values[17]),
-        ]
-        self.supervisorDataPos["BlueDefenderLeft"] = [
-            float(values[18]),
-            float(values[19]),
-            float(values[20]),
-        ]
-        self.supervisorDataPos["BlueDefenderRight"] = [
-            float(values[21]),
-            float(values[22]),
-            float(values[23]),
-        ]
-        self.supervisorDataPos["BlueForward"] = [
-            float(values[24]),
-            float(values[25]),
-            float(values[26]),
-        ]
+        self.supervisorData["time"] = float(values[0])
+        self.supervisorData["ballPriority"] = values[1]
+        self.supervisorData["ballOwner"] = values[2]
+        self.supervisorData["ballPosition"] = [float(values[i]) for i in range(3, 6)]
 
-        # Extract additional string (assuming it's the last element)
-        ballOwner = values[-1]
+        for i, robot in enumerate(self.ROassistantS):
+            self.supervisorData[robot] = [
+                float(values[j]) for j in range(6 + i * 3, 9 + i * 3)
+            ]
 
     def getBallData(self) -> list:
         """Get the latest coordinates of the ball and robots.
@@ -471,24 +423,9 @@ class SoccerRobot(Robot):
                     # Calculate the turn angle in the range [-180, 180)
                     turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
                     if abs(turnAngle) > 10:
-                        if turnAngle > 90:
-                            return self.motions.turnLeft180
-                        elif turnAngle > 50:
-                            return self.motions.turnLeft60
-                        elif turnAngle > 30:
-                            return self.motions.turnLeft40
-                        elif turnAngle > 20:
-                            return self.motions.turnLeft30
-                        elif turnAngle > 10:
-                            return self.motions.turnLeft20
-                        elif turnAngle < -50:
-                            return self.motions.turnRight60
-                        elif turnAngle < -30:
-                            return self.motions.turnRight40
-                        elif turnAngle < -10:
-                            return self.motions.turnRight20
+                        return self.getTurningMotion(turnAngle)
 
-                return self.motions.forwardsSprint
+                return self.motions.forwardLoop
 
             case RobotState.LOOK_THE_BALL:
                 # Calculate the angle to the target position
@@ -505,22 +442,7 @@ class SoccerRobot(Robot):
                 turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
 
                 if abs(turnAngle) > 10:
-                    if turnAngle > 90:
-                        return self.motions.turnLeft180
-                    elif turnAngle > 50:
-                        return self.motions.turnLeft60
-                    elif turnAngle > 30:
-                        return self.motions.turnLeft40
-                    elif turnAngle > 20:
-                        return self.motions.turnLeft30
-                    elif turnAngle > 10:
-                        return self.motions.turnLeft20
-                    elif turnAngle < -50:
-                        return self.motions.turnRight60
-                    elif turnAngle < -30:
-                        return self.motions.turnRight40
-                    elif turnAngle < -10:
-                        return self.motions.turnRight20
+                    return self.getTurningMotion(turnAngle)
 
                 return self.motions.standInit
 
