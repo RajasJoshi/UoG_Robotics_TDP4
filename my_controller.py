@@ -2,7 +2,11 @@
 
 # You may need to import some classes of the controller module. Ex:
 #  from controller import Robot, Motor, DistanceSensor
+import pip
+pip.main(['install', 'lapx>=0.5.2'])
+
 from controller import Robot
+from collections import defaultdict
 import cv2
 import numpy as np
 from ultralytics import YOLO
@@ -16,6 +20,9 @@ cameraTop = robot.getDevice('CameraTop')
 cameraBot = robot.getDevice('CameraBottom')
 cameraBot.enable(timestep)
 cameraTop.enable(timestep)
+
+track_history = defaultdict(lambda: [])
+track = []
 
 # You should insert a getDevice-like function in order to get the
 # instance of a device of the robot. Something like:
@@ -37,17 +44,36 @@ while robot.step(timestep) != -1:
     
     model = YOLO('/Users/sovikghosh/Desktop/best.pt')
 
-    results = model.predict(frame)[0]# Example: Display the grayscale image
-    threshold = 0.5
-    
-    for result in results.boxes.data.tolist():
-        x1, y1, x2, y2, score, class_id = result
+    results = model.track(frame, persist=True)
 
-        if score > threshold:
-            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 4)
-            cv2.putText(frame, results.names[int(class_id)].upper(), (int(x1), int(y1 - 10)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3, cv2.LINE_AA)
-    cv2.imshow('FRAME',frame)
-    cv2.waitKey(1)
+    # Get the boxes and track IDs
+    boxes = results[0].boxes.xywh.cpu()
+    names = results[0].names
+    track_ids = results[0].boxes.id.int().cpu().tolist()
+    clss = results[0].boxes.cls.cpu().tolist()
 
+    # Visualize the results on the frame
+    annotated_frame = results[0].plot()
+
+    # Plot the tracks
+    for box, clss, track_id in zip(boxes, clss, track_ids):
+        x, y, w, h = box
+        if names[clss] == 'Ball':
+            track = track_history[track_id]
+            track.append((float(x), float(y)))  # x, y center point
+            if len(track) > 30:  # retain 90 tracks for 90 frames
+                track.pop(0)
+
+        # Draw the tracking lines
+        if track:
+            points = np.hstack(track).astype(np.int32).reshape((-1, 1, 2))
+            cv2.polylines(annotated_frame, [points], isClosed=False, color=(230, 230, 230), thickness=10)
+        else: pass
+
+    # Display the annotated frame
+    cv2.imshow("YOLOv8 Tracking", annotated_frame)
+
+    # Break the loop if 'q' is pressed
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
 cv2.destroyAllWindows()
