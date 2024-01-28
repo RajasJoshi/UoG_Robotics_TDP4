@@ -71,7 +71,11 @@ while robot.step(timestep) != -1:
         else: pass
 
     # Display the annotated frame
-    cv2.imshow("YOLOv8 Tracking", annotated_frame)
+    cv2.namedWindow('Window', cv2.WINDOW_NORMAL)
+
+    # Resize the window to your desired size
+    cv2.resizeWindow('Window', 400, 300) 
+    cv2.imshow("Window", annotated_frame)
 
     # Break the loop if 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord("q"):
