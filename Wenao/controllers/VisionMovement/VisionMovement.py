@@ -5,7 +5,7 @@ All robots should be derived from this class.
 import os
 import sys
 
-currentdir = os.path.dirname(os.path.realpath(_file_))
+currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
@@ -26,7 +26,7 @@ from Utils import Functions
 
 
 class ImageServer:
-    def _init_(self, width, height, camera, robot_name, position):
+    def __init__(self, width, height, camera, robot_name, position):
         self.camera = camera  # camera
         self.width = width
         self.height = height
@@ -35,10 +35,18 @@ class ImageServer:
         self.running = True
         self.track_history = defaultdict(lambda: [])
         self.track = []
-        self.model = YOLO("../Utils/best.pt")
+        self.model = YOLO("../Utils/best.pt",verbose=False)
         self.queue = queue.Queue(maxsize=3)
         self.thread = Thread(target=self.run, daemon=True)
         self.thread.start()
+        
+        # Ball distance Parameters
+        self.ball_diameter = 0.48 #meters
+        self.vertical_fov = 47.64 #degrees
+        self.horizontal_fov = 60.97 #degrees
+
+        self.distance_at_100_vfov = (self.ball_diameter / 2) / np.tan(np.deg2rad(self.vertical_fov/2))
+        self.distance_at_100_hfov = (self.ball_diameter / 2) / np.tan(np.deg2rad(self.horizontal_fov/2))
 
     def send(self, image):
         self.queue.put(image)
@@ -46,55 +54,56 @@ class ImageServer:
     def stop(self):
         self.running = False
         self.thread.join()
+        
+
+       
+
+        
+    def ball_distance(self, ball_width):
+        #focal_length = (ball_width * supervisor_distance) / self.ball_diameter
+        #this is a paramter that has been tuned to webots and needs to be retuned for the real robot
+        focal_length = 196
+        distance = self.ball_diameter * focal_length / ball_width
+        print(f'focal_length_distance: {distance}')
+        
+    def ball_heading(self, ball_center_x, ball_center_y):
+        y = self.height - ball_center_y
+        x = ball_center_x - self.width/2
+        angle = np.arctan2(x, y)
+        print(f'angle: {np.rad2deg(angle)}')
+        
 
     def run(self):
         while self.running:
             try:
                 img = self.queue.get(timeout=0.1)
-                cvimg = np.frombuffer(img, dtype=np.uint8).reshape(
-                    (self.height, self.width, 4)
-                )
-                # Perform some OpenCV operations (e.g., grayscale conversion)
+                cvimg = np.frombuffer(img, dtype=np.uint8).reshape((self.height, self.width, 4))
+                
                 frame = cv2.cvtColor(cvimg, cv2.COLOR_BGR2RGB)
+                if self.position == "Top":
+                    results = self.model.predict(frame,verbose=False)[0]
+                    threshold = 0.5
+                    
+                    for result in results.boxes.data.tolist():
+                        x1, y1, x2, y2, score, class_id = result
 
-                results = self.model.track(frame, persist=True)
+                        if score > threshold:
+                            if results.names[int(class_id)] == 'Ball':
+                                ball_width = y2 - y1
+                                ball_center_x = (x1 + x2) / 2
+                                ball_center_y = (y1 + y2) / 2
+                                self.ball_distance(ball_width)
+                                self.ball_heading(ball_center_x, ball_center_y)
+   
+                                
 
-                # Get the boxes and track IDs
-                boxes = results[0].boxes.xywh.cpu()
-                names = results[0].names
-                track_ids = results[0].boxes.id.int().cpu().tolist()
-                clss = results[0].boxes.cls.cpu().tolist()
 
-                # Visualize the results on the frame
-                annotated_frame = results[0].plot()
-
-                # Plot the tracks
-                for box, clss, track_id in zip(boxes, clss, track_ids):
-                    x, y, w, h = box
-                    if names[clss] == "Ball":
-                        track = self.track_history[track_id]
-                        track.append((float(x), float(y)))  # x, y center point
-                        if len(track) > 30:  # retain 90 tracks for 90 frames
-                            track.pop(0)
-
-                    # Draw the tracking lines
-                    if track:
-                        points = np.hstack(track).astype(np.int32).reshape((-1, 1, 2))
-                        cv2.polylines(
-                            annotated_frame,
-                            [points],
-                            isClosed=False,
-                            color=(230, 230, 230),
-                            thickness=10,
-                        )
-                    else:
-                        pass
-                # Display the image using OpenCV
-                cv2.imshow(
-                    f"Image Stream - {self.robot_name} - {self.position}",
-                    cvimg,
-                )
-                cv2.waitKey(1)
+                            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 4)
+                            cv2.putText(frame, results.names[int(class_id)].upper(), (int(x1), int(y1 - 10)),
+                                        cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3, cv2.LINE_AA)
+                
+                    cv2.imshow('FRAME',frame)
+                    cv2.waitKey(1)
                 self.queue.task_done()
             except queue.Empty:
                 continue
@@ -109,8 +118,8 @@ class RobotState(Enum):
 class SoccerRobot(Robot):
     PHALANX_MAX = 8
 
-    def _init_(self):
-        Robot._init_(self)
+    def __init__(self):
+        Robot.__init__(self)
         self.robotName = self.getName()
         self.currentlyPlaying = False
         self.supervisorData = {
@@ -171,6 +180,11 @@ class SoccerRobot(Robot):
 
                 if self.isNewDataAvailable():
                     self.getNewSupervisorData()
+                    distance = Functions.calculateDistance(
+                    self.getBallData(), self.getSelfPosition(self.robotName)
+                )
+                    # print(f'real supervisor distance: {distance}')
+                    
                     whatToDoNext = self.NextMotion()
 
                     if self.isNewMotionValid(whatToDoNext):
@@ -511,5 +525,5 @@ def main():
     robot.run()
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
