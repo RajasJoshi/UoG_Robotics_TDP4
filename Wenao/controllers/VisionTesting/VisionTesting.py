@@ -1,12 +1,11 @@
 """my_controller controller."""
 
-# You may need to import some classes of the controller module. Ex:
-#  from controller import Robot, Motor, DistanceSensor
+
 from controller import Robot
 import cv2
 import numpy as np
 from ultralytics import YOLO
-# create the Robot instance.
+
 robot = Robot()
 
 # get the time step of the current world.
@@ -17,14 +16,33 @@ cameraBot = robot.getDevice('CameraBottom')
 cameraBot.enable(timestep)
 cameraTop.enable(timestep)
 
-# You should insert a getDevice-like function in order to get the
-# instance of a device of the robot. Something like:
-#  motor = robot.getDevice('motorname')
-#  ds = robot.getDevice('dsname')
-#  ds.enable(timestep)
+ball_diameter = 0.48 #meters
+vertical_fov = 47.64 #degrees
+horizontal_fov = 60.97 #degrees
 
-# Main loop:
-# - perform simulation steps until Webots is stopping the controller
+distance_at_100_vfov = (ball_diameter / 2) / np.tan(np.deg2rad(vertical_fov/2))
+distance_at_100_hfov = (ball_diameter / 2) / np.tan(np.deg2rad(horizontal_fov/2))
+
+def ball_distance(ball_height, ball_width):
+    
+    verticalFovRatio = ball_height / cameraTop.getHeight()
+    horizontalFovRatio = ball_width / cameraTop.getWidth()
+    
+    if (ball_height > 0.9 * ball_width) and (ball_height < ball_width * 1.1):
+        vertical_estimate = distance_at_100_vfov * verticalFovRatio
+        horizontal_estimate = distance_at_100_hfov * horizontalFovRatio
+        distance_estimate = (vertical_estimate + horizontal_estimate) / 2
+    
+    elif ball_height < 0.9 * ball_width:
+        horizontal_estimate = distance_at_100_hfov * horizontalFovRatio
+        distance_estimate = horizontal_estimate
+        
+    else:
+        vertical_estimate = distance_at_100_vfov * verticalFovRatio
+        distance_estimate = vertical_estimate
+    print(distance_estimate)
+        
+
 while robot.step(timestep) != -1:
     image = cameraTop.getImage()
     width, height = cameraTop.getWidth(), cameraTop.getHeight()
@@ -44,6 +62,13 @@ while robot.step(timestep) != -1:
         x1, y1, x2, y2, score, class_id = result
 
         if score > threshold:
+            if results.names[int(class_id)] == 'Ball':
+                ball_height = x2 - x1
+                ball_width = y2 - y1
+                
+                ball_distance(ball_height, ball_width)
+
+
             cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 4)
             cv2.putText(frame, results.names[int(class_id)].upper(), (int(x1), int(y1 - 10)),
                         cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3, cv2.LINE_AA)
