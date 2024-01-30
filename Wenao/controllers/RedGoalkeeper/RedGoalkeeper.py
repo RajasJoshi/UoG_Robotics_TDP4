@@ -68,24 +68,24 @@ class SoccerRobot(Robot):
         self.supervisorDataPos = {
             "ballPosition": [0.0, 0.0, 0.0],
             "RedGoalkeeper": [0.0, 0.0, 0.0],
-            "RedDefenderLeft": [0.0, 0.0, 0.0],
-            "RedDefenderRight": [0.0, 0.0, 0.0],
-            "RedForward": [0.0, 0.0, 0.0],
-            "BlueGoalkeeper": [0.0, 0.0, 0.0],
-            "BlueDefenderLeft": [0.0, 0.0, 0.0],
-            "BlueDefenderRight": [0.0, 0.0, 0.0],
+            # "RedDefenderLeft": [0.0, 0.0, 0.0],
+            # "RedDefenderRight": [0.0, 0.0, 0.0],
+            # "RedForward": [0.0, 0.0, 0.0],
+            # "BlueGoalkeeper": [0.0, 0.0, 0.0],
+            # "BlueDefenderLeft": [0.0, 0.0, 0.0],
+            # "BlueDefenderRight": [0.0, 0.0, 0.0],
             "BlueForward": [0.0, 0.0, 0.0],
             # Add more keys for other data as needed
         }
 
         self.supervisorDataRot = {
             "RedGoalkeeper": [0.0, 0.0, 0.0],
-            "RedDefenderLeft": [0.0, 0.0, 0.0],
-            "RedDefenderRight": [0.0, 0.0, 0.0],
-            "RedForward": [0.0, 0.0, 0.0],
-            "BlueGoalkeeper": [0.0, 0.0, 0.0],
-            "BlueDefenderLeft": [0.0, 0.0, 0.0],
-            "BlueDefenderRight": [0.0, 0.0, 0.0],
+            # "RedDefenderLeft": [0.0, 0.0, 0.0],
+            # "RedDefenderRight": [0.0, 0.0, 0.0],
+            # "RedForward": [0.0, 0.0, 0.0],
+            # "BlueGoalkeeper": [0.0, 0.0, 0.0],
+            # "BlueDefenderLeft": [0.0, 0.0, 0.0],
+            # "BlueDefenderRight": [0.0, 0.0, 0.0],
             "BlueForward": [0.0, 0.0, 0.0],
             # Add more keys for other data as needed
         }
@@ -152,16 +152,16 @@ class SoccerRobot(Robot):
                         self.addMotionToQueue(whatToDoNext)
                         self.startMotion()
 
-                try:
-                    top_image = self.cameraTop.getImage()
-                    bottom_image = self.cameraBottom.getImage()
+                # try:
+                #     top_image = self.cameraTop.getImage()
+                #     bottom_image = self.cameraBottom.getImage()
 
-                    self.TopCamServer.send(top_image)
-                    self.BottomCamServer.send(bottom_image)
+                #     self.TopCamServer.send(top_image)
+                #     self.BottomCamServer.send(bottom_image)
 
-                except ValueError as e:
-                    # Handle the exception (e.g., print an error message)
-                    print(f"Error getting camera image: {e}")
+                # except ValueError as e:
+                #     # Handle the exception (e.g., print an error message)
+                #     print(f"Error getting camera image: {e}")
 
                 if self.step(self.timeStep) == -1:
                     break

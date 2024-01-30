@@ -25,12 +25,12 @@ class SupervisorBase(Supervisor):
 
         self.robots = {
             "RedGoalkeeper": self.getFromDef("RedGoalkeeper"),
-            "RedDefenderLeft": self.getFromDef("RedDefenderLeft"),
-            "RedDefenderRight": self.getFromDef("RedDefenderRight"),
-            "RedForward": self.getFromDef("RedForward"),
-            "BlueGoalkeeper": self.getFromDef("BlueGoalkeeper"),
-            "BlueDefenderLeft": self.getFromDef("BlueDefenderLeft"),
-            "BlueDefenderRight": self.getFromDef("BlueDefenderRight"),
+            # "RedDefenderLeft": self.getFromDef("RedDefenderLeft"),
+            # "RedDefenderRight": self.getFromDef("RedDefenderRight"),
+            # "RedForward": self.getFromDef("RedForward"),
+            # "BlueGoalkeeper": self.getFromDef("BlueGoalkeeper"),
+            # "BlueDefenderLeft": self.getFromDef("BlueDefenderLeft"),
+            # "BlueDefenderRight": self.getFromDef("BlueDefenderRight"),
             "BlueForward": self.getFromDef("BlueForward"),
         }
 
@@ -123,20 +123,20 @@ class SupervisorBase(Supervisor):
                 str,
                 self.getBallPosition()
                 + self.getRobotPosition("RedGoalkeeper")
-                + self.getRobotPosition("RedDefenderLeft")
-                + self.getRobotPosition("RedDefenderRight")
-                + self.getRobotPosition("RedForward")
-                + self.getRobotPosition("BlueGoalkeeper")
-                + self.getRobotPosition("BlueDefenderLeft")
-                + self.getRobotPosition("BlueDefenderRight")
+                # + self.getRobotPosition("RedDefenderLeft")
+                # + self.getRobotPosition("RedDefenderRight")
+                # + self.getRobotPosition("RedForward")
+                # + self.getRobotPosition("BlueGoalkeeper")
+                # + self.getRobotPosition("BlueDefenderLeft")
+                # + self.getRobotPosition("BlueDefenderRight")
                 + self.getRobotPosition("BlueForward")
                 + self.getRobotOrientation("RedGoalkeeper")
-                + self.getRobotOrientation("RedDefenderLeft")
-                + self.getRobotOrientation("RedDefenderRight")
-                + self.getRobotOrientation("RedForward")
-                + self.getRobotOrientation("BlueGoalkeeper")
-                + self.getRobotOrientation("BlueDefenderLeft")
-                + self.getRobotOrientation("BlueDefenderRight")
+                # + self.getRobotOrientation("RedDefenderLeft")
+                # + self.getRobotOrientation("RedDefenderRight")
+                # + self.getRobotOrientation("RedForward")
+                # + self.getRobotOrientation("BlueGoalkeeper")
+                # + self.getRobotOrientation("BlueDefenderLeft")
+                # + self.getRobotOrientation("BlueDefenderRight")
                 + self.getRobotOrientation("BlueForward")
                 + [self.getBallOwner()],
             )
