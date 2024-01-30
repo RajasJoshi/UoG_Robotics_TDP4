@@ -4,7 +4,6 @@ All robots should be derived from this class.
 """
 import os
 import sys
-import math
 
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
@@ -12,12 +11,15 @@ sys.path.append(parentdir)
 
 import queue
 import time
+import math
 from threading import Thread
+from enum import Enum
 
 import cv2  # Import OpenCV library
 import numpy as np
-from controller import Keyboard, Robot
+from controller import Robot
 from Utils.Consts import Motions
+from Utils import Functions
 
 
 class ImageServer:
@@ -48,13 +50,19 @@ class ImageServer:
                     (self.height, self.width, 4)
                 )
                 # Display the image using OpenCV
-                cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
-                cv2.waitKey(1)
+                # cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
+                # cv2.waitKey(1)
                 self.queue.task_done()
             except queue.Empty:
                 continue
 
-            time.sleep(1 / 30.0)
+
+class RobotState(Enum):
+    INIT = 0
+    MOVE_TO_GOAL = 1
+    MOVE_TO_BALL = 2
+    SAVE_THE_BALL = 3
+    LOOK_THE_BALL = 3
 
 
 class SoccerRobot(Robot):
@@ -64,30 +72,34 @@ class SoccerRobot(Robot):
         Robot.__init__(self)
         self.robotName = self.getName()
         self.currentlyPlaying = False
-        self.supervisorDataPos = {
-            "ballPosition": [0.0, 0.0, 0.0],
-            "RedGoalkeeper": [0.0, 0.0, 0.0],
-            "RedDefenderLeft": [0.0, 0.0, 0.0],
-            "RedDefenderRight": [0.0, 0.0, 0.0],
-            "RedForward": [0.0, 0.0, 0.0],
-            "BlueGoalkeeper": [0.0, 0.0, 0.0],
-            "BlueDefenderLeft": [0.0, 0.0, 0.0],
-            "BlueDefenderRight": [0.0, 0.0, 0.0],
-            "BlueForward": [0.0, 0.0, 0.0],
-            # Add more keys for other data as needed
+        self.supervisorData = {
+            "time": 0,
+            "ballPriority": "",
+            "ballOwner": "",
+            "ballPosition": [0, 0, 0],
+            "RedGoalkeeper": [0, 0, 0],
+            "RedDefenderLeft": [0, 0, 0],
+            "RedDefenderRight": [0, 0, 0],
+            "RedForward": [0, 0, 0],
+            "BlueGoalkeeper": [0, 0, 0],
+            "BlueDefenderLeft": [0, 0, 0],
+            "BlueDefenderRight": [0, 0, 0],
+            "BlueForward": [0, 0, 0],
         }
+        self.ROassistantS = [
+            "RedGoalkeeper",
+            "RedDefenderLeft",
+            "RedDefenderRight",
+            "RedForward",
+            "BlueGoalkeeper",
+            "BlueDefenderLeft",
+            "BlueDefenderRight",
+            "BlueForward",
+        ]
 
-        self.supervisorDataRot = {
-            "RedGoalkeeper": [0.0, 0.0, 0.0],
-            "RedDefenderLeft": [0.0, 0.0, 0.0],
-            "RedDefenderRight": [0.0, 0.0, 0.0],
-            "RedForward": [0.0, 0.0, 0.0],
-            "BlueGoalkeeper": [0.0, 0.0, 0.0],
-            "BlueDefenderLeft": [0.0, 0.0, 0.0],
-            "BlueDefenderRight": [0.0, 0.0, 0.0],
-            "BlueForward": [0.0, 0.0, 0.0],
-            # Add more keys for other data as needed
-        }
+        self.AppState = RobotState.INIT
+        self.nextAppState = RobotState.INIT
+        self.StartLocation = [2.5531271807273765, 1.8067763758432578]
 
         self.enableDevices()
         # Load motion files
@@ -113,61 +125,33 @@ class SoccerRobot(Robot):
         )
 
     def run(self):
-        # until a key is pressed
+        try:
+            while self.step(self.timeStep) != -1:
+                self.clearMotionQueue()
 
-        while self.step(self.timeStep) != -1:
-            self.clearMotionQueue()
+                if self.isNewDataAvailable():
+                    self.getNewSupervisorData()
+                    whatToDoNext = self.NextMotion()
 
-            key = self.keyboard.getKey()
+                    if self.isNewMotionValid(whatToDoNext):
+                        self.addMotionToQueue(whatToDoNext)
+                        self.startMotion()
 
-            if key == Keyboard.LEFT:
-                self.addMotionToQueue(self.motions.sideStepLeft)
-            elif key == Keyboard.RIGHT:
-                self.addMotionToQueue(self.motions.sideStepRight)
-            elif key == Keyboard.UP:
-                self.addMotionToQueue(self.motions.forwards)
-            elif key == Keyboard.DOWN:
-                self.addMotionToQueue(self.motions.backwards)
-            elif key == Keyboard.LEFT | Keyboard.SHIFT:
-                self.addMotionToQueue(self.motions.turnLeft60)
-            elif key == Keyboard.RIGHT | Keyboard.SHIFT:
-                self.addMotionToQueue(self.motions.turnRight60)
-            elif key == Keyboard.UP | Keyboard.CONTROL:
-                self.addMotionToQueue(self.motions.standUpFromFront)
-            elif key == Keyboard.DOWN | Keyboard.CONTROL:
-                self.addMotionToQueue(self.motions.standUpFromBack)
-            elif key == Keyboard.ALT:
-                self.addMotionToQueue(self.motions.shoot)
-            elif key == Keyboard.ALT | Keyboard.SHIFT:
-                self.addMotionToQueue(self.motions.longShoot)
-            # else:
-            #     self.addMotionToQueue(self.motions.handWave)
+                try:
+                    top_image = self.cameraTop.getImage()
+                    bottom_image = self.cameraBottom.getImage()
 
-            self.startMotion()
+                    self.TopCamServer.send(top_image)
+                    self.BottomCamServer.send(bottom_image)
 
-            if self.isNewBallDataAvailable():
-                self.getSupervisorData()
-                                
-                findBall = self.moveToBall()
-                if self.isNewMotionValid(findBall):
-                    self.addMotionToQueue(findBall)
-                    self.startMotion() 
-                    
-                # print("my location:", self.getSelfCoordinate(self.robotName))
+                except ValueError as e:
+                    # Handle the exception (e.g., print an error message)
+                    print(f"Error getting camera image: {e}")
 
-            try:
-                top_image = self.cameraTop.getImage()
-                bottom_image = self.cameraBottom.getImage()
-
-                self.TopCamServer.send(top_image)
-                self.BottomCamServer.send(bottom_image)
-
-            except ValueError as e:
-                # Handle the exception (e.g., print an error message)
-                print(f"Error getting camera image: {e}")
-
-            if self.step(self.timeStep) == -1:
-                break
+                if self.step(self.timeStep) == -1:
+                    break
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     def enableDevices(self):
         # get the time step of the current world.
@@ -181,7 +165,15 @@ class SoccerRobot(Robot):
 
         # GPS
         self.gps = self.getDevice("gps")
-        self.gps.enable(self.timeStep)
+        self.gps.enable(4 * self.timeStep)
+
+        # accelerometer
+        self.accelerometer = self.getDevice("accelerometer")
+        self.accelerometer.enable(4 * self.timeStep)
+
+        # inertial unit
+        self.inertialUnit = self.getDevice("inertial unit")
+        self.inertialUnit.enable(self.timeStep)
 
         # ultrasound sensors
         self.ultrasound = []
@@ -215,10 +207,6 @@ class SoccerRobot(Robot):
 
         # Emitter
         self.emitter = self.getDevice("emitter")
-        
-        # InertialUnit
-        self.inertialUnit = self.getDevice("inertial unit")
-        self.inertialUnit.enable(self.timeStep)
 
         # keyboard
         self.keyboard = self.getKeyboard()
@@ -287,38 +275,32 @@ class SoccerRobot(Robot):
         Returns:
             Motion: Decided motion.
         """
-        if turningAngle > 50:
+        if turningAngle > 90:
+            return self.motions.turnLeft180
+        elif turningAngle > 50:
             return self.motions.turnLeft60
+        elif turningAngle > 30:
+            return self.motions.turnLeft40
         elif turningAngle > 20:
             return self.motions.turnLeft30
+        elif turningAngle > 10:
+            return self.motions.turnLeft20
         elif turningAngle < -50:
             return self.motions.turnRight60
         elif turningAngle < -30:
             return self.motions.turnRight40
+        elif turningAngle < -10:
+            return self.motions.turnRight20
         else:
             return None
 
-    def printSelf(self) -> None:
-        print("Hello! This is robot ", self.name)
-
-    def getSelfCoordinate(self, robotName) -> list:
+    def getSelfPosition(self, robotName) -> list:
         """Get the robot coordinate on the field.
 
         Returns:
             list: x, y coordinates.
         """
-        for key, value in self.supervisorDataPos.items():
-            # Compare search_string with the keys (case-insensitive)
-            if robotName.lower() == key.lower():
-                return value
-
-    def getSelfOrientation(self, robotName) -> list:
-        """Get the robot coordinate on the field.
-
-        Returns:
-            list: x, y coordinates.
-        """
-        for key, value in self.supervisorDataRot.items():
+        for key, value in self.supervisorData.items():
             # Compare search_string with the keys (case-insensitive)
             if robotName.lower() == key.lower():
                 return value
@@ -331,7 +313,7 @@ class SoccerRobot(Robot):
         """
         return self.inertialUnit.getRollPitchYaw()
 
-    def isNewBallDataAvailable(self) -> bool:
+    def isNewDataAvailable(self) -> bool:
         """Check if there is a new ball data available.
 
         Returns:
@@ -339,7 +321,7 @@ class SoccerRobot(Robot):
         """
         return self.receiver.getQueueLength() > 0
 
-    def getSupervisorData(self) -> None:
+    def getNewSupervisorData(self) -> None:
         """Get the latest supervisor data."""
         data = self.receiver.getString()
 
@@ -353,91 +335,15 @@ class SoccerRobot(Robot):
         values = message.split(",")
 
         # Extract and process received values
-        self.supervisorDataPos["ballPosition"] = [
-            float(values[0]),
-            float(values[1]),
-            float(values[2]),
-        ]
-        self.supervisorDataPos["RedGoalkeeper"] = [
-            float(values[3]),
-            float(values[4]),
-            float(values[5]),
-        ]
-        self.supervisorDataPos["RedDefenderLeft"] = [
-            float(values[6]),
-            float(values[7]),
-            float(values[8]),
-        ]
-        self.supervisorDataPos["RedDefenderRight"] = [
-            float(values[9]),
-            float(values[10]),
-            float(values[11]),
-        ]
-        self.supervisorDataPos["RedForward"] = [
-            float(values[12]),
-            float(values[13]),
-            float(values[14]),
-        ]
-        self.supervisorDataPos["BlueGoalkeeper"] = [
-            float(values[15]),
-            float(values[16]),
-            float(values[17]),
-        ]
-        self.supervisorDataPos["BlueDefenderLeft"] = [
-            float(values[18]),
-            float(values[19]),
-            float(values[20]),
-        ]
-        self.supervisorDataPos["BlueDefenderRight"] = [
-            float(values[21]),
-            float(values[22]),
-            float(values[23]),
-        ]
-        self.supervisorDataPos["BlueForward"] = [
-            float(values[24]),
-            float(values[25]),
-            float(values[26]),
-        ]
-        self.supervisorDataRot["RedGoalkeeper"] = [
-            float(values[27]),
-            float(values[28]),
-            float(values[29]),
-        ]
-        self.supervisorDataRot["RedDefenderLeft"] = [
-            float(values[30]),
-            float(values[31]),
-            float(values[32]),
-        ]
-        self.supervisorDataRot["RedDefenderRight"] = [
-            float(values[33]),
-            float(values[34]),
-            float(values[35]),
-        ]
-        self.supervisorDataRot["RedForward"] = [
-            float(values[36]),
-            float(values[37]),
-            float(values[38]),
-        ]
-        self.supervisorDataRot["BlueGoalkeeper"] = [
-            float(values[39]),
-            float(values[40]),
-            float(values[41]),
-        ]
-        self.supervisorDataRot["BlueDefenderLeft"] = [
-            float(values[42]),
-            float(values[43]),
-            float(values[44]),
-        ]
-        self.supervisorDataRot["BlueDefenderRight"] = [
-            float(values[45]),
-            float(values[46]),
-            float(values[47]),
-        ]
-        self.supervisorDataRot["BlueForward"] = [
-            float(values[48]),
-            float(values[49]),
-            float(values[50]),
-        ]
+        self.supervisorData["time"] = float(values[0])
+        self.supervisorData["ballPriority"] = values[1]
+        self.supervisorData["ballOwner"] = values[2]
+        self.supervisorData["ballPosition"] = [float(values[i]) for i in range(3, 6)]
+
+        for i, robot in enumerate(self.ROassistantS):
+            self.supervisorData[robot] = [
+                float(values[j]) for j in range(6 + i * 3, 9 + i * 3)
+            ]
 
     def getBallData(self) -> list:
         """Get the latest coordinates of the ball and robots.
@@ -446,7 +352,7 @@ class SoccerRobot(Robot):
             list: x, y coordinates.
         """
 
-        return [self.supervisorData[0], self.supervisorData[1]]
+        return self.getSelfPosition("ballPosition")
 
     def getBallOwner(self) -> str:
         """Get the ball owner team player.
@@ -468,75 +374,84 @@ class SoccerRobot(Robot):
         """
 
         return self.supervisorData[11].decode("utf-8")
-        
-    def moveToBall(self):
-      
-        ball_position = self.supervisorDataPos["ballPosition"]
-        robot_position = self.supervisorDataPos["BlueDefenderRight"]
-        
-        # Calculate the difference between the current and target positions
-        difference_x = ball_position[0] - robot_position[0]
-        difference_y = ball_position[1] - robot_position[1]
 
-        # Calculate the distance to the goal position
-        calculateDistance = (difference_x**2 + difference_y**2)**0.5
-        distance = round(calculateDistance, 4)    
-        print("Right Defender Robot Position:", robot_position)
-        print("Right Defender Ball Position:", ball_position)
-        print("Right Defender Distance:", distance)    
-        
-         # Calculate the angle to the target position
-        target_angle = math.degrees(math.atan2(difference_y , difference_x))        
-        robot_angle = math.degrees(self.getRollPitchYaw()[2])
-        turn_robot = target_angle - robot_angle
-        if turn_robot > 180:
-            turn_robot = turn_robot - 360
-        elif turn_robot < -180:
-            turn_robot = turn_robot + 360
-            
-        print("Right Defender Turning Angle:", turn_robot)
-       
-        amIfalling = self.detectFall()
-        if self.isNewMotionValid(amIfalling):
-            self.addMotionToQueue(amIfalling)
-            self.startMotion()
-       
-        # If the distance is greater than a threshold, move towards the target
-        if distance > 0.27 and turn_robot > 10:
-            if turn_robot > 80:
-                return self.motions.turnLeft60              
-            elif turn_robot > 30:
-                return self.motions.turnLeft40
-            elif turn_robot > 20:
-                return self.motions.turnLeft30
-            elif turn_robot > 10:
-                return self.motions.turnLeft20
-            elif turn_robot < -80:
-                return self.motions.turnRight60
-            elif turn_robot < -30:
-                return self.motions.turnRight40
-            elif turn_robot < -20:
-                return self.motions.turnRight10
-            
-        elif distance > 0.27 and turn_robot <= 10:         
-            return self.motions.forwards
-            
-        else:
-            return self.motions.shoot 
-
-    def detectFall(self):
+    def NextMotion(self):
         # Fall Detection
-        robotHeightFromGround = self.getSelfCoordinate(self.robotName)[2]
-        if robotHeightFromGround < 0.2:
-            if (
-                self.ultrasound[0].getValue() == 2.55
-                and self.ultrasound[1].getValue() == 2.55
-            ):
-                print("standup from back")
-                return self.motions.standUpFromBack
-            else:
-                print("standup from front")
-                return self.motions.standUpFromFront
+        acc = self.accelerometer.getValues()
+        if (
+            math.fabs(acc[0]) > math.fabs(acc[1])
+            and math.fabs(acc[0]) > math.fabs(acc[2])
+            and acc[0] < -5
+        ):
+            return self.motions.standUpFromFront
+        elif (
+            math.fabs(acc[0]) > math.fabs(acc[1])
+            and math.fabs(acc[0]) > math.fabs(acc[2])
+            and acc[2] > 0
+        ):
+            return self.motions.standUpFromBack
+
+        if self.ultrasound[0].getValue() < 0.5:
+            return self.motions.sideStepRightLoop
+        elif self.ultrasound[1].getValue() < 0.5:
+            return self.motions.sideStepLeftLoop
+
+        # Get the current position
+        currentPosition = self.getSelfPosition(self.robotName)
+
+        match self.AppState:
+            case RobotState.INIT:
+                # Calculate the distance to the goal position
+                distance = Functions.calculateDistance(
+                    self.StartLocation, self.getSelfPosition(self.robotName)
+                )
+
+                if distance <= 0.2:
+                    self.AppState = RobotState.LOOK_THE_BALL
+                    return self.motions.standInit
+                else:
+                    # Calculate the angle to the target position
+                    dx, dy = (
+                        self.StartLocation[0] - currentPosition[0],
+                        self.StartLocation[1] - currentPosition[1],
+                    )
+                    targetAngle = math.degrees(math.atan2(dy, dx))
+
+                    # Get the robot's orientation angle
+                    robotAngle = math.degrees(self.getRollPitchYaw()[2])
+
+                    # Calculate the turn angle in the range [-180, 180)
+                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+                    if abs(turnAngle) > 10:
+                        return self.getTurningMotion(turnAngle)
+
+                return self.motions.forwardLoop
+
+            case RobotState.LOOK_THE_BALL:
+                # Calculate the angle to the target position
+                dx, dy = (
+                    self.getBallData()[0] - currentPosition[0],
+                    self.getBallData()[1] - currentPosition[1],
+                )
+                targetAngle = math.degrees(math.atan2(dy, dx))
+
+                # Get the robot's orientation angle
+                robotAngle = math.degrees(self.getRollPitchYaw()[2])
+
+                # Calculate the turn angle in the range [-180, 180)
+                turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+
+                if abs(turnAngle) > 10:
+                    return self.getTurningMotion(turnAngle)
+
+                return self.motions.standInit
+
+            case RobotState.MOVE_TO_GOAL:
+                print("Move to the ball")
+            case _:
+                self.nextAppState = RobotState.INIT
+
+        self.AppState = self.nextAppState
 
 
 def main():

@@ -5,38 +5,66 @@ All Supervisor classes should be derived from this class.
 
 import os
 import sys
-
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
-
-
 from controller import Supervisor
 from Utils import Functions
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
 
 class SupervisorBase(Supervisor):
+    ROassistantS = [
+        "RedGoalkeeper",
+        "RedDefenderLeft",
+        "RedDefenderRight",
+        "RedForward",
+        "BlueGoalkeeper",
+        "BlueDefenderLeft",
+        "BlueDefenderRight",
+        "BlueForward",
+    ]
+
     def __init__(self):
         super().__init__()
 
         self.emitter = self.getDevice("emitter")
-
         self.ball = self.getFromDef("BALL")
-
-        self.robots = {
-            "RedGoalkeeper": self.getFromDef("RedGoalkeeper"),
-            "RedDefenderLeft": self.getFromDef("RedDefenderLeft"),
-            "RedDefenderRight": self.getFromDef("RedDefenderRight"),
-            "RedForward": self.getFromDef("RedForward"),
-            "BlueGoalkeeper": self.getFromDef("BlueGoalkeeper"),
-            "BlueDefenderLeft": self.getFromDef("BlueDefenderLeft"),
-            "BlueDefenderRight": self.getFromDef("BlueDefenderRight"),
-            "BlueForward": self.getFromDef("BlueForward"),
-        }
+        self.robots = {name: self.getFromDef(name) for name in self.ROassistantS}
 
         self.ballPriority = "R"
-
         self.previousBallLocation = [0, 0, 0.0798759]
+        self.score = [10, 20]
+        Red = "Red"
+        Blue = "Blue"
+        self.setLabel(0, "█" * 100, 0, 0, 0.1, 0xFFFFFF, 0.3, "Lucida Console")
+        self.setLabel(1, "█" * 100, 0, 0.048, 0.1, 0xFFFFFF, 0.3, "Lucida Console")
+        self.setLabel(2, Red, 0.01, 0.003, 0.08, 0xFF0000, 0, "Arial")
+        self.setLabel(3, Blue, 0.01, 0.051, 0.08, 0x0000FF, 0, "Arial")
+
+    def updateScoreboard(self):
+        for i in range(2):
+            color = 0xFF0000 if i == 0 else 0x0000FF
+            self.setLabel(
+                4 + i,
+                "{:.3f}".format(self.score[i]),
+                0.8,
+                0.003 + 0.048 * i,
+                0.08,
+                color,
+                0,
+                "Arial",
+            )
+
+    def isitGoal(self):
+        ball_coordinate = self.getBallPosition()
+
+        if abs(ball_coordinate[0]) > 4.5:
+            if abs(ball_coordinate[1]) < 1.35:
+                goal_team = "RED" if 4.5 < ball_coordinate[0] else "BLUE"
+                print(f"{goal_team} GOAL!")
+                if goal_team == "RED":
+                    self.score[0] += 1
+                else:
+                    self.score[1] += 1
 
     def getBallPosition(self) -> list:
         """Get the soccer ball coordinate on the field.
@@ -46,12 +74,13 @@ class SupervisorBase(Supervisor):
         """
         newBallLocation = self.ball.getPosition()
 
-        if abs(newBallLocation[0]) < 4.5 and abs(newBallLocation[1]) < 3:
+        if max(map(abs, newBallLocation[:2])) < 4.5:
             if (
-                self.previousBallLocation[0] + 0.05 < newBallLocation[0]
-                or self.previousBallLocation[0] - 0.05 > newBallLocation[0]
-                or self.previousBallLocation[1] + 0.05 < newBallLocation[1]
-                or self.previousBallLocation[1] - 0.05 > newBallLocation[1]
+                max(
+                    abs(a - b)
+                    for a, b in zip(self.previousBallLocation, newBallLocation)
+                )
+                > 0.05
             ):
                 self.ballPriority = "N"
                 self.previousBallLocation = newBallLocation
@@ -65,8 +94,7 @@ class SupervisorBase(Supervisor):
             list: x, y, z coordinates.
         """
         self.previousBallLocation = ballPosition
-        ballTranslation = self.ball.getField("translation")
-        ballTranslation.setSFVec3f(ballPosition)
+        self.ball.getField("translation").setSFVec3f(ballPosition)
         self.ball.resetPhysics()
 
     def getRobotPosition(self, robotName) -> list:
@@ -75,8 +103,7 @@ class SupervisorBase(Supervisor):
         Returns:
             list: x, y, z coordinates.
         """
-        robotTranslation = self.robots[robotName].getPosition()
-        return robotTranslation
+        return self.robots[robotName].getPosition()
 
     def getRobotOrientation(self, robotName) -> list:
         """Get the robot coordinate on the field.
@@ -84,8 +111,7 @@ class SupervisorBase(Supervisor):
         Returns:
             list: x, y, z coordinates.
         """
-        robotRotation = self.robots[robotName].getOrientation()
-        return robotRotation
+        return self.robots[robotName].getOrientation()
 
     def getBallOwner(self) -> str:
         """Calculate the ball owner team from the distances from the ball.
@@ -93,84 +119,37 @@ class SupervisorBase(Supervisor):
         Returns:
             str: Ball owner team first letter.
         """
-
         ballPosition = self.getBallPosition()
-        ballOwnerRobotName = "RedGoalkeeper"
-        minDistance = Functions.calculateDistance(
-            ballPosition, self.getRobotPosition(ballOwnerRobotName)
-        )
-        for i, key in enumerate(self.robots):
-            tempDistance = Functions.calculateDistance(
-                ballPosition, self.getRobotPosition(key)
-            )
-            if tempDistance < minDistance:
-                minDistance = tempDistance
-                ballOwnerRobotName = key
+        distances = {
+            name: Functions.calculateDistance(ballPosition, self.getRobotPosition(name))
+            for name in self.robots
+        }
+        ballOwnerRobotName = min(distances, key=distances.get)
 
-        if len(ballOwnerRobotName) < 9:
-            for i in range(len(ballOwnerRobotName), 9):
-                ballOwnerRobotName = ballOwnerRobotName + "*"
-
-        return ballOwnerRobotName
+        return ballOwnerRobotName.ljust(9, "*")
 
     def sendSupervisorData(self) -> None:
         """Send Data (ballPosition, ballOwner, ballPriority, ...) to Robots. Channel is '0'."""
 
-        ballPosition = self.getBallPosition()
-        RedGoalkeeperPos = self.getRobotPosition("RedGoalkeeper")
-        RedDefenderLeftPos = self.getRobotPosition("RedDefenderLeft")
-        RedDefenderRightPos = self.getRobotPosition("RedDefenderRight")
-        RedForwardPos = self.getRobotPosition("RedForward")
-        BlueGoalkeeperPos = self.getRobotPosition("BlueGoalkeeper")
-        BlueDefenderLeftPos = self.getRobotPosition("BlueDefenderLeft")
-        BlueDefenderRightPos = self.getRobotPosition("BlueDefenderRight")
-        BlueForwardPos = self.getRobotPosition("BlueForward")
-
-        RedGoalkeeperRot = self.getRobotOrientation("RedGoalkeeper")
-        RedDefenderLeftRot = self.getRobotOrientation("RedDefenderLeft")
-        RedDefenderRightRot = self.getRobotOrientation("RedDefenderRight")
-        RedForwardRot = self.getRobotOrientation("RedForward")
-        BlueGoalkeeperRot = self.getRobotOrientation("BlueGoalkeeper")
-        BlueDefenderLeftRot = self.getRobotOrientation("BlueDefenderLeft")
-        BlueDefenderRightRot = self.getRobotOrientation("BlueDefenderRight")
-        BlueForwardRot = self.getRobotOrientation("BlueForward")
-
         # Pack the values into a string to transmit
-
         message = ",".join(
             map(
                 str,
-                ballPosition
-                + RedGoalkeeperPos
-                + RedDefenderLeftPos
-                + RedDefenderRightPos
-                + RedForwardPos
-                + BlueGoalkeeperPos
-                + BlueDefenderLeftPos
-                + BlueDefenderRightPos
-                + BlueForwardPos
-                + RedGoalkeeperRot
-                + RedDefenderLeftRot
-                + RedDefenderRightRot
-                + RedForwardRot
-                + BlueGoalkeeperRot
-                + BlueDefenderLeftRot
-                + BlueDefenderRightRot
-                + BlueForwardRot,
+                [
+                    self.getTime(),
+                    self.ballPriority,
+                    self.getBallOwner(),
+                    *self.getBallPosition(),
+                    *self.getRobotPosition("RedGoalkeeper"),
+                    *self.getRobotPosition("RedDefenderLeft"),
+                    *self.getRobotPosition("RedDefenderRight"),
+                    *self.getRobotPosition("RedForward"),
+                    *self.getRobotPosition("BlueGoalkeeper"),
+                    *self.getRobotPosition("BlueDefenderLeft"),
+                    *self.getRobotPosition("BlueDefenderRight"),
+                    *self.getRobotPosition("BlueForward"),
+                ],
             )
         )
 
-        # Send the message using the emitter
-        self.emitter.send(message.encode())
-
-    def setBallPriority(self, priority):
-        self.ballPriority = priority
-
-    def resetSimulation(self):
-        self.previousBallLocation = [0, 0, 0.0798759]
-        self.simulationReset()
-        for robot in self.robots.values():
-            robot.resetPhysics()
-
-    def stopSimulation(self):
-        self.simulationSetMode(self.SIMULATION_MODE_PAUSE)
+        self.emitter.send(message.encode("utf-8"))

@@ -10,5 +10,6 @@ from Utils.Consts import TIME_STEP
 supervisor = SupervisorBase()
 
 while supervisor.step(TIME_STEP) != -1:
-    # scoreboard.updateScoreboard(supervisor)
     supervisor.sendSupervisorData()
+    supervisor.isitGoal()
+    supervisor.updateScoreboard()

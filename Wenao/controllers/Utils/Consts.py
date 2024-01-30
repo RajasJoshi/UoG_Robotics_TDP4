@@ -16,6 +16,7 @@ class Motions:
             "forwardsSprint", "../../motions/ForwardsSprint.motion"
         )
         self.forwards50 = MotionBase("forwards50", "../../motions/Forwards50.motion")
+        self.forwardLoop = MotionBase("forwardLoop", "../../motions/ForwardLoop.motion")
         self.backwards = MotionBase("backwards", "../../motions/Backwards.motion")
         self.shoot = MotionBase("shoot", "../../motions/Shoot.motion")
         self.rightShoot = MotionBase("rightShoot", "../../motions/RightShoot.motion")
@@ -31,6 +32,12 @@ class Motions:
         )
         self.sideStepRight = MotionBase(
             "sideStepRight", "../../motions/SideStepRight.motion"
+        )
+        self.sideStepLeftLoop = MotionBase(
+            "sideStepLeftLoop", "../../motions/SideStepLeftLoop.motion"
+        )
+        self.sideStepRightLoop = MotionBase(
+            "sideStepRightLoop", "../../motions/SideStepRightLoop.motion"
         )
         self.standUpFromFront = MotionBase(
             "standUpFromFront", "../../motions/StandUpFromFront.motion"
@@ -48,6 +55,7 @@ class Motions:
         self.turnRight10_V2 = MotionBase(
             "turnRight10", "../../motions/TurnRight10_V2.motion"
         )
+        self.turnRight20 = MotionBase("turnRight20", "../../motions/TurnRight20.motion")
         self.turnRight40 = MotionBase("turnRight40", "../../motions/TurnRight40.motion")
         self.turnRight60 = MotionBase("turnRight60", "../../motions/TurnRight60.motion")
         self.standInit = MotionBase("standInit", "../../motions/StandInit.motion")
