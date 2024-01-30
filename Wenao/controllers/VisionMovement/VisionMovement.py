@@ -59,26 +59,18 @@ class ImageServer:
        
 
         
-    def ball_distance(self, ball_width, ball_height, center_y):
+    def ball_distance(self, ball_width):
         #focal_length = (ball_width * supervisor_distance) / self.ball_diameter
         #this is a paramter that has been tuned to webots and needs to be retuned for the real robot
         if self.position == "Bottom":
-            focal_length = 76
-            upclose_scaling_factor = 1
-            if center_y > 190:
-                distance = ball_height / ball_width * upclose_scaling_factor
-            else:
-                distance = self.ball_diameter * focal_length / ball_width
+            focal_length = 80
    
         elif self.position == "Top":
-            focal_length = 196
-            upclose_scaling_factor = 1
-            if center_y > self.height - 30:
-                distance = ball_height / ball_width * upclose_scaling_factor
-            else:
-                distance = self.ball_diameter * focal_length / ball_width
+            focal_length = 180
+            
+        distance = self.ball_diameter * focal_length / ball_width
         
-        print(f'distance estimate: {distance}')
+        print(f'distance estimate: {min(4.5,distance)}') #stop noise from being larger than field
         
     def ball_heading(self, ball_center_x, ball_center_y):
         y = self.height - ball_center_y
@@ -94,8 +86,8 @@ class ImageServer:
                 cvimg = np.frombuffer(img, dtype=np.uint8).reshape((self.height, self.width, 4))
                 
                 frame = cv2.cvtColor(cvimg, cv2.COLOR_BGR2RGB)
-                if self.position == "Bottom":
-                # if self.position == "Top":
+                # if self.position == "Bottom":
+                if self.position == "Top":
                     results = self.model.predict(frame,verbose=False)[0]
                     threshold = 0.5
                     
@@ -108,8 +100,8 @@ class ImageServer:
                                 ball_height = y2 - y1
                                 ball_center_x = (x1 + x2) / 2
                                 ball_center_y = (y1 + y2) / 2
-                                self.ball_distance(ball_width, ball_height, ball_center_y)
-                                # self.ball_heading(ball_center_x, ball_center_y)   
+                                self.ball_distance(ball_width)
+                                self.ball_heading(ball_center_x, ball_center_y)   
                                 
 
 
@@ -143,22 +135,22 @@ class SoccerRobot(Robot):
             "ballOwner": "",
             "ballPosition": [0, 0, 0],
             "RedGoalkeeper": [0, 0, 0],
-            # "RedDefenderLeft": [0, 0, 0],
-            # "RedDefenderRight": [0, 0, 0],
-            # "RedForward": [0, 0, 0],
-            # "BlueGoalkeeper": [0, 0, 0],
-            # "BlueDefenderLeft": [0, 0, 0],
-            # "BlueDefenderRight": [0, 0, 0],
+            "RedDefenderLeft": [0, 0, 0],
+            "RedDefenderRight": [0, 0, 0],
+            "RedForward": [0, 0, 0],
+            "BlueGoalkeeper": [0, 0, 0],
+            "BlueDefenderLeft": [0, 0, 0],
+            "BlueDefenderRight": [0, 0, 0],
             "BlueForward": [0, 0, 0],
         }
         self.ROassistantS = [
             "RedGoalkeeper",
-            # "RedDefenderLeft",
-            # "RedDefenderRight",
-            # "RedForward",
-            # "BlueGoalkeeper",
-            # "BlueDefenderLeft",
-            # "BlueDefenderRight",
+            "RedDefenderLeft",
+            "RedDefenderRight",
+            "RedForward",
+            "BlueGoalkeeper",
+            "BlueDefenderLeft",
+            "BlueDefenderRight",
             "BlueForward",
         ]
 
@@ -195,12 +187,11 @@ class SoccerRobot(Robot):
 
                 if self.isNewDataAvailable():
                     self.getNewSupervisorData()
-                #     distance = Functions.calculateDistance(
-                #     self.getBallData(), self.getSelfPosition(self.robotName)
-                # )
-                #     print(f'robot position: {self.getSelfPosition(self.robotName)}')
-                #     print(f'ball position: {self.getBallData()}')
-                #     print(f'real supervisor distance: {distance}')
+                    distance = Functions.calculateDistance(
+                    self.getBallData(), self.getSelfPosition(self.robotName)
+                )
+   
+                    print(f'real supervisor distance: {distance}')
                     
                     whatToDoNext = self.NextMotion()
 
