@@ -5,9 +5,7 @@ All robots should be derived from this class.
 import os
 import sys
 
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 import queue
 import time
@@ -61,7 +59,6 @@ class RobotState(Enum):
     INIT = 0
     MOVE_TO_GOAL = 1
     MOVE_TO_BALL = 2
-    SAVE_THE_BALL = 3
     LOOK_THE_BALL = 3
 
 
@@ -78,28 +75,28 @@ class SoccerRobot(Robot):
             "ballOwner": "",
             "ballPosition": [0, 0, 0],
             "RedGoalkeeper": [0, 0, 0],
-            "RedDefenderLeft": [0, 0, 0],
-            "RedDefenderRight": [0, 0, 0],
-            "RedForward": [0, 0, 0],
+            "RedDefender": [0, 0, 0],
+            "RedForwardB": [0, 0, 0],
+            "RedForwardA": [0, 0, 0],
             "BlueGoalkeeper": [0, 0, 0],
-            "BlueDefenderLeft": [0, 0, 0],
-            "BlueDefenderRight": [0, 0, 0],
-            "BlueForward": [0, 0, 0],
+            "BlueDefender": [0, 0, 0],
+            "BlueForwardB": [0, 0, 0],
+            "BlueForwardA": [0, 0, 0],
         }
-        self.ROassistantS = [
+        self.RobotList = [
             "RedGoalkeeper",
-            "RedDefenderLeft",
-            "RedDefenderRight",
-            "RedForward",
+            "RedDefender",
+            "RedForwardB",
+            "RedForwardA",
             "BlueGoalkeeper",
-            "BlueDefenderLeft",
-            "BlueDefenderRight",
-            "BlueForward",
+            "BlueDefender",
+            "BlueForwardB",
+            "BlueForwardA",
         ]
 
         self.AppState = RobotState.INIT
-        self.nextAppState = RobotState.INIT
-        self.StartLocation = [2.4800866489969065, -1.9427833494757105]
+
+        self.StartLocation = [-0.23606, 1.78171]
 
         self.enableDevices()
         # Load motion files
@@ -340,7 +337,7 @@ class SoccerRobot(Robot):
         self.supervisorData["ballOwner"] = values[2]
         self.supervisorData["ballPosition"] = [float(values[i]) for i in range(3, 6)]
 
-        for i, robot in enumerate(self.ROassistantS):
+        for i, robot in enumerate(self.RobotList):
             self.supervisorData[robot] = [
                 float(values[j]) for j in range(6 + i * 3, 9 + i * 3)
             ]
@@ -449,9 +446,7 @@ class SoccerRobot(Robot):
             case RobotState.MOVE_TO_GOAL:
                 print("Move to the ball")
             case _:
-                self.nextAppState = RobotState.INIT
-
-        self.AppState = self.nextAppState
+                self.AppState = RobotState.INIT
 
 
 def main():

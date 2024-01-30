@@ -7,20 +7,21 @@ import os
 import sys
 from controller import Supervisor
 from Utils import Functions
+import time
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 
 class SupervisorBase(Supervisor):
-    ROassistantS = [
+    RobotList = [
         "RedGoalkeeper",
-        "RedDefenderLeft",
-        "RedDefenderRight",
-        "RedForward",
+        "RedDefender",
+        "RedForwardB",
+        "RedForwardA",
         "BlueGoalkeeper",
-        "BlueDefenderLeft",
-        "BlueDefenderRight",
-        "BlueForward",
+        "BlueDefender",
+        "BlueForwardB",
+        "BlueForwardA",
     ]
 
     def __init__(self):
@@ -28,11 +29,11 @@ class SupervisorBase(Supervisor):
 
         self.emitter = self.getDevice("emitter")
         self.ball = self.getFromDef("BALL")
-        self.robots = {name: self.getFromDef(name) for name in self.ROassistantS}
-
+        self.robots = {name: self.getFromDef(name) for name in self.RobotList}
+        self.latestGoalTime = 0
         self.ballPriority = "R"
         self.previousBallLocation = [0, 0, 0.0798759]
-        self.score = [10, 20]
+        self.score = [0, 0]
         Red = "Red"
         Blue = "Blue"
         self.setLabel(0, "█" * 100, 0, 0, 0.1, 0xFFFFFF, 0.3, "Lucida Console")
@@ -45,7 +46,7 @@ class SupervisorBase(Supervisor):
             color = 0xFF0000 if i == 0 else 0x0000FF
             self.setLabel(
                 4 + i,
-                "{:.3f}".format(self.score[i]),
+                "{:d}".format(self.score[i]),
                 0.8,
                 0.003 + 0.048 * i,
                 0.08,
@@ -65,6 +66,11 @@ class SupervisorBase(Supervisor):
                     self.score[0] += 1
                 else:
                     self.score[1] += 1
+
+                self.latestGoalTime = time.time() * 1000
+
+                if self.latestGoalTime < (time.time() * 1000) - 5000:
+                    self.resetSimulation()
 
     def getBallPosition(self) -> list:
         """Get the soccer ball coordinate on the field.
@@ -141,15 +147,21 @@ class SupervisorBase(Supervisor):
                     self.getBallOwner(),
                     *self.getBallPosition(),
                     *self.getRobotPosition("RedGoalkeeper"),
-                    *self.getRobotPosition("RedDefenderLeft"),
-                    *self.getRobotPosition("RedDefenderRight"),
-                    *self.getRobotPosition("RedForward"),
+                    *self.getRobotPosition("RedDefender"),
+                    *self.getRobotPosition("RedForwardB"),
+                    *self.getRobotPosition("RedForwardA"),
                     *self.getRobotPosition("BlueGoalkeeper"),
-                    *self.getRobotPosition("BlueDefenderLeft"),
-                    *self.getRobotPosition("BlueDefenderRight"),
-                    *self.getRobotPosition("BlueForward"),
+                    *self.getRobotPosition("BlueDefender"),
+                    *self.getRobotPosition("BlueForwardB"),
+                    *self.getRobotPosition("BlueForwardA"),
                 ],
             )
         )
 
         self.emitter.send(message.encode("utf-8"))
+
+    def resetSimulation(self):
+        self.previousBallLocation = [0, 0, 0.0798759]
+        self.simulationReset()
+        for robot in self.robots.values():
+            robot.resetPhysics()

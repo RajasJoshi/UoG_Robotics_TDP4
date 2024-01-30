@@ -34,11 +34,11 @@ DEF RedGoalkeeper NaoV6 {
     jerseyColor 1 0 0
   }
 }
-DEF RedDefenderLeft NaoV6 {
+DEF RedDefender NaoV6 {
   translation -2.4022481138463587 3.1958414125934893 0.32029599092899314
   rotation 0.048892454874613425 0.04748051955307438 -0.9976748609237902 1.6024204285941188
-  name "RedDefenderLeft"
-  controller "RedDefenderLeft"
+  name "RedDefender"
+  controller "RedDefender"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_2.png"
@@ -46,11 +46,11 @@ DEF RedDefenderLeft NaoV6 {
     jerseyColor 1 0 0
   }
 }
-DEF RedDefenderRight NaoV6 {
+DEF RedForwardB NaoV6 {
   translation -1.7742856221330368 3.204251310823099 0.3202959909289577
   rotation 0.04888767678311336 0.04950288912506321 -0.9975767935487581 1.5607138792538826
-  name "RedDefenderRight"
-  controller "RedDefenderRight"
+  name "RedForwardB"
+  controller "RedForwardB"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_3.png"
@@ -58,11 +58,11 @@ DEF RedDefenderRight NaoV6 {
     jerseyColor 1 0 0
   }
 }
-DEF RedForward NaoV6 {
+DEF RedForwardA NaoV6 {
   translation -1.088090623386855 3.21071260719813 0.32029599092894134
   rotation 0.04889593428825571 0.04597061469211552 -0.997745403494753 1.6346987082082596
-  name "RedForward"
-  controller "RedForward"
+  name "RedForwardA"
+  controller "RedForwardA"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_4.png"
@@ -79,11 +79,11 @@ DEF BlueGoalkeeper NaoV6 {
     jerseyColor 0 0 1
   }
 }
-DEF BlueDefenderLeft NaoV6 {
+DEF BlueDefender NaoV6 {
   translation 2.662626484215248 -3.1674137948764174 0.31794582350366546
   rotation -0.049398853565318736 0.04930419431707207 0.9975614515854031 1.5544299704444229
-  name "BlueDefenderLeft"
-  controller "BlueDefenderLeft"
+  name "BlueDefender"
+  controller "BlueDefender"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_2.png"
@@ -91,11 +91,11 @@ DEF BlueDefenderLeft NaoV6 {
     jerseyColor 0 0 1
   }
 }
-DEF BlueDefenderRight NaoV6 {
+DEF BlueForwardB NaoV6 {
   translation 1.9015173468635125 -3.1654064748630035 0.3197003222992825
   rotation -0.050242144413230695 0.049051937846040554 0.9975317710821587 1.5436307843080403
-  name "BlueDefenderRight"
-  controller "BlueDefenderRight"
+  name "BlueForwardB"
+  controller "BlueForwardB"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_3.png"
@@ -103,11 +103,11 @@ DEF BlueDefenderRight NaoV6 {
     jerseyColor 0 0 1
   }
 }
-DEF BlueForward NaoV6 {
+DEF BlueForwardA NaoV6 {
   translation 1.100535112134728 -3.1628206246247244 0.31839527117522737
   rotation -0.05093587308919152 0.04704912041370518 0.9975930618749002 1.5689336996649348
-  name "BlueForward"
-  controller "BlueForward"
+  name "BlueForwardA"
+  controller "BlueForwardA"
   jersey NaoJersey {
     jerseyTexture [
       "../protos/textures/nao_jersey_dark_4.png"
@@ -126,6 +126,6 @@ DEF SUPERVISOR Robot {
     }
   ]
   name "supervisor"
-  controller "supervisor"
+  controller "Supervisor"
   supervisor TRUE
 }
