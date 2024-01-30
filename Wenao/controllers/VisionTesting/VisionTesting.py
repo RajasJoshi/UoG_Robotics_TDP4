@@ -1,11 +1,16 @@
 """my_controller controller."""
 
+# You may need to import some classes of the controller module. Ex:
+#  from controller import Robot, Motor, DistanceSensor
+import pip
+pip.main(['install', 'lapx>=0.5.2'])
 
 from controller import Robot
+from collections import defaultdict
 import cv2
 import numpy as np
 from ultralytics import YOLO
-
+# create the Robot instance.
 robot = Robot()
 
 # get the time step of the current world.
@@ -16,33 +21,17 @@ cameraBot = robot.getDevice('CameraBottom')
 cameraBot.enable(timestep)
 cameraTop.enable(timestep)
 
-ball_diameter = 0.48 #meters
-vertical_fov = 47.64 #degrees
-horizontal_fov = 60.97 #degrees
+track_history = defaultdict(lambda: [])
+track = []
 
-distance_at_100_vfov = (ball_diameter / 2) / np.tan(np.deg2rad(vertical_fov/2))
-distance_at_100_hfov = (ball_diameter / 2) / np.tan(np.deg2rad(horizontal_fov/2))
+# You should insert a getDevice-like function in order to get the
+# instance of a device of the robot. Something like:
+#  motor = robot.getDevice('motorname')
+#  ds = robot.getDevice('dsname')
+#  ds.enable(timestep)
 
-def ball_distance(ball_height, ball_width):
-    
-    verticalFovRatio = ball_height / cameraTop.getHeight()
-    horizontalFovRatio = ball_width / cameraTop.getWidth()
-    
-    if (ball_height > 0.9 * ball_width) and (ball_height < ball_width * 1.1):
-        vertical_estimate = distance_at_100_vfov * verticalFovRatio
-        horizontal_estimate = distance_at_100_hfov * horizontalFovRatio
-        distance_estimate = (vertical_estimate + horizontal_estimate) / 2
-    
-    elif ball_height < 0.9 * ball_width:
-        horizontal_estimate = distance_at_100_hfov * horizontalFovRatio
-        distance_estimate = horizontal_estimate
-        
-    else:
-        vertical_estimate = distance_at_100_vfov * verticalFovRatio
-        distance_estimate = vertical_estimate
-    print(distance_estimate)
-        
-
+# Main loop:
+# - perform simulation steps until Webots is stopping the controller
 while robot.step(timestep) != -1:
     image = cameraTop.getImage()
     width, height = cameraTop.getWidth(), cameraTop.getHeight()
@@ -53,26 +42,42 @@ while robot.step(timestep) != -1:
     # Perform some OpenCV operations (e.g., grayscale conversion)
     frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     
-    model = YOLO('/home/jamie-linux/Documents/Robotics_MSc/UoG_Robotics_TDP4/Wenao/controllers/best.pt')
+    model = YOLO('/home/jamie-linux/Documents/Robotics_MSc/UoG_Robotics_TDP4/best.pt')
 
-    results = model.predict(frame)[0]# Example: Display the grayscale image
-    threshold = 0.5
-    
-    for result in results.boxes.data.tolist():
-        x1, y1, x2, y2, score, class_id = result
+    results = model.track(frame, persist=True)
 
-        if score > threshold:
-            if results.names[int(class_id)] == 'Ball':
-                ball_height = x2 - x1
-                ball_width = y2 - y1
-                
-                ball_distance(ball_height, ball_width)
+    # Get the boxes and track IDs
+    boxes = results[0].boxes.xywh.cpu()
+    names = results[0].names
+    track_ids = results[0].boxes.id.int().cpu().tolist()
+    clss = results[0].boxes.cls.cpu().tolist()
 
+    # Visualize the results on the frame
+    annotated_frame = results[0].plot()
 
-            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 4)
-            cv2.putText(frame, results.names[int(class_id)].upper(), (int(x1), int(y1 - 10)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3, cv2.LINE_AA)
-    cv2.imshow('FRAME',frame)
-    cv2.waitKey(1)
+    # Plot the tracks
+    for box, clss, track_id in zip(boxes, clss, track_ids):
+        x, y, w, h = box
+        if names[clss] == 'Ball':
+            track = track_history[track_id]
+            track.append((float(x), float(y)))  # x, y center point
+            if len(track) > 30:  # retain 90 tracks for 90 frames
+                track.pop(0)
 
+        # Draw the tracking lines
+        if track:
+            points = np.hstack(track).astype(np.int32).reshape((-1, 1, 2))
+            cv2.polylines(annotated_frame, [points], isClosed=False, color=(230, 230, 230), thickness=10)
+        else: pass
+
+    # Display the annotated frame
+    cv2.namedWindow('Window', cv2.WINDOW_NORMAL)
+
+    # Resize the window to your desired size
+    cv2.resizeWindow('Window', 400, 300) 
+    cv2.imshow("Window", annotated_frame)
+
+    # Break the loop if 'q' is pressed
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
 cv2.destroyAllWindows()
