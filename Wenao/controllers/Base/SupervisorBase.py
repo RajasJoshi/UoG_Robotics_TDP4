@@ -5,9 +5,10 @@ All Supervisor classes should be derived from this class.
 
 import os
 import sys
+import time
+
 from controller import Supervisor
 from Utils import Functions
-import time
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 

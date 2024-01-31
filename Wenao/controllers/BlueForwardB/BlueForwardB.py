@@ -7,52 +7,15 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-import queue
-import time
+
 import math
-from threading import Thread
 from enum import Enum
 
-import cv2  # Import OpenCV library
 import numpy as np
 from controller import Robot
-from Utils.Consts import Motions
 from Utils import Functions
-
-
-class ImageServer:
-    def __init__(self, width, height, camera, robot_name, position):
-        self.camera = camera  # camera
-        self.width = width
-        self.height = height
-        self.robot_name = robot_name
-        self.position = position
-        self.running = True
-
-        self.queue = queue.Queue(maxsize=3)
-        self.thread = Thread(target=self.run, daemon=True)
-        self.thread.start()
-
-    def send(self, image):
-        self.queue.put(image)
-
-    def stop(self):
-        self.running = False
-        self.thread.join()
-
-    def run(self):
-        while self.running:
-            try:
-                img = self.queue.get(timeout=0.1)
-                cvimg = np.frombuffer(img, dtype=np.uint8).reshape(
-                    (self.height, self.width, 4)
-                )
-                # Display the image using OpenCV
-                # cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
-                # cv2.waitKey(1)
-                self.queue.task_done()
-            except queue.Empty:
-                continue
+from Utils.Consts import Motions
+from Utils.ImageServer import ImageServer
 
 
 class RobotState(Enum):

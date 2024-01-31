@@ -7,60 +7,21 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-import queue
-import time
+
 import math
-from threading import Thread
 from enum import Enum
 
-import cv2  # Import OpenCV library
 import numpy as np
 from controller import Robot
-from Utils.Consts import Motions
 from Utils import Functions
-
-
-class ImageServer:
-    def __init__(self, width, height, camera, robot_name, position):
-        self.camera = camera  # camera
-        self.width = width
-        self.height = height
-        self.robot_name = robot_name
-        self.position = position
-        self.running = True
-
-        self.queue = queue.Queue(maxsize=3)
-        self.thread = Thread(target=self.run, daemon=True)
-        self.thread.start()
-
-    def send(self, image):
-        self.queue.put(image)
-
-    def stop(self):
-        self.running = False
-        self.thread.join()
-
-    def run(self):
-        while self.running:
-            try:
-                img = self.queue.get(timeout=0.1)
-                cvimg = np.frombuffer(img, dtype=np.uint8).reshape(
-                    (self.height, self.width, 4)
-                )
-                # Display the image using OpenCV
-                # cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
-                # cv2.waitKey(1)
-                self.queue.task_done()
-            except queue.Empty:
-                continue
+from Utils.Consts import Motions
+from Utils.ImageServer import ImageServer
 
 
 class RobotState(Enum):
     INIT = 0
-    MOVE_TO_GOAL = 1
-    MOVE_TO_BALL = 2
-    SAVE_THE_BALL = 3
-    LOOK_THE_BALL = 3
+    LOOK_THE_BALL = 1
+    BE_A_DEFENDER = 2
 
 
 class SoccerRobot(Robot):
@@ -442,10 +403,46 @@ class SoccerRobot(Robot):
                 if abs(turnAngle) > 10:
                     return self.getTurningMotion(turnAngle)
 
+                # Calculate the distance to the goal position
+                distance = Functions.calculateDistance(
+                    self.StartLocation, self.getSelfPosition(self.robotName)
+                )
+
+                if distance <= 0.2 and abs(turnAngle) < 10:
+                    self.AppState = RobotState.BE_A_DEFENDER
+
                 return self.motions.standInit
 
-            case RobotState.MOVE_TO_GOAL:
-                print("Move to the ball")
+            case RobotState.BE_A_DEFENDER:
+                dx, dy = (
+                    self.getBallData()[0] - currentPosition[0],
+                    self.getBallData()[1] - currentPosition[1],
+                )
+                targetAngle = math.degrees(math.atan2(dy, dx))
+
+                # Get the robot's orientation angle
+                robotAngle = math.degrees(self.getRollPitchYaw()[2])
+
+                # Calculate the turn angle in the range [-180, 180)
+                turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+                turningMotion = self.getTurningMotion(turnAngle)
+                if turningMotion is not None:
+                    return turningMotion
+
+                if (
+                    self.supervisorData["ballOwner"][0] != "R"
+                    and self.getBallData()[0] < 0
+                ):
+                    # Calculate the distance to the goal position
+                    distance = Functions.calculateDistance(
+                        self.getBallData(), self.getSelfPosition(self.robotName)
+                    )
+
+                    if distance <= 0.2 and abs(turnAngle) < 10:
+                        return self.motions.longShoot
+
+                    return self.motions.forwardLoop
+
             case _:
                 self.AppState = RobotState.INIT
 
