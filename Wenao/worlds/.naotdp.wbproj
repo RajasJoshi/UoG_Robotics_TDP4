@@ -1,25 +1,25 @@
 Webots Project File version R2023b
-perspectives: 000000ff00000000fd0000000200000001000001e500000342fc0200000001fb0000001400540065007800740045006400690074006f00720100000016000003420000008700ffffff000000030000078000000082fc0100000001fb0000001a0043006f006e0073006f006c00650041006c006c0041006c006c0100000000000007800000006900ffffff000005990000034200000001000000020000000100000008fc00000000
-simulationViewPerspectives: 000000ff0000000100000002000001ac000005450100000002010000000100
+perspectives: 000000ff00000000fd00000002000000010000044b00000406fc0200000001fb0000001400540065007800740045006400690074006f00720100000022000004060000009c00ffffff0000000300000a00000000d9fc0100000001fb0000001a0043006f006e0073006f006c00650041006c006c0041006c006c010000000000000a000000006900ffffff000005b30000040600000001000000020000000100000008fc00000000
+simulationViewPerspectives: 000000ff00000001000000020000017b000004f60100000002010000000100
 sceneTreePerspectives: 000000ff00000001000000030000002a000000c0000000fa0100000002010000000200
 maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
-textFiles: 0 "controllers/BlueForward/BlueForward.py" "controllers/BlueDefenderRight/BlueDefenderRight.py" "controllers/RedForward/RedForward.py"
+textFiles: 1 "controllers/RedForwardA/RedForwardA.py" "controllers/BlueDefender/BlueDefender.py" "controllers/BlueForwardA/BlueForwardA.py"
 consoles: Console:All:All
-renderingDevicePerspectives: BlueDefenderLeft:CameraBottom;1;0.190625;0;0
-renderingDevicePerspectives: BlueDefenderLeft:CameraTop;1;0.0953125;0;0
-renderingDevicePerspectives: BlueDefenderRight:CameraBottom;1;0.190625;0;0
-renderingDevicePerspectives: BlueDefenderRight:CameraTop;1;0.0953125;0;0
-renderingDevicePerspectives: BlueForward:CameraBottom;1;0.190625;0;0
-renderingDevicePerspectives: BlueForward:CameraTop;1;0.0953125;0;0
-renderingDevicePerspectives: BlueGoalkeeper:CameraBottom;1;0.190625;0;0
-renderingDevicePerspectives: BlueGoalkeeper:CameraTop;1;0.0953125;0;0
-renderingDevicePerspectives: RedDefenderLeft:CameraBottom;1;0.190625;0;0
-renderingDevicePerspectives: RedDefenderLeft:CameraTop;1;0.0953125;0;0
-renderingDevicePerspectives: RedDefenderRight:CameraBottom;1;0.190625;0;0
-renderingDevicePerspectives: RedDefenderRight:CameraTop;1;0.0953125;0;0
-renderingDevicePerspectives: RedForward:CameraBottom;1;0.190625;0;0
-renderingDevicePerspectives: RedForward:CameraTop;1;0.0953125;0;0
-renderingDevicePerspectives: RedGoalkeeper:CameraBottom;1;0.190625;0;0
-renderingDevicePerspectives: RedGoalkeeper:CameraTop;1;0.0953125;0;0
+renderingDevicePerspectives: BlueDefender:CameraBottom;1;1;0;0
+renderingDevicePerspectives: BlueDefender:CameraTop;1;1;0;0
+renderingDevicePerspectives: BlueForwardA:CameraBottom;1;1;0;0
+renderingDevicePerspectives: BlueForwardA:CameraTop;1;1;0;0
+renderingDevicePerspectives: BlueForwardB:CameraBottom;1;1;0;0
+renderingDevicePerspectives: BlueForwardB:CameraTop;1;1;0;0
+renderingDevicePerspectives: BlueGoalkeeper:CameraBottom;1;1;0;0
+renderingDevicePerspectives: BlueGoalkeeper:CameraTop;1;1;0;0
+renderingDevicePerspectives: RedDefender:CameraBottom;1;1;0;0
+renderingDevicePerspectives: RedDefender:CameraTop;1;1;0;0
+renderingDevicePerspectives: RedForwardA:CameraBottom;1;1;0;0
+renderingDevicePerspectives: RedForwardA:CameraTop;1;1;0;0
+renderingDevicePerspectives: RedForwardB:CameraBottom;1;1;0;0
+renderingDevicePerspectives: RedForwardB:CameraTop;1;1;0;0
+renderingDevicePerspectives: RedGoalkeeper:CameraBottom;1;1;0;0
+renderingDevicePerspectives: RedGoalkeeper:CameraTop;1;1;0;0

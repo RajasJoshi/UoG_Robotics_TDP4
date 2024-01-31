@@ -5,9 +5,7 @@ All robots should be derived from this class.
 import os
 import sys
 
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 import queue
 import time
@@ -56,13 +54,10 @@ class ImageServer:
             except queue.Empty:
                 continue
 
-
 class RobotState(Enum):
     INIT = 0
-    MOVE_TO_GOAL = 1
-    MOVE_TO_BALL = 2
-    SAVE_THE_BALL = 3
-    LOOK_THE_BALL = 3
+    CHECK_BALL = 1
+    LOOK_THE_BALL = 2
 
 
 class SoccerRobot(Robot):
@@ -78,28 +73,28 @@ class SoccerRobot(Robot):
             "ballOwner": "",
             "ballPosition": [0, 0, 0],
             "RedGoalkeeper": [0, 0, 0],
-            "RedDefenderLeft": [0, 0, 0],
-            "RedDefenderRight": [0, 0, 0],
-            "RedForward": [0, 0, 0],
+            "RedDefender": [0, 0, 0],
+            "RedForwardB": [0, 0, 0],
+            "RedForwardA": [0, 0, 0],
             "BlueGoalkeeper": [0, 0, 0],
-            "BlueDefenderLeft": [0, 0, 0],
-            "BlueDefenderRight": [0, 0, 0],
-            "BlueForward": [0, 0, 0],
+            "BlueDefender": [0, 0, 0],
+            "BlueForwardB": [0, 0, 0],
+            "BlueForwardA": [0, 0, 0],
         }
-        self.ROassistantS = [
+        self.RobotList = [
             "RedGoalkeeper",
-            "RedDefenderLeft",
-            "RedDefenderRight",
-            "RedForward",
+            "RedDefender",
+            "RedForwardB",
+            "RedForwardA",
             "BlueGoalkeeper",
-            "BlueDefenderLeft",
-            "BlueDefenderRight",
-            "BlueForward",
+            "BlueDefender",
+            "BlueForwardB",
+            "BlueForwardA",
         ]
 
         self.AppState = RobotState.INIT
-        self.nextAppState = RobotState.INIT
-        self.StartLocation = [-2.603420414381743, -1.8417749970992363]
+
+        self.StartLocation = [2.36239, -0.030042]
 
         self.enableDevices()
         # Load motion files
@@ -340,7 +335,7 @@ class SoccerRobot(Robot):
         self.supervisorData["ballOwner"] = values[2]
         self.supervisorData["ballPosition"] = [float(values[i]) for i in range(3, 6)]
 
-        for i, robot in enumerate(self.ROassistantS):
+        for i, robot in enumerate(self.RobotList):
             self.supervisorData[robot] = [
                 float(values[j]) for j in range(6 + i * 3, 9 + i * 3)
             ]
@@ -426,32 +421,110 @@ class SoccerRobot(Robot):
                         return self.getTurningMotion(turnAngle)
 
                 return self.motions.forwardLoop
+                
+            case RobotState.CHECK_BALL:
+                
+                blue_goal = [3.22447,-0.0298182]
+                red_goal = [-3.25978, 0.0196566] 
+                
+                # Calculate the ball distance to the blue goalpost position
+                blue_goal_distance = Functions.calculateDistance(
+                        blue_goal, self.getBallData()
+                    ) 
+                    
+                # Calculate the ball distance to the red goalpost position
+                red_goal_distance = Functions.calculateDistance(
+                        red_goal, self.getBallData()
+                    ) 
+                    
+                # Calculate the Blue Forward A's distance to the ball position
+                blue_ForwardA = Functions.calculateDistance(
+                        self.getBallData(), self.getSelfPosition("BlueForwardA")
+                    ) 
+                    
+               # Calculate the Red Forward A's distance to the ball position
+                red_ForwardA = Functions.calculateDistance(
+                        self.getBallData(), self.getSelfPosition("RedForwardA")
+                    ) 
+                    
+                print("Ball's Distance:", blue_goal_distance)  
+                print("Robot's Distance:", red_ForwardA)  
+                    
+                                    
+                if red_ForwardA < 0.4:              
+                    # Calculate the angle to the target position
+                    dx, dy = (
+                        self.getBallData()[0] - currentPosition[0],
+                        self.getBallData()[1] - currentPosition[1],
+                    )
+                    targetAngle = math.degrees(math.atan2(dy, dx))
+    
+                    # Get the robot's orientation angle
+                    robotAngle = math.degrees(self.getRollPitchYaw()[2])
+    
+                    # Calculate the turn angle in the range [-180, 180)
+                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+    
+                    if abs(turnAngle) > 10:
+                        return self.getTurningMotion(turnAngle)
+                    return self.motions.forwardLoop 
+                    
+                elif blue_ForwardA < 0.4:
+                    return self.motions.standInit
+                    
+                elif blue_ForwardA < 0.4 and blue_ForwardA < 0.4:
+                    return self.motions.standInit  
+                                     
 
             case RobotState.LOOK_THE_BALL:
-                # Calculate the angle to the target position
-                dx, dy = (
-                    self.getBallData()[0] - currentPosition[0],
-                    self.getBallData()[1] - currentPosition[1],
+                distance = Functions.calculateDistance(
+                    self.getBallData(), self.getSelfPosition(self.robotName)
                 )
-                targetAngle = math.degrees(math.atan2(dy, dx))
-
-                # Get the robot's orientation angle
-                robotAngle = math.degrees(self.getRollPitchYaw()[2])
-
-                # Calculate the turn angle in the range [-180, 180)
-                turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
-
-                if abs(turnAngle) > 10:
-                    return self.getTurningMotion(turnAngle)
-
-                return self.motions.standInit
+                
+                if distance <= 1.5:
+                    self.AppState = RobotState.CHECK_BALL
+                    
+                else:
+                    # Calculate the angle to the target position
+                    dx, dy = (
+                        self.getBallData()[0] - currentPosition[0],
+                        self.getBallData()[1] - currentPosition[1],
+                    )
+                    targetAngle = math.degrees(math.atan2(dy, dx))
+    
+                    # Get the robot's orientation angle
+                    robotAngle = math.degrees(self.getRollPitchYaw()[2])
+    
+                    # Calculate the turn angle in the range [-180, 180)
+                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+    
+                    if abs(turnAngle) > 10:
+                        return self.getTurningMotion(turnAngle)
+                    return self.motions.standInit
 
             case RobotState.MOVE_TO_GOAL:
                 print("Move to the ball")
             case _:
-                self.nextAppState = RobotState.INIT
+                self.AppState = RobotState.INIT
+                
+    def detect_collision(self):
+        for robot_name in self.RobotList:
+            if robot_name != self.robotName:
+                robot_position = self.getSelfPosition(robot_name)
 
-        self.AppState = self.nextAppState
+                # Calculate the distance between robots
+                robot_distance = Functions.calculateDistance(
+                    robot_position, self.getSelfPosition(self.robotName)
+                )
+
+                # Check ultrasound values for collision detection
+                if robot_distance < 0.4 and self.ultrasound[0].getValue() < 0.75:
+                    self.interruptMotion()
+                    return self.motions.sideStepRight
+
+                if robot_distance < 0.4 and self.ultrasound[1].getValue() < 0.75:
+                    self.interruptMotion()
+                    return self.motions.sideStepLeft
 
 
 def main():

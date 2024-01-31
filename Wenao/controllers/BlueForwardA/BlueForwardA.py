@@ -5,9 +5,7 @@ All robots should be derived from this class.
 import os
 import sys
 
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 import queue
 import time
@@ -61,6 +59,7 @@ class RobotState(Enum):
     INIT = 0
     MOVE_TO_GOAL = 1
     MOVE_TO_BALL = 2
+    SAVE_THE_BALL = 3
     LOOK_THE_BALL = 3
 
 
@@ -77,29 +76,29 @@ class SoccerRobot(Robot):
             "ballOwner": "",
             "ballPosition": [0, 0, 0],
             "RedGoalkeeper": [0, 0, 0],
-            "RedDefenderLeft": [0, 0, 0],
-            "RedDefenderRight": [0, 0, 0],
-            "RedForward": [0, 0, 0],
+            "RedDefender": [0, 0, 0],
+            "RedForwardB": [0, 0, 0],
+            "RedForwardA": [0, 0, 0],
             "BlueGoalkeeper": [0, 0, 0],
-            "BlueDefenderLeft": [0, 0, 0],
-            "BlueDefenderRight": [0, 0, 0],
-            "BlueForward": [0, 0, 0],
+            "BlueDefender": [0, 0, 0],
+            "BlueForwardB": [0, 0, 0],
+            "BlueForwardA": [0, 0, 0],
         }
-        self.ROassistantS = [
+        self.RobotList = [
             "RedGoalkeeper",
-            "RedDefenderLeft",
-            "RedDefenderRight",
-            "RedForward",
+            "RedDefender",
+            "RedForwardB",
+            "RedForwardA",
             "BlueGoalkeeper",
-            "BlueDefenderLeft",
-            "BlueDefenderRight",
-            "BlueForward",
+            "BlueDefender",
+            "BlueForwardB",
+            "BlueForwardA",
         ]
 
         self.AppState = RobotState.INIT
-        self.nextAppState = RobotState.INIT
-        self.StartLocation = [0.8537437331388491, -0.05814318321955188]
 
+        self.StartLocation = [0.8537437331388491, -0.05814318321955188]
+        self.TargetgoalPosition = [-3.25978, 0.0196566] 
         self.enableDevices()
         # Load motion files
         self.motions = Motions()
@@ -292,8 +291,7 @@ class SoccerRobot(Robot):
             return self.motions.turnRight20
         else:
             return None
-            
-            
+
     def getSelfPosition(self, robotName) -> list:
         """Get the robot coordinate on the field.
 
@@ -340,7 +338,7 @@ class SoccerRobot(Robot):
         self.supervisorData["ballOwner"] = values[2]
         self.supervisorData["ballPosition"] = [float(values[i]) for i in range(3, 6)]
 
-        for i, robot in enumerate(self.ROassistantS):
+        for i, robot in enumerate(self.RobotList):
             self.supervisorData[robot] = [
                 float(values[j]) for j in range(6 + i * 3, 9 + i * 3)
             ]
@@ -399,7 +397,6 @@ class SoccerRobot(Robot):
         # Get the current position
         currentPosition = self.getSelfPosition(self.robotName)
         
-        print(self.AppState)
 
         match self.AppState:
             case RobotState.INIT:
@@ -458,12 +455,9 @@ class SoccerRobot(Robot):
                     return self.motions.forwardLoop
                 
             case RobotState.MOVE_TO_GOAL:   
-            
-                self.goalPosition = [-3.25978, 0.0196566]  
-                     
                 # Calculate the ball distance to the goal position
                 ball_distance = Functions.calculateDistance(
-                    self.goalPosition, self.getBallData()
+                    self.TargetgoalPosition, self.getBallData()
                 )
                 
                 # Calculate the robot's distance to the ball position
@@ -471,10 +465,10 @@ class SoccerRobot(Robot):
                     self.getBallData(), self.getSelfPosition(self.robotName)
                 )
                 
-                print("Ball's Distance:", ball_distance)  
-                print("Robot's Distance:", robot_distance)  
+                #print("Ball's Distance:", ball_distance)  
+                #print("Robot's Distance:", robot_distance)  
                 
-                # Check if nao robot is near the ball
+                # Check if nao robot is away from the ball
                 if robot_distance > 0.2:
                     self.AppState = RobotState.LOOK_THE_BALL
                     return self.motions.forwardLoop                     
@@ -486,19 +480,17 @@ class SoccerRobot(Robot):
                 else:
                     # Calculate the robot's angle to the goal position
                     dx, dy = (
-                        self.goalPosition[0] - currentPosition[0],
-                        self.goalPosition[1] - currentPosition[1],
+                        self.TargetgoalPosition[0] - currentPosition[0],
+                        self.TargetgoalPosition[1] - currentPosition[1],
                     )
                     targetAngle = math.degrees(math.atan2(dy, dx))
-    
+
                     # Get the robot's orientation angle
                     robotAngle = math.degrees(self.getRollPitchYaw()[2])
-    
+
                     # Calculate the turn angle in the range [-180, 180)
-                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180  
-                    
-                    print("Robot's Angle:", turnAngle)               
-        
+                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+
                     if abs(turnAngle) > 10:
                         if turnAngle > 90:
                             return self.motions.rightSidePass
@@ -509,40 +501,30 @@ class SoccerRobot(Robot):
                         elif turnAngle < -50:
                             return self.motions.leftSidePass
                         elif turnAngle < -30:
-                            return self.motions.longShoot                      
-                    return self.motions.forwardLoop                         
-                
+                            return self.motions.longShoot
+                    return self.motions.forwardLoop
             case _:
-                self.nextAppState = RobotState.INIT
+                self.AppState = RobotState.INIT
 
-        self.AppState = self.nextAppState
         
     def detect_collision(self):
-    
-        # Create a list to store instances of all the robots
-        nao_names = ["BlueForward","RedForward","BlueDefenderRight"]     
-        too_close = False
-        
-        for i in range(len(nao_names)):
-            if nao_names[i] != self.robotName:
-                nao_position = self.getSelfPosition(nao_names[i])
-                
-                # Calculate the distance between nao robots
-                nao_distance = Functions.calculateDistance(nao_position, self.getSelfPosition(self.robotName))
-                #print(f"Distance from {self.robotName} to {nao_names[i]}:{nao_distance}")
-                #print(self.ultrasound[0].getValue())
-                #print(self.ultrasound[1].getValue())
-                
-                # If robots are too close, move away from each other
-                if nao_distance < 0.4 and self.ultrasound[0].getValue() < 0.75:
+        for robot_name in self.RobotList:
+            if robot_name != self.robotName:
+                robot_position = self.getSelfPosition(robot_name)
+
+                # Calculate the distance between robots
+                robot_distance = Functions.calculateDistance(
+                    robot_position, self.getSelfPosition(self.robotName)
+                )
+
+                # Check ultrasound values for collision detection
+                if robot_distance < 0.4 and self.ultrasound[0].getValue() < 0.75:
                     self.interruptMotion()
                     return self.motions.sideStepRight
-                    
-                if nao_distance < 0.4 and self.ultrasound[1].getValue() < 0.75:
+
+                if robot_distance < 0.4 and self.ultrasound[1].getValue() < 0.75:
                     self.interruptMotion()
                     return self.motions.sideStepLeft
-
-
 def main():
     # Create the robot and initialize the camera
     robot = SoccerRobot()
@@ -551,4 +533,3 @@ def main():
 
 if __name__ == "__main__":
     main()
- 
