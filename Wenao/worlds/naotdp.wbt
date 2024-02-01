@@ -1,0 +1,131 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/robotstadium/protos/RobotstadiumSoccerField.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/balls/protos/RobocupSoccerBall.proto"
+EXTERNPROTO "../protos/NaoV6.proto"
+EXTERNPROTO "../protos/NaoJersey.proto"
+
+WorldInfo {
+  optimalThreadCount 8
+  gpsCoordinateSystem "WGS84"
+}
+Viewpoint {
+  orientation -0.24374122770383327 0.24527136720711723 0.9383134712588217 1.6281895084173221
+  position -0.13822713151077515 -14.77816869988081 7.129375153925527
+}
+TexturedBackground {
+  texture "stadium"
+}
+TexturedBackgroundLight {
+  castShadows FALSE
+}
+RobotstadiumSoccerField {
+  frame1Color 0 0 1
+  frame2Color 1 0 0
+}
+DEF RedGoalkeeper NaoV6 {
+  translation -3.026206334813596 3.2029578684469504 0.32029599092899846
+  rotation 0.04889329791356073 0.04711662716882185 -0.9976920711639287 1.610109117757123
+  name "RedGoalkeeper"
+  controller "RedGoalkeeper"
+  jersey NaoJersey {
+    jerseyColor 1 0 0
+  }
+}
+DEF RedDefender NaoV6 {
+  translation -2.4022481138463587 3.1958414125934893 0.32029599092899314
+  rotation 0.048892454874613425 0.04748051955307438 -0.9976748609237902 1.6024204285941188
+  name "RedDefender"
+  controller "RedDefender"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_2.png"
+    ]
+    jerseyColor 1 0 0
+  }
+}
+DEF RedForwardB NaoV6 {
+  translation -1.7742856221330368 3.204251310823099 0.3202959909289577
+  rotation 0.04888767678311336 0.04950288912506321 -0.9975767935487581 1.5607138792538826
+  name "RedForwardB"
+  controller "RedForwardB"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_3.png"
+    ]
+    jerseyColor 1 0 0
+  }
+}
+DEF RedForwardA NaoV6 {
+  translation -1.088090623386855 3.21071260719813 0.32029599092894134
+  rotation 0.04889593428825571 0.04597061469211552 -0.997745403494753 1.6346987082082596
+  name "RedForwardA"
+  controller "RedForwardA"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_4.png"
+    ]
+    jerseyColor 1 0 0
+  }
+}
+DEF BlueGoalkeeper NaoV6 {
+  translation 3.3475127162368827 -3.167100805973759 0.31831329409725384
+  rotation -0.05025331848469187 0.04659705413742566 0.9976488954171151 1.5918319783201622
+  name "BlueGoalkeeper"
+  controller "BlueGoalkeeper"
+  jersey NaoJersey {
+    jerseyColor 0 0 1
+  }
+}
+DEF BlueDefender NaoV6 {
+  translation 2.662626484215248 -3.1674137948764174 0.31794582350366546
+  rotation -0.049398853565318736 0.04930419431707207 0.9975614515854031 1.5544299704444229
+  name "BlueDefender"
+  controller "BlueDefender"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_2.png"
+    ]
+    jerseyColor 0 0 1
+  }
+}
+DEF BlueForwardB NaoV6 {
+  translation 1.9015173468635125 -3.1654064748630035 0.3197003222992825
+  rotation -0.050242144413230695 0.049051937846040554 0.9975317710821587 1.5436307843080403
+  name "BlueForwardB"
+  controller "BlueForwardB"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_3.png"
+    ]
+    jerseyColor 0 0 1
+  }
+}
+DEF BlueForwardA NaoV6 {
+  translation 1.100535112134728 -3.1628206246247244 0.31839527117522737
+  rotation -0.05093587308919152 0.04704912041370518 0.9975930618749002 1.5689336996649348
+  name "BlueForwardA"
+  controller "BlueForwardA"
+  jersey NaoJersey {
+    jerseyTexture [
+      "../protos/textures/nao_jersey_dark_4.png"
+    ]
+    jerseyColor 0 0 1
+  }
+}
+DEF BALL RobocupSoccerBall {
+  translation 0.0 0.0 0.0
+  rotation 0.7061171684562897 0.08214359694419121 0.7033142781803466 -3.0337383834214533
+  name "RobocupSoccerBall"
+}
+DEF SUPERVISOR Robot {
+  children [
+    DEF EMITTER Emitter {
+    }
+  ]
+  name "supervisor"
+  controller "Supervisor"
+  supervisor TRUE
+}
