@@ -60,7 +60,7 @@ class SupervisorBase(Supervisor):
         ball_coordinate = self.getBallPosition()
 
         if abs(ball_coordinate[0]) > 4.5:
-            if abs(ball_coordinate[1]) < 1.35:
+            if ball_coordinate[1] < 0.7 and ball_coordinate[1] > -0.7:
                 goal_team = "RED" if 4.5 < ball_coordinate[0] else "BLUE"
                 print(f"{goal_team} GOAL!")
                 if goal_team == "RED":
