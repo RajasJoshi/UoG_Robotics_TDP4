@@ -372,8 +372,8 @@ class SoccerRobot(Robot):
                     # Calculate the angle to the target position
                     targetAngle = math.degrees(
                         math.atan2(
-                            currentBallPosition[1] - currentSelfPosition[1],
-                            currentBallPosition[0] - currentSelfPosition[0],
+                            self.StartLocation[1] - currentSelfPosition[1],
+                            self.StartLocation[0] - currentSelfPosition[0],
                         )
                     )
 
