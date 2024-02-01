@@ -351,11 +351,16 @@ class SoccerRobot(Robot):
         ):
             return self.motions.standUpFromBack
 
-        self.detect_collision()
+        collision = self.detect_collision()
+        if self.isNewMotionValid(collision):
+            self.addMotionToQueue(collision)
+            self.startMotion()
 
         # Get the current position
         currentSelfPosition = self.getSelfPosition(self.robotName)
         currentBallPosition = self.getBallData()
+        
+        print(self.AppState)
 
         match self.AppState:
             case RobotState.INIT:
@@ -418,7 +423,7 @@ class SoccerRobot(Robot):
 
             case RobotState.BE_A_GOALKEEPER:
                 isTheBallClose = Functions.calculateDistance(
-                    currentBallPosition, [-4.5, 0.00]
+                    currentBallPosition, [4.5, 0.00]
                 )
 
                 targetAngle = math.degrees(

@@ -350,7 +350,10 @@ class SoccerRobot(Robot):
         ):
             return self.motions.standUpFromBack
 
-        self.detect_collision()
+        collision = self.detect_collision()
+        if self.isNewMotionValid(collision):
+            self.addMotionToQueue(collision)
+            self.startMotion()
 
         # Get the current position
         currentSelfPosition = self.getSelfPosition(self.robotName)
@@ -440,7 +443,6 @@ class SoccerRobot(Robot):
                     )
 
                     if distance <= 0.2 and abs(turnAngle) < 10:
-                        print("Bitch shoot now")
                         return self.motions.shoot
 
                     return self.motions.forwardsSprint

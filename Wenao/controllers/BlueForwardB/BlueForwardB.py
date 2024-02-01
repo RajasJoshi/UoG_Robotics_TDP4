@@ -7,60 +7,22 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-import queue
-import time
+
 import math
-from threading import Thread
 from enum import Enum
 
-import cv2  # Import OpenCV library
 import numpy as np
 from controller import Robot
-from Utils.Consts import Motions
 from Utils import Functions
-
-
-class ImageServer:
-    def __init__(self, width, height, camera, robot_name, position):
-        self.camera = camera  # camera
-        self.width = width
-        self.height = height
-        self.robot_name = robot_name
-        self.position = position
-        self.running = True
-
-        self.queue = queue.Queue(maxsize=3)
-        self.thread = Thread(target=self.run, daemon=True)
-        self.thread.start()
-
-    def send(self, image):
-        self.queue.put(image)
-
-    def stop(self):
-        self.running = False
-        self.thread.join()
-
-    def run(self):
-        while self.running:
-            try:
-                img = self.queue.get(timeout=0.1)
-                cvimg = np.frombuffer(img, dtype=np.uint8).reshape(
-                    (self.height, self.width, 4)
-                )
-                # Display the image using OpenCV
-                # cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
-                # cv2.waitKey(1)
-                self.queue.task_done()
-            except queue.Empty:
-                continue
+from Utils.Consts import Motions
+from Utils.ImageServer import ImageServer
 
 
 class RobotState(Enum):
     INIT = 0
-    MOVE_TO_GOAL = 1
-    MOVE_TO_BALL = 2
-    LOOK_THE_BALL = 3
-    SCORE_GOAL = 4
+    LOOK_THE_BALL = 1
+    BE_A_FORWARD = 2
+    SCORE_GOAL = 3
 
 
 class SoccerRobot(Robot):
@@ -96,8 +58,9 @@ class SoccerRobot(Robot):
         ]
 
         self.AppState = RobotState.INIT
+
         self.StartLocation = [0.278889, -1.8676]
-        self.TargetgoalPosition = [-3.25978, 0.0196566] 
+        self.TargetgoalPosition = [-3.25978, 0.0196566]
         self.enableDevices()
         # Load motion files
         self.motions = Motions()
@@ -394,97 +357,95 @@ class SoccerRobot(Robot):
             self.startMotion()
 
         # Get the current position
-        currentPosition = self.getSelfPosition(self.robotName)
-        
-        print(self.AppState)
-        
+        currentSelfPosition = self.getSelfPosition(self.robotName)
+        currentBallPosition = self.getBallData()
 
         match self.AppState:
             case RobotState.INIT:
                 # Calculate the distance to the goal position
                 distance = Functions.calculateDistance(
-                    self.StartLocation, self.getSelfPosition(self.robotName)
+                    self.StartLocation, currentSelfPosition
                 )
-                
+
                 if distance <= 0.2:
                     self.AppState = RobotState.LOOK_THE_BALL
                     return self.motions.standInit
                 else:
                     # Calculate the angle to the target position
-                    dx, dy = (
-                        self.StartLocation[0] - currentPosition[0],
-                        self.StartLocation[1] - currentPosition[1],
+                    targetAngle = math.degrees(
+                        math.atan2(
+                            self.StartLocation[1] - currentSelfPosition[1],
+                            self.StartLocation[0] - currentSelfPosition[0],
+                        )
                     )
-                    targetAngle = math.degrees(math.atan2(dy, dx))
 
                     # Get the robot's orientation angle
                     robotAngle = math.degrees(self.getRollPitchYaw()[2])
 
                     # Calculate the turn angle in the range [-180, 180)
                     turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
-                    
                     if abs(turnAngle) > 10:
                         return self.getTurningMotion(turnAngle)
+
                 return self.motions.forwardLoop
 
-            case RobotState.LOOK_THE_BALL:           
+            case RobotState.LOOK_THE_BALL:
+                # Calculate the angle to the target position
                 distance = Functions.calculateDistance(
-                    self.getBallData(), self.getSelfPosition(self.robotName)
+                    currentBallPosition, currentSelfPosition
                 )
-                
+
                 if distance <= 0.2:
-                    self.AppState = RobotState.MOVE_TO_GOAL
+                    self.AppState = RobotState.BE_A_FORWARD
                     return self.motions.shoot
-                    
+
                 else:
                     # Calculate the angle to the target position
-                    dx, dy = (
-                        self.getBallData()[0] - currentPosition[0],
-                        self.getBallData()[1] - currentPosition[1],
+                    targetAngle = math.degrees(
+                        math.atan2(
+                            currentBallPosition[1] - currentSelfPosition[1],
+                            currentBallPosition[0] - currentSelfPosition[0],
+                        )
                     )
-                    targetAngle = math.degrees(math.atan2(dy, dx))
-    
+
                     # Get the robot's orientation angle
                     robotAngle = math.degrees(self.getRollPitchYaw()[2])
-    
+
                     # Calculate the turn angle in the range [-180, 180)
                     turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
-    
+
                     if abs(turnAngle) > 10:
                         return self.getTurningMotion(turnAngle)
-                
-            case RobotState.MOVE_TO_GOAL:   
+
+            case RobotState.BE_A_FORWARD:
                 # Calculate the ball distance to the goal position
                 ball_distance = Functions.calculateDistance(
-                    self.TargetgoalPosition, self.getBallData()
+                    self.TargetgoalPosition, currentBallPosition
                 )
-                
+
                 # Calculate the robot's distance to the ball position
                 robot_distance = Functions.calculateDistance(
-                    self.getBallData(), self.getSelfPosition(self.robotName)
+                    currentBallPosition, currentSelfPosition
                 )
-                
-                #print("Ball's Distance:", ball_distance)  
-                #print("Robot's Distance:", robot_distance)  
-                
+
                 # Check if nao robot is away from the ball
                 if robot_distance > 0.2:
                     self.AppState = RobotState.LOOK_THE_BALL
-                    return self.motions.forwardLoop                     
-                
+                    return self.motions.forwardLoop
+
                 # Check if the ball is near the goalpost
                 elif ball_distance <= 0.2:
                     self.AppState = RobotState.SCORE_GOAL
                     return self.motions.standInit
-                    
+
                 else:
                     # Calculate the robot's angle to the goal position
-                    dx, dy = (
-                        self.TargetgoalPosition[0] - currentPosition[0],
-                        self.TargetgoalPosition[1] - currentPosition[1],
+                    targetAngle = math.degrees(
+                        math.atan2(
+                            self.TargetgoalPosition[1] - currentSelfPosition[1],
+                            self.TargetgoalPosition[0] - currentSelfPosition[0],
+                        )
                     )
-                    targetAngle = math.degrees(math.atan2(dy, dx))
-
                     # Get the robot's orientation angle
                     robotAngle = math.degrees(self.getRollPitchYaw()[2])
 
@@ -503,37 +464,40 @@ class SoccerRobot(Robot):
                         elif turnAngle < -30:
                             return self.motions.shoot
                     return self.motions.forwardLoop
-                    
-            case RobotState.SCORE_GOAL:   
-                    # Calculate the Robot's angle to the goalkeeper position
-                    dx, dy = (
-                        self.getSelfPosition("RedGoalkeeper")[0] - currentPosition[0],
-                        sself.getSelfPosition("RedGoalkeeper")[1] - currentPosition[1],
+
+            case RobotState.SCORE_GOAL:
+                # Calculate the Robot's angle to the goalkeeper position
+                targetAngle = math.degrees(
+                    math.atan2(
+                        self.getSelfPosition("RedGoalkeeper")[1]
+                        - currentSelfPosition[1],
+                        self.getSelfPosition("RedGoalkeeper")[0]
+                        - currentSelfPosition[0],
                     )
-                    targetAngle = math.degrees(math.atan2(dy, dx))
+                )
 
-                    # Get the robot's orientation angle
-                    robotAngle = math.degrees(self.getRollPitchYaw()[2])
+                # Get the robot's orientation angle
+                robotAngle = math.degrees(self.getRollPitchYaw()[2])
 
-                    # Calculate the turn angle in the range [-180, 180)
-                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+                # Calculate the turn angle in the range [-180, 180)
+                turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
 
-                    if abs(turnAngle) > 10:
-                        if turnAngle > 90:
-                            return self.motions.rightSidePass
-                        elif turnAngle > 40:
-                            return self.motions.rightSidePass
-                        elif turnAngle > 20:
-                            return self.motions.rightSidePass
-                        elif turnAngle < -50:
-                            return self.motions.leftSidePass
-                        elif turnAngle < -30:
-                            return self.motions.shoot
-                    return self.motions.shoot
+                if abs(turnAngle) > 10:
+                    if turnAngle > 90:
+                        return self.motions.rightSidePass
+                    elif turnAngle > 40:
+                        return self.motions.rightSidePass
+                    elif turnAngle > 20:
+                        return self.motions.rightSidePass
+                    elif turnAngle < -50:
+                        return self.motions.leftSidePass
+                    elif turnAngle < -30:
+                        return self.motions.shoot
+                return self.motions.shoot
+
             case _:
                 self.AppState = RobotState.INIT
 
-        
     def detect_collision(self):
         for robot_name in self.RobotList:
             if robot_name != self.robotName:
@@ -552,6 +516,11 @@ class SoccerRobot(Robot):
                 if robot_distance < 0.4 and self.ultrasound[1].getValue() < 0.75:
                     self.interruptMotion()
                     return self.motions.sideStepLeft
+
+        # Return a default motion or None if no collision is detected
+        return None
+
+
 def main():
     # Create the robot and initialize the camera
     robot = SoccerRobot()
