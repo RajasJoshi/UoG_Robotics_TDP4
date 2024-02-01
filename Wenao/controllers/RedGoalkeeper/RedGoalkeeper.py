@@ -2,6 +2,7 @@
 The Basic Robot behaviour and feature class.
 All robots should be derived from this class.
 """
+
 import os
 import sys
 

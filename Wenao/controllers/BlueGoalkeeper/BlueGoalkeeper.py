@@ -2,6 +2,7 @@
 The Basic Robot behaviour and feature class.
 All robots should be derived from this class.
 """
+
 import os
 import sys
 
@@ -421,7 +422,7 @@ class SoccerRobot(Robot):
 
             case RobotState.BE_A_GOALKEEPER:
                 isTheBallClose = Functions.calculateDistance(
-                    currentBallPosition, [-4.5, 0.00]
+                    currentBallPosition, [4.5, 0.00]
                 )
 
                 targetAngle = math.degrees(

@@ -2,6 +2,7 @@
 The Basic Robot behaviour and feature class.
 All robots should be derived from this class.
 """
+
 import os
 import sys
 
@@ -436,8 +437,7 @@ class SoccerRobot(Robot):
 
                 # Check if the ball is near the goalpost
                 elif ball_distance <= 0.2:
-                    self.AppState = RobotState.SCORE_GOAL
-                    return self.motions.standInit
+                    return self.motions.shoot
 
                 else:
                     # Calculate the robot's angle to the goal position
@@ -456,15 +456,17 @@ class SoccerRobot(Robot):
                     if abs(turnAngle) > 10:
                         if turnAngle > 90:
                             return self.motions.rightSidePass
-                        elif turnAngle > 40:
+                        elif turnAngle > 50:
                             return self.motions.rightSidePass
-                        elif turnAngle > 20:
+                        elif turnAngle > 30:
                             return self.motions.rightSidePass
                         elif turnAngle < -50:
                             return self.motions.leftSidePass
                         elif turnAngle < -30:
-                            return self.motions.shoot
-                    return self.motions.forwardLoop
+                            return self.motions.leftSidePass
+                        else:
+                            return self.motions.longShoot
+                    return self.motions.forwards50
 
             case RobotState.SCORE_GOAL:
                 # Calculate the Robot's angle to the goalkeeper position
