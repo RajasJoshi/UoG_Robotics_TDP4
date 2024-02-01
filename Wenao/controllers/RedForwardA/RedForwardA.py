@@ -348,7 +348,10 @@ class SoccerRobot(Robot):
         ):
             return self.motions.standUpFromBack
 
-        self.detect_collision()
+        collision = self.detect_collision()
+        if self.isNewMotionValid(collision):
+            self.addMotionToQueue(collision)
+            self.startMotion()
 
         # Get the current position
         currentSelfPosition = self.getSelfPosition(self.robotName)
@@ -382,7 +385,7 @@ class SoccerRobot(Robot):
                     self.AppState = RobotState.BE_A_FORWARD
                     return self.motions.standInit
 
-                return self.motions.forwardLoop
+                return self.motions.forwards
 
             case RobotState.LOOK_THE_BALL:
                 distance = Functions.calculateDistance(
@@ -410,7 +413,7 @@ class SoccerRobot(Robot):
 
                     if abs(turnAngle) > 10:
                         return self.getTurningMotion(turnAngle)
-                    return self.motions.forwardLoop
+                    return self.motions.forwards
 
             case RobotState.BE_A_FORWARD:
                 # Calculate the ball distance to the goal position
@@ -426,7 +429,7 @@ class SoccerRobot(Robot):
                 # Check if nao robot is near the ball
                 if robot_distance > 0.2:
                     self.AppState = RobotState.LOOK_THE_BALL
-                    return self.motions.forwards50
+                    return self.motions.forwards
 
                 # Check if the ball is near the goalpost
                 elif ball_distance <= 0.2:

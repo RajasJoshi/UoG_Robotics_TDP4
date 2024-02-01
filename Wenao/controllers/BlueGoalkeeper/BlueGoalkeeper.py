@@ -351,7 +351,10 @@ class SoccerRobot(Robot):
         ):
             return self.motions.standUpFromBack
 
-        self.detect_collision()
+        collision = self.detect_collision()
+        if self.isNewMotionValid(collision):
+            self.addMotionToQueue(collision)
+            self.startMotion()
 
         # Get the current position
         currentSelfPosition = self.getSelfPosition(self.robotName)
