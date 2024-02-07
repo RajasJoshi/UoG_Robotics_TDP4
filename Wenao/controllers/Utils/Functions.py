@@ -1,4 +1,4 @@
-import math
+import numpy as np
 
 
 def calculateDistance(coordinate1, coordinate2) -> float:
@@ -11,9 +11,9 @@ def calculateDistance(coordinate1, coordinate2) -> float:
     Returns:
         float: Distance between coordinates.
     """
-    deltaX = math.fabs(coordinate1[0] - coordinate2[0])
-    deltaY = math.fabs(coordinate1[1] - coordinate2[1])
-    return math.hypot(deltaX, deltaY)
+    deltaX = np.abs(coordinate1[0] - coordinate2[0])
+    deltaY = np.abs(coordinate1[1] - coordinate2[1])
+    return np.hypot(deltaX, deltaY)
 
 
 def calculateAngleAccordingToXAxis(ballCoordinate, robotCoordinate) -> float:
@@ -27,10 +27,10 @@ def calculateAngleAccordingToXAxis(ballCoordinate, robotCoordinate) -> float:
         float: Angle between robot-ball vector and x-axis.
     """
     hypot = calculateDistance(ballCoordinate, robotCoordinate)
-    deltaX = math.fabs(ballCoordinate[0] - robotCoordinate[0])
+    deltaX = np.abs(ballCoordinate[0] - robotCoordinate[0])
 
     cosTheta = deltaX / hypot
-    degree = math.degrees(math.acos(cosTheta))
+    degree = np.degrees(np.arccos(cosTheta))
 
     return degree
 
@@ -88,7 +88,7 @@ def calculateTurningAngleAccordingToRobotHeading(
         degree = -degree
 
     # Finds the angle of robots heading.
-    zAxisDegree = math.degrees(robotHeadingAngle)
+    zAxisDegree = np.degrees(robotHeadingAngle)
 
     turningAngle = degree - zAxisDegree
     if turningAngle > 180:

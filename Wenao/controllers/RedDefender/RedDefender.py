@@ -9,7 +9,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 
-import math
+import configparser
 from enum import Enum
 import numpy as np
 from controller import Robot
@@ -28,11 +28,11 @@ class RobotState(Enum):
 class SoccerRobot(Robot):
     PHALANX_MAX = 8
 
-    def __init__(self):
+    def __init__(self, config):
         Robot.__init__(self)
         self.robotName = self.getName()
         self.currentlyPlaying = False
-
+        self.config = config
         self.AppState = RobotState.INIT
 
         self.StartLocation = [-2.07803, -0.00558616]
@@ -44,21 +44,25 @@ class SoccerRobot(Robot):
         self.motionQueue = [self.motions.standInit]
         self.startMotion()
 
-        self.TopCamServer = ImageServer(
-            self.cameraTop.getWidth(),
-            self.cameraTop.getHeight(),
-            self.cameraTop,
-            self.robotName,  # Pass robot name to ImageServer
-            "Top",
-        )
-        self.BottomCamServer = ImageServer(
-            self.cameraBottom.getWidth(),
-            self.cameraBottom.getHeight(),
-            self.cameraBottom,
-            self.robotName,  # Pass robot name to ImageServer
-            "Bottom",
-        )
-        self.Supervisor = SupervisorData(self.robotName)
+        self.bVisionUsed = config.getboolean("RedTeam", "Vision")
+
+        if self.bVisionUsed:
+            self.TopCamServer = ImageServer(
+                self.cameraTop.getWidth(),
+                self.cameraTop.getHeight(),
+                self.cameraTop,
+                self.robotName,  # Pass robot name to ImageServer
+                "Top",
+            )
+            self.BottomCamServer = ImageServer(
+                self.cameraBottom.getWidth(),
+                self.cameraBottom.getHeight(),
+                self.cameraBottom,
+                self.robotName,  # Pass robot name to ImageServer
+                "Bottom",
+            )
+        else:
+            self.Supervisor = SupervisorData(self.robotName)
 
     def run(self):
         try:
@@ -73,16 +77,17 @@ class SoccerRobot(Robot):
                         self.addMotionToQueue(whatToDoNext)
                         self.startMotion()
 
-                try:
-                    top_image = self.cameraTop.getImage()
-                    bottom_image = self.cameraBottom.getImage()
+                if self.bVisionUsed:
+                    try:
+                        top_image = self.cameraTop.getImage()
+                        bottom_image = self.cameraBottom.getImage()
 
-                    self.TopCamServer.send(top_image)
-                    self.BottomCamServer.send(bottom_image)
+                        self.TopCamServer.send(top_image)
+                        self.BottomCamServer.send(bottom_image)
 
-                except ValueError as e:
-                    # Handle the exception (e.g., print an error message)
-                    print(f"Error getting camera image: {e}")
+                    except ValueError as e:
+                        # Handle the exception (e.g., print an error message)
+                        print(f"Error getting camera image: {e}")
 
                 if self.step(self.timeStep) == -1:
                     break
@@ -210,14 +215,14 @@ class SoccerRobot(Robot):
         # Fall Detection
         acc = self.accelerometer.getValues()
         if (
-            math.fabs(acc[0]) > math.fabs(acc[1])
-            and math.fabs(acc[0]) > math.fabs(acc[2])
+            np.abs(acc[0]) > np.abs(acc[1])
+            and np.abs(acc[0]) > np.abs(acc[2])
             and acc[0] < -5
         ):
             return self.motions.standUpFromFront
         elif (
-            math.fabs(acc[0]) > math.fabs(acc[1])
-            and math.fabs(acc[0]) > math.fabs(acc[2])
+            np.abs(acc[0]) > np.abs(acc[1])
+            and np.abs(acc[0]) > np.abs(acc[2])
             and acc[2] > 0
         ):
             return self.motions.standUpFromBack
@@ -319,7 +324,9 @@ class SoccerRobot(Robot):
 
 def main():
     # Create the robot and initialize the camera
-    robot = SoccerRobot()
+    config = configparser.ConfigParser()
+    config.read("../Utils/globalconfig.ini")
+    robot = SoccerRobot(config)
     robot.run()
 
 
