@@ -4,7 +4,6 @@ from threading import Thread
 
 import cv2
 import numpy as np
-from ultralytics import YOLO
 
 
 class ImageServer:

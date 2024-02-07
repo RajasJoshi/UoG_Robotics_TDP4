@@ -68,10 +68,7 @@ class SupervisorBase(Supervisor):
                 else:
                     self.score[1] += 1
 
-                self.latestGoalTime = time.time() * 1000
-
-                if self.latestGoalTime < (time.time() * 1000) - 5000:
-                    self.resetSimulation()
+                self.resetSimulation()
 
     def getBallPosition(self) -> list:
         """Get the soccer ball coordinate on the field.
