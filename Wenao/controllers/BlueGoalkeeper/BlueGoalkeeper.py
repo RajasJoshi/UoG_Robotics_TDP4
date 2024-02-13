@@ -37,15 +37,13 @@ class SoccerRobot(Robot):
         self.AppState = RobotState.INIT
 
         self.StartLocation = [4.5, 0.00]
-
+        self.bVisionUsed = config.getboolean("BlueTeam", "Vision")
         self.enableDevices()
         # Load motion files
         self.motions = Motions()
         self.currentlyMoving = False
         self.motionQueue = [self.motions.standInit]
         self.startMotion()
-
-        self.bVisionUsed = config.getboolean("BlueTeam", "Vision")
 
         if self.bVisionUsed:
             self.TopCamServer = ImageServer(
@@ -100,10 +98,11 @@ class SoccerRobot(Robot):
         self.timeStep = int(self.getBasicTimeStep())
 
         # camera
-        self.cameraTop = self.getDevice("CameraTop")
-        self.cameraBottom = self.getDevice("CameraBottom")
-        self.cameraTop.enable(4 * self.timeStep)
-        self.cameraBottom.enable(4 * self.timeStep)
+        if self.bVisionUsed:
+            self.cameraTop = self.getDevice("CameraTop")
+            self.cameraBottom = self.getDevice("CameraBottom")
+            self.cameraTop.enable(4 * self.timeStep)
+            self.cameraBottom.enable(4 * self.timeStep)
 
         # accelerometer
         self.accelerometer = self.getDevice("accelerometer")
@@ -112,13 +111,6 @@ class SoccerRobot(Robot):
         # inertial unit
         self.inertialUnit = self.getDevice("inertial unit")
         self.inertialUnit.enable(self.timeStep)
-
-        # ultrasound sensors
-        self.ultrasound = []
-        self.ultrasound.append(self.getDevice("Sonar/Left"))
-        self.ultrasound.append(self.getDevice("Sonar/Right"))
-        self.ultrasound[0].enable(self.timeStep)
-        self.ultrasound[1].enable(self.timeStep)
 
         # Receiver
         self.receiver = self.getDevice("receiver")
