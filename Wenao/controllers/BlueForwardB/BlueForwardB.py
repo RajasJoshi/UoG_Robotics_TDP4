@@ -38,14 +38,13 @@ class SoccerRobot(Robot):
 
         self.StartLocation = [0.278889, -1.8676]
         self.TargetgoalPosition = [-3.25978, 0.0196566]
+        self.bVisionUsed = config.getboolean("BlueTeam", "Vision")
         self.enableDevices()
         # Load motion files
         self.motions = Motions()
         self.currentlyMoving = False
         self.motionQueue = [self.motions.standInit]
         self.startMotion()
-
-        self.bVisionUsed = config.getboolean("BlueTeam", "Vision")
 
         if self.bVisionUsed:
             self.TopCamServer = ImageServer(
@@ -100,10 +99,11 @@ class SoccerRobot(Robot):
         self.timeStep = int(self.getBasicTimeStep())
 
         # camera
-        self.cameraTop = self.getDevice("CameraTop")
-        self.cameraBottom = self.getDevice("CameraBottom")
-        self.cameraTop.enable(4 * self.timeStep)
-        self.cameraBottom.enable(4 * self.timeStep)
+        if self.bVisionUsed:
+            self.cameraTop = self.getDevice("CameraTop")
+            self.cameraBottom = self.getDevice("CameraBottom")
+            self.cameraTop.enable(4 * self.timeStep)
+            self.cameraBottom.enable(4 * self.timeStep)
 
         # accelerometer
         self.accelerometer = self.getDevice("accelerometer")
@@ -112,13 +112,6 @@ class SoccerRobot(Robot):
         # inertial unit
         self.inertialUnit = self.getDevice("inertial unit")
         self.inertialUnit.enable(self.timeStep)
-
-        # ultrasound sensors
-        self.ultrasound = []
-        self.ultrasound.append(self.getDevice("Sonar/Left"))
-        self.ultrasound.append(self.getDevice("Sonar/Right"))
-        self.ultrasound[0].enable(self.timeStep)
-        self.ultrasound[1].enable(self.timeStep)
 
         # Receiver
         self.receiver = self.getDevice("receiver")
@@ -345,17 +338,17 @@ class SoccerRobot(Robot):
 
             case RobotState.SCORE_GOAL:
                 # Calculate the Robot's angle to the goalkeeper position
-                targetAngle = math.degrees(
-                    math.atan2(
-                        self.getSelfPosition("RedGoalkeeper")[1]
+                targetAngle = np.degrees(
+                    np.arctan2(
+                        self.Supervisor.data("RedGoalkeeper")[1]
                         - currentSelfPosition[1],
-                        self.getSelfPosition("RedGoalkeeper")[0]
+                        self.Supervisor.data("RedGoalkeeper")[0]
                         - currentSelfPosition[0],
                     )
                 )
 
                 # Get the robot's orientation angle
-                robotAngle = math.degrees(self.getRollPitchYaw()[2])
+                robotAngle = np.degrees(self.getRollPitchYaw()[2])
 
                 # Calculate the turn angle in the range [-180, 180)
                 turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
