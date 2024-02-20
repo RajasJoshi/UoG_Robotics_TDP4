@@ -340,9 +340,9 @@ class SoccerRobot(Robot):
                 # Calculate the Robot's angle to the goalkeeper position
                 targetAngle = np.degrees(
                     np.arctan2(
-                        self.Supervisor.data("RedGoalkeeper")[1]
+                        self.Supervisor.data["RedGoalkeeper"][1]
                         - currentSelfPosition[1],
-                        self.Supervisor.data("RedGoalkeeper")[0]
+                        self.Supervisor.data["RedGoalkeeper"][0]
                         - currentSelfPosition[0],
                     )
                 )

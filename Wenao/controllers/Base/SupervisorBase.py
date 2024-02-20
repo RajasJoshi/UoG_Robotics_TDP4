@@ -5,7 +5,7 @@ All Supervisor classes should be derived from this class.
 
 import os
 import sys
-import time
+import numpy as np
 
 from controller import Supervisor
 from Utils import Functions
@@ -32,7 +32,6 @@ class SupervisorBase(Supervisor):
         self.ball = self.getFromDef("BALL")
         self.robots = {name: self.getFromDef(name) for name in self.RobotList}
         self.latestGoalTime = 0
-        self.ballPriority = "R"
         self.previousBallLocation = [0, 0, 0.0798759]
         self.score = [0, 0]
         Red = "Red"
@@ -86,7 +85,6 @@ class SupervisorBase(Supervisor):
                 )
                 > 0.05
             ):
-                self.ballPriority = "N"
                 self.previousBallLocation = newBallLocation
 
         return newBallLocation
@@ -109,14 +107,6 @@ class SupervisorBase(Supervisor):
         """
         return self.robots[robotName].getPosition()
 
-    def getRobotOrientation(self, robotName) -> list:
-        """Get the robot coordinate on the field.
-
-        Returns:
-            list: x, y, z coordinates.
-        """
-        return self.robots[robotName].getOrientation()
-
     def getBallOwner(self) -> str:
         """Calculate the ball owner team from the distances from the ball.
 
@@ -136,25 +126,12 @@ class SupervisorBase(Supervisor):
         """Send Data (ballPosition, ballOwner, ballPriority, ...) to Robots. Channel is '0'."""
 
         # Pack the values into a string to transmit
-        message = ",".join(
-            map(
-                str,
-                [
-                    self.getTime(),
-                    self.ballPriority,
-                    self.getBallOwner(),
-                    *self.getBallPosition(),
-                    *self.getRobotPosition("RedGoalkeeper"),
-                    *self.getRobotPosition("RedDefender"),
-                    *self.getRobotPosition("RedForwardB"),
-                    *self.getRobotPosition("RedForwardA"),
-                    *self.getRobotPosition("BlueGoalkeeper"),
-                    *self.getRobotPosition("BlueDefender"),
-                    *self.getRobotPosition("BlueForwardB"),
-                    *self.getRobotPosition("BlueForwardA"),
-                ],
-            )
-        )
+        robot_positions = [
+            coord
+            for name in self.RobotList
+            for coord in self.getRobotPosition(name)[:2]
+        ]
+        message = f"{self.getTime()},{self.getBallOwner()},{','.join(map(str, self.getBallPosition()[:2] + robot_positions))}"
 
         self.emitter.send(message.encode("utf-8"))
 

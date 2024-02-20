@@ -68,13 +68,13 @@ class SoccerRobot(Robot):
             while self.step(self.timeStep) != -1:
                 self.clearMotionQueue()
 
-                if self.isNewDataAvailable():
-                    self.Supervisor.updateData(self.receiver)
-                    whatToDoNext = self.NextMotion()
+                # if self.isNewDataAvailable():
+                #     self.Supervisor.updateData(self.receiver)
+                #     whatToDoNext = self.NextMotion()
 
-                    if self.isNewMotionValid(whatToDoNext):
-                        self.addMotionToQueue(whatToDoNext)
-                        self.startMotion()
+                #     if self.isNewMotionValid(whatToDoNext):
+                #         self.addMotionToQueue(whatToDoNext)
+                #         self.startMotion()
 
                 if self.bVisionUsed:
                     try:

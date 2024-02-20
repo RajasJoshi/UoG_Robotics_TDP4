@@ -69,13 +69,13 @@ class SoccerRobot(Robot):
             while self.step(self.timeStep) != -1:
                 self.clearMotionQueue()
 
-                if self.isNewDataAvailable():
-                    self.Supervisor.updateData(self.receiver)
-                    whatToDoNext = self.NextMotion()
+                # if self.isNewDataAvailable():
+                #     self.Supervisor.updateData(self.receiver)
+                #     whatToDoNext = self.NextMotion()
 
-                    if self.isNewMotionValid(whatToDoNext):
-                        self.addMotionToQueue(whatToDoNext)
-                        self.startMotion()
+                #     if self.isNewMotionValid(whatToDoNext):
+                #         self.addMotionToQueue(whatToDoNext)
+                #         self.startMotion()
 
                 if self.bVisionUsed:
                     try:
@@ -335,9 +335,9 @@ class SoccerRobot(Robot):
                 # Calculate the Robot's angle to the goalkeeper position
                 targetAngle = np.degrees(
                     np.arctan2(
-                        self.Supervisor.data("RedGoalkeeper")[1]
+                        self.Supervisor.data["RedGoalkeeper"][1]
                         - currentSelfPosition[1],
-                        self.Supervisor.data("RedGoalkeeper")[0]
+                        self.Supervisor.data["RedGoalkeeper"][0]
                         - currentSelfPosition[0],
                     )
                 )
