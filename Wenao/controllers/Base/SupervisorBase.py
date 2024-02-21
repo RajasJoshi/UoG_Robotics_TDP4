@@ -107,18 +107,42 @@ class SupervisorBase(Supervisor):
         """
         return self.robots[robotName].getPosition()
 
+    def getRobotAngle(self, robotName):
+        """Get the robot angle on the field.
+
+        Args:
+            robotName (str): The name of the robot.
+
+        Returns:
+            float: The robot angle in radians.
+        """
+        orientation = self.robots[robotName].getOrientation()
+        angle = np.arctan2(orientation[1], orientation[0])
+        return angle
+
     def getBallOwner(self) -> str:
-        """Calculate the ball owner team from the distances from the ball.
+        """Calculate the ball owner team from the distances from the ball and the orientation of the robots.
 
         Returns:
             str: Ball owner team first letter.
         """
         ballPosition = self.getBallPosition()
-        distances = {
-            name: Functions.calculateDistance(ballPosition, self.getRobotPosition(name))
-            for name in self.robots
-        }
-        ballOwnerRobotName = min(distances, key=distances.get)
+        scores = {}
+        for name in self.robots:
+            robotPosition = self.getRobotPosition(name)
+            robotAngle = self.getRobotAngle(name)
+            ballAngle = np.arctan2(
+                ballPosition[1] - robotPosition[1], ballPosition[0] - robotPosition[0]
+            )
+            angleDiff = abs(ballAngle - robotAngle)
+            distance = Functions.calculateDistance(ballPosition, robotPosition)
+            # Lower scores are better. A small distance and a small angle difference result in a small score.
+            # Square the distance to give more weight to the distance.
+            scores[name] = distance**2 + angleDiff
+
+        ballOwnerRobotName = min(scores, key=scores.get)
+
+        return ballOwnerRobotName.ljust(9, "*")
 
         return ballOwnerRobotName.ljust(9, "*")
 
