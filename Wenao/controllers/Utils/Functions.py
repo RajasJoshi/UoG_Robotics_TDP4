@@ -11,8 +11,8 @@ def calculateDistance(coordinate1, coordinate2) -> float:
     Returns:
         float: Distance between coordinates.
     """
-    deltaX = np.abs(coordinate1[0] - coordinate2[0])
-    deltaY = np.abs(coordinate1[1] - coordinate2[1])
+    deltaX = coordinate1[0] - coordinate2[0]
+    deltaY = coordinate1[1] - coordinate2[1]
     return np.hypot(deltaX, deltaY)
 
 

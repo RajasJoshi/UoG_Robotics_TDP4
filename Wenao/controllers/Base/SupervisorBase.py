@@ -144,8 +144,6 @@ class SupervisorBase(Supervisor):
 
         return ballOwnerRobotName.ljust(9, "*")
 
-        return ballOwnerRobotName.ljust(9, "*")
-
     def sendSupervisorData(self) -> None:
         """Send Data (ballPosition, ballOwner, ballPriority, ...) to Robots. Channel is '0'."""
 

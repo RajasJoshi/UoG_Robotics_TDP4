@@ -23,6 +23,7 @@ class RobotState(Enum):
     INIT = 0
     BE_A_FORWARD = 1
     SCORE_GOAL = 2
+    PASS_TO_PLAYER = 3  # Add a new state for passing to a player
 
 
 class SoccerRobot(Robot):
@@ -317,7 +318,7 @@ class SoccerRobot(Robot):
 
                 # Check if the ball is near the goalpost
                 else:
-                    self.AppState = RobotState.BE_A_FORWARD
+                    self.AppState = RobotState.PASS_TO_PLAYER
                     return self.motions.standInit
 
             case RobotState.BE_A_FORWARD:
@@ -397,6 +398,26 @@ class SoccerRobot(Robot):
                     else:
                         return self.motions.leftSidePass
 
+            case RobotState.PASS_TO_PLAYER:
+                currentSelfPosition = self.Supervisor.getSelfPosition()
+                # Get the player's position
+                playerPosition = self.Supervisor.data["RedForwardB"]
+
+                # Determine whether to pass to the right or left
+                if playerPosition[1] > currentSelfPosition[1]:
+                    self.interruptMotion()
+                    # The player is to the right of the robot, so pass to the right
+                    if self.isNewMotionValid(self.motions.rightSidePass):
+                        self.addMotionToQueue(self.motions.rightSidePass)
+                        self.startMotion()
+                    self.AppState = RobotState.BE_A_FORWARD
+
+                else:
+                    if self.isNewMotionValid(self.motions.leftSidePass):
+                        self.addMotionToQueue(self.motions.leftSidePass)
+                        self.startMotion()
+                    self.AppState = RobotState.BE_A_FORWARD
+
             case _:
                 self.AppState = RobotState.INIT
 
@@ -440,6 +461,43 @@ class SoccerRobot(Robot):
             return self.motions.sideStepRight
         else:
             return None
+
+    def calculatescore(self, player_name):
+        """
+        Calculate the score based on the number of enemy players around a team player.
+
+        Args:
+            player_name (str): The name of the player.
+
+        Returns:
+            float: The score.
+        """
+        # Get the player's position
+        player_position = self.Supervisor.data[player_name]
+
+        # Initialize the count of enemy players
+        enemy_count = 0
+
+        # Iterate over all the robots
+        for robot_name in self.Supervisor.robot_list:
+            # Skip if the robot is the player itself or a teammate
+            if robot_name == player_name or robot_name.startswith("Red"):
+                continue
+
+            # Get the robot's position
+            robot_position = self.Supervisor.data[robot_name]
+
+            # Calculate the distance between the player and the robot
+            distance = Functions.calculateDistance(player_position, robot_position)
+
+            # If the distance is less than a threshold, increment the enemy count
+            if distance < 1:  # You can adjust this threshold as needed
+                enemy_count += 1
+
+        # Calculate the score as the inverse of the enemy count, add 1 to avoid division by zero
+        score = 1 / (enemy_count + 1)
+
+        return score
 
 
 def main():
