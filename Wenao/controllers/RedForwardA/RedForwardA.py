@@ -35,9 +35,15 @@ class SoccerRobot(Robot):
         self.currentlyPlaying = False
         self.config = config
         self.AppState = RobotState.INIT
-        self.TargetgoalPosition = [3.25978, 0.0196566]
+
         self.bVisionUsed = config.getboolean("RedTeam", "Vision")
         self.bAvoidCollision = config.getboolean("RedTeam", "Avoidance")
+        self.PlayerMode = config.get("RedForwardA", "PlayerMode")
+        self.Strategy = config.get("RedForwardA", "Strategy")
+        TargetPosition = config.get("RedForwardA", "TargetPos")
+        self.TargetPosition = list(map(float, TargetPosition.split(",")))
+        StartLocation = config.get("RedForwardA", "StartPos")
+        self.StartLocation = list(map(float, StartLocation.split(",")))
 
         self.enableDevices()
         # Load motion files
@@ -247,7 +253,7 @@ class SoccerRobot(Robot):
 
         # Calculate the ball distance to the goal position
         BallToGoaldist = Functions.calculateDistance(
-            currentBallPosition, self.TargetgoalPosition
+            currentBallPosition, self.TargetPosition
         )
 
         # Detect collision
@@ -330,15 +336,15 @@ class SoccerRobot(Robot):
 
                 # Check if the ball is near the goalpost
                 elif BallToGoaldist <= 0.2 and abs(currentSelfPosition[1]) > abs(
-                    self.TargetgoalPosition[1]
+                    self.TargetPosition[1]
                 ):
                     self.AppState = RobotState.SCORE_GOAL
                     return self.motions.standInit
 
                 else:
                     gridtargetpose = (
-                        int((self.TargetgoalPosition[0] - (-4.5)) / 0.1),
-                        int((self.TargetgoalPosition[1] - (-2.8)) / 0.1),
+                        int((self.TargetPosition[0] - (-4.5)) / 0.1),
+                        int((self.TargetPosition[1] - (-2.8)) / 0.1),
                     )
 
                     # Use the A* algorithm to find the shortest path to the ball
