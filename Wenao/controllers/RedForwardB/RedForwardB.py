@@ -35,9 +35,14 @@ class SoccerRobot(Robot):
         self.config = config
         self.AppState = RobotState.INIT
 
-        self.StartLocation = [-0.23606, 1.78171]
-        self.TargetgoalPosition = [3.25978, 0.0196566]
         self.bVisionUsed = config.getboolean("RedTeam", "Vision")
+        self.bAvoidCollision = config.getboolean("RedTeam", "Avoidance")
+        self.PlayerMode = config.get("RedForwardB", "PlayerMode")
+        self.Strategy = config.get("RedForwardB", "Strategy")
+        TargetPosition = config.get("RedForwardB", "TargetPos")
+        self.TargetPosition = list(map(float, TargetPosition.split(",")))
+        StartLocation = config.get("RedForwardB", "StartPos")
+        self.StartLocation = list(map(float, StartLocation.split(",")))
 
         self.enableDevices()
         # Load motion files
@@ -292,7 +297,7 @@ class SoccerRobot(Robot):
                 if self.Supervisor.data["ballOwner"][0] != "R":
                     # Calculate the ball distance to the goal position
                     ball_distance = Functions.calculateDistance(
-                        self.TargetgoalPosition, currentBallPosition
+                        self.TargetPosition, currentBallPosition
                     )
 
                     # Calculate the robot's distance to the ball position
@@ -313,8 +318,8 @@ class SoccerRobot(Robot):
                         # Calculate the robot's angle to the goal position
                         targetAngle = np.degrees(
                             np.arctan2(
-                                self.TargetgoalPosition[1] - currentSelfPosition[1],
-                                self.TargetgoalPosition[0] - currentSelfPosition[0],
+                                self.TargetPosition[1] - currentSelfPosition[1],
+                                self.TargetPosition[0] - currentSelfPosition[0],
                             )
                         )
 
@@ -342,6 +347,42 @@ class SoccerRobot(Robot):
             case _:
                 self.AppState = RobotState.INIT
 
+    def calculatescore(self, player_name):
+        """
+        Calculate the score based on the number of enemy players around a team player.
+
+        Args:
+            player_name (str): The name of the player.
+
+        Returns:
+            float: The score.
+        """
+        # Get the player's position
+        player_position = self.Supervisor.data[player_name]
+
+        # Initialize the count of enemy players
+        enemy_count = 0
+
+        # Iterate over all the robots
+        for robot_name in self.Supervisor.robot_list:
+            # Skip if the robot is the player itself or a teammate
+            if robot_name == player_name or robot_name.startswith("Red"):
+                continue
+
+            # Get the robot's position
+            robot_position = self.Supervisor.data[robot_name]
+
+            # Calculate the distance between the player and the robot
+            distance = Functions.calculateDistance(player_position, robot_position)
+
+            # If the distance is less than a threshold, increment the enemy count
+            if distance < 1:  # You can adjust this threshold as needed
+                enemy_count += 1
+
+        # Calculate the score as the inverse of the enemy count, add 1 to avoid division by zero
+        score = 1 / (enemy_count + 1)
+
+        return score
 
 def main():
     # Create the robot and initialize the camera

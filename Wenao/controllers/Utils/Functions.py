@@ -11,89 +11,30 @@ def calculateDistance(coordinate1, coordinate2) -> float:
     Returns:
         float: Distance between coordinates.
     """
-    deltaX = np.abs(coordinate1[0] - coordinate2[0])
-    deltaY = np.abs(coordinate1[1] - coordinate2[1])
+    deltaX = coordinate1[0] - coordinate2[0]
+    deltaY = coordinate1[1] - coordinate2[1]
     return np.hypot(deltaX, deltaY)
 
 
-def calculateAngleAccordingToXAxis(ballCoordinate, robotCoordinate) -> float:
-    """Finds the angle between robot-ball vector and x-axis.
+@staticmethod
+def calculateAngle(v1, v2):
+    """Calculate the angle between two vectors.
 
     Args:
-        ballCoordinate (list): x, y, z coordinates of the ball.
-        robotCoordinate (list): x, y coordinates of the robot.
+        v1 (list): The first vector.
+        v2 (list): The second vector.
 
     Returns:
-        float: Angle between robot-ball vector and x-axis.
+        float: The angle between the vectors in degrees.
     """
-    hypot = calculateDistance(ballCoordinate, robotCoordinate)
-    deltaX = np.abs(ballCoordinate[0] - robotCoordinate[0])
-
-    cosTheta = deltaX / hypot
-    degree = np.degrees(np.arccos(cosTheta))
-
-    return degree
-
-
-def calculateBallRegion(ballCoordinate, robotCoordinate) -> int:
-    """Ball region is the region of the ball according to robot.
-        We assumed the robot as origin of coordinate system.
-
-    Args:
-        ballCoordinate (list): x, y, z coordinates of the ball.
-        robotCoordinate (list): x, y coordinates of the robot.
-
-    Returns:
-        int: 1 = top-right, 2 = top-left, 3 = bottom-left, 4 = bottom-right
-    """
-    ballRegion = 0
-    # Find the location of the ball according to the robot.
-    if ballCoordinate[0] > robotCoordinate[0]:
-        if ballCoordinate[1] > robotCoordinate[1]:
-            ballRegion = 1
-        else:
-            ballRegion = 4
-    else:
-        if ballCoordinate[1] > robotCoordinate[1]:
-            ballRegion = 2
-        else:
-            ballRegion = 3
-
-    return ballRegion
+    dotProduct = v1[0] * v2[0] + v1[1] * v2[1]
+    magnitudeProduct = (v1[0] ** 2 + v1[1] ** 2) ** 0.5 * (
+        v2[0] ** 2 + v2[1] ** 2
+    ) ** 0.5
+    cosAngle = dotProduct / magnitudeProduct
+    angle = np.arccos(cosAngle)
+    return np.degrees(angle)
 
 
-def calculateTurningAngleAccordingToRobotHeading(
-    ballCoordinate, robotCoordinate, robotHeadingAngle
-) -> float:
-    """Calculates the turning angle to the ball for robot according to it's heading.
-
-    Args:
-        ballCoordinate (list): x, y, z coordinates of the ball.
-        robotCoordinate (list): x, y coordinates of the robot.
-        robotHeadingAngle (float): Robot heading angle as radian.
-
-    Returns:
-        float: The angle needed to turn the ball.
-    """
-
-    degree = calculateAngleAccordingToXAxis(ballCoordinate, robotCoordinate)
-    ballRegion = calculateBallRegion(ballCoordinate, robotCoordinate)
-
-    # Recalculate the degree according to ballRegion.
-    if ballRegion == 2:
-        degree = 180 - degree
-    elif ballRegion == 3:
-        degree = degree - 180
-    elif ballRegion == 4:
-        degree = -degree
-
-    # Finds the angle of robots heading.
-    zAxisDegree = np.degrees(robotHeadingAngle)
-
-    turningAngle = degree - zAxisDegree
-    if turningAngle > 180:
-        turningAngle = turningAngle - 360
-    elif turningAngle < -180:
-        turningAngle = turningAngle + 360
-
-    return turningAngle
+def calculateTurnAngle(targetAngle, robotAngle):
+    return (targetAngle - robotAngle + 180) % 360 - 180
