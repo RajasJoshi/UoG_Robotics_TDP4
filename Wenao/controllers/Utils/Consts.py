@@ -1,11 +1,6 @@
-import math
-from enum import Enum
-
 from controller import Motion
 
 TIME_STEP = 40
-
-PI = math.pi
 
 
 class Motions:
