@@ -129,8 +129,10 @@ class SupervisorBase(Supervisor):
             for name in self.robots
         }
         ballOwnerRobotName = min(distances, key=distances.get)
-
-        return ballOwnerRobotName.ljust(9, "*")
+        if distances[ballOwnerRobotName] < 0.2:
+            return ballOwnerRobotName.ljust(9, "*")
+        else:
+            return 'None'
 
     def sendSupervisorData(self) -> None:
         """Send Data (ballPosition, ballOwner, ballPriority, ...) to Robots. Channel is '0'."""
@@ -155,7 +157,6 @@ class SupervisorBase(Supervisor):
                 ],
             )
         )
-
         self.emitter.send(message.encode("utf-8"))
 
     def resetSimulation(self):
@@ -163,3 +164,17 @@ class SupervisorBase(Supervisor):
         self.simulationReset()
         for robot in self.robots.values():
             robot.resetPhysics()
+
+    def get_data(self):
+        data = {'time_steps': self.getTime(),
+                'possession': self.getBallOwner(),
+                'RedForwardA': self.getRobotPosition("RedGoalkeeper"),
+                'RedDefender': self.getRobotPosition("RedDefender"),
+                'RedForwardB': self.getRobotPosition("RedForwardB"),
+                'RedForwardA': self.getRobotPosition("RedForwardA"),
+                'BlueGoalkeeper': self.getRobotPosition("BlueGoalkeeper"),
+                'BlueDefender': self.getRobotPosition("BlueDefender"),
+                'BlueForwardB': self.getRobotPosition("BlueForwardB"),
+                'BlueForwardA': self.getRobotPosition("BlueForwardA")}
+        
+        return data

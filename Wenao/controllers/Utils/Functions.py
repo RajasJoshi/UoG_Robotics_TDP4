@@ -1,4 +1,5 @@
 import math
+import csv
 
 
 def calculateDistance(coordinate1, coordinate2) -> float:
@@ -97,3 +98,27 @@ def calculateTurningAngleAccordingToRobotHeading(
         turningAngle = turningAngle + 360
 
     return turningAngle
+
+def write_data(file_name: str, pos: list) -> None:
+    """
+    LOG PATTERN:
+
+            time_steps,
+            possession,
+            RedForward,
+            RedDefender,
+            RedForwardB,
+            BlueGoalkeeper,
+            BlueDefender,
+            BlueForwardB,
+            BlueForwardA
+
+    """
+    # Write the data to the CSV file
+    with open(file_name, 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+
+        # Write data
+        writer.writerow([pos['time_steps'], pos['possession']] +
+                        pos['RedForwardA'] + pos['RedDefender'] + pos['RedForwardB'] +
+                        pos['BlueGoalkeeper'] + pos['BlueDefender'] + pos['BlueForwardB'] + pos['BlueForwardA'])
