@@ -166,6 +166,7 @@ class SupervisorBase(Supervisor):
             robot.resetPhysics()
 
     def get_data(self):
+        
         data = {'time_steps': self.getTime(),
                 'possession': self.getBallOwner(),
                 'RedForwardA': self.getRobotPosition("RedGoalkeeper"),
