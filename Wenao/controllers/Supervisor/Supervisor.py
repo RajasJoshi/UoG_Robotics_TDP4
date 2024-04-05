@@ -2,10 +2,6 @@ import os
 import sys
 import pandas as pd
 
-
-from mplsoccer import PyPizza, add_image, FontManager, Pitch, VerticalPitch, Sbopen
-from urllib.request import urlopen
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from Base.SupervisorBase import SupervisorBase
@@ -95,8 +91,8 @@ if __name__ == '__main__':
         if not os.path.exists(file_name):
             break
 
-    supervisor = Supervisor('log_game1.csv')
-    #supervisor.run()
+    supervisor = Supervisor(file_name)
+    supervisor.run()
     supervisor.possession_percentage()
     supervisor.passing_percentage()
     supervisor.interrupt_percentage()

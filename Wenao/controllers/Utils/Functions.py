@@ -1,10 +1,8 @@
+import numpy as np
 import math
 import csv
 import matplotlib.pyplot as plt
-import matplotlib.patheffects as path_effects
-from matplotlib.colors import LinearSegmentedColormap
-from scipy.ndimage import gaussian_filter
-from mplsoccer import PyPizza, FontManager, Pitch, VerticalPitch, Sbopen
+from mplsoccer import PyPizza, FontManager
 
 
 def calculateDistance(coordinate1, coordinate2) -> float:
@@ -17,29 +15,33 @@ def calculateDistance(coordinate1, coordinate2) -> float:
     Returns:
         float: Distance between coordinates.
     """
-    deltaX = math.fabs(coordinate1[0] - coordinate2[0])
-    deltaY = math.fabs(coordinate1[1] - coordinate2[1])
-    return math.hypot(deltaX, deltaY)
+    deltaX = coordinate1[0] - coordinate2[0]
+    deltaY = coordinate1[1] - coordinate2[1]
+    return np.hypot(deltaX, deltaY)
 
 
-def calculateAngleAccordingToXAxis(ballCoordinate, robotCoordinate) -> float:
-    """Finds the angle between robot-ball vector and x-axis.
+@staticmethod
+def calculateAngle(v1, v2):
+    """Calculate the angle between two vectors.
 
     Args:
-        ballCoordinate (list): x, y, z coordinates of the ball.
-        robotCoordinate (list): x, y coordinates of the robot.
+        v1 (list): The first vector.
+        v2 (list): The second vector.
 
     Returns:
-        float: Angle between robot-ball vector and x-axis.
+        float: The angle between the vectors in degrees.
     """
-    hypot = calculateDistance(ballCoordinate, robotCoordinate)
-    deltaX = math.fabs(ballCoordinate[0] - robotCoordinate[0])
+    dotProduct = v1[0] * v2[0] + v1[1] * v2[1]
+    magnitudeProduct = (v1[0] ** 2 + v1[1] ** 2) ** 0.5 * (
+        v2[0] ** 2 + v2[1] ** 2
+    ) ** 0.5
+    cosAngle = dotProduct / magnitudeProduct
+    angle = np.arccos(cosAngle)
+    return np.degrees(angle)
 
-    cosTheta = deltaX / hypot
-    degree = math.degrees(math.acos(cosTheta))
 
-    return degree
-
+def calculateTurnAngle(targetAngle, robotAngle):
+    return (targetAngle - robotAngle + 180) % 360 - 180
 
 def calculateBallRegion(ballCoordinate, robotCoordinate) -> int:
     """Ball region is the region of the ball according to robot.
@@ -66,43 +68,6 @@ def calculateBallRegion(ballCoordinate, robotCoordinate) -> int:
             ballRegion = 3
 
     return ballRegion
-
-
-def calculateTurningAngleAccordingToRobotHeading(
-    ballCoordinate, robotCoordinate, robotHeadingAngle
-) -> float:
-    """Calculates the turning angle to the ball for robot according to it's heading.
-
-    Args:
-        ballCoordinate (list): x, y, z coordinates of the ball.
-        robotCoordinate (list): x, y coordinates of the robot.
-        robotHeadingAngle (float): Robot heading angle as radian.
-
-    Returns:
-        float: The angle needed to turn the ball.
-    """
-
-    degree = calculateAngleAccordingToXAxis(ballCoordinate, robotCoordinate)
-    ballRegion = calculateBallRegion(ballCoordinate, robotCoordinate)
-
-    # Recalculate the degree according to ballRegion.
-    if ballRegion == 2:
-        degree = 180 - degree
-    elif ballRegion == 3:
-        degree = degree - 180
-    elif ballRegion == 4:
-        degree = -degree
-
-    # Finds the angle of robots heading.
-    zAxisDegree = math.degrees(robotHeadingAngle)
-
-    turningAngle = degree - zAxisDegree
-    if turningAngle > 180:
-        turningAngle = turningAngle - 360
-    elif turningAngle < -180:
-        turningAngle = turningAngle + 360
-
-    return turningAngle
 
 def write_data(file_name: str, pos: list) -> None:
     """
@@ -222,51 +187,3 @@ def draw_pizza(params: list, values: list, file_name: str, stat_type: str) -> No
     ])
     plt.savefig(file_name)  # Save the plot as an image
 
-def draw_heat(x: list, y: list, file_name: str) -> None:
-    pitch = Pitch(pitch_type='statsbomb', line_zorder=2,
-                    pitch_color='#22312b', line_color='#efefef')
-        
-    # fontmanager for google font (robotto)
-    robotto_regular = FontManager()
-
-    # path effects
-    path_eff = [path_effects.Stroke(linewidth=1.5, foreground='black'),
-                path_effects.Normal()]
-
-    # see the custom colormaps example for more ideas on setting colormaps
-    pearl_earring_cmap = LinearSegmentedColormap.from_list("Pearl Earring - 10 colors",
-                                                        ['#15242e', '#4393c4'], N=10)
-    
-    fig, axs = pitch.grid(endnote_height=0.03, endnote_space=0,
-                    # leave some space for the colorbar
-                    grid_width=0.88, left=0.025,
-                    title_height=0.06, title_space=0,
-                    # Turn off the endnote/title axis. I usually do this after
-                    # I am happy with the chart layout and text placement
-                    axis=False,
-                    grid_height=0.86)
-    fig.set_facecolor('#22312b')
-
-    # plot heatmap
-    bin_statistic = pitch.bin_statistic(x, y, statistic='count', bins=(25, 25))
-    bin_statistic['statistic'] = gaussian_filter(bin_statistic['statistic'], 1)
-    pcm = pitch.heatmap(bin_statistic, ax=axs['pitch'], cmap='hot', edgecolors='#22312b')
-
-    # add cbar
-    ax_cbar = fig.add_axes((0.915, 0.093, 0.03, 0.786))
-    cbar = plt.colorbar(pcm, cax=ax_cbar)
-    cbar.outline.set_edgecolor('#efefef')
-    cbar.ax.yaxis.set_tick_params(color='#efefef')
-    plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='#efefef')
-    for label in cbar.ax.get_yticklabels():
-        label.set_fontproperties(robotto_regular.prop)
-        label.set_fontsize(15)
-
-    # endnote and title
-    axs['endnote'].text(1, 0.5, '@your_twitter_handle', va='center', ha='right', fontsize=15,
-                        fontproperties=robotto_regular.prop, color='#dee6ea')
-    ax_title = axs['title'].text(0.5, 0.5, "Pressure applied by Chelsea FC Women", color='white',
-                                va='center', ha='center', path_effects=path_eff,
-                                fontproperties=robotto_regular.prop, fontsize=30)
-    
-    plt.savefig(file_name)  # Save the plot as an image

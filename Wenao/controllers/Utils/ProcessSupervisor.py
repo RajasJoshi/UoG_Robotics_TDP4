@@ -41,12 +41,11 @@ class SupervisorData:
 
         # Extract and process received values
         self.data["time"] = float(values[0])
-        self.data["ballPriority"] = values[1]
-        self.data["ballOwner"] = values[2]
-        self.data["ballPosition"] = [float(values[i]) for i in range(3, 6)]
+        self.data["ballOwner"] = values[1]
+        self.data["ballPosition"] = [float(values[i]) for i in range(2, 4)]
 
         for i, robot in enumerate(self.robot_list):
-            self.data[robot] = [float(values[j]) for j in range(6 + i * 3, 9 + i * 3)]
+            self.data[robot] = [float(values[j]) for j in range(4 + i * 2, 6 + i * 2)]
 
     def getBallData(self):
         return self.data.get("ballPosition")
