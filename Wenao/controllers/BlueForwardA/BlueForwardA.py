@@ -44,6 +44,7 @@ class SoccerRobot(Robot):
         self.TargetPosition = list(map(float, TargetPosition.split(",")))
         StartLocation = config.get("BlueForwardA", "StartPos")
         self.StartLocation = list(map(float, StartLocation.split(",")))
+        self.gameStarted = False
 
         self.enableDevices()
         # Load motion files
@@ -236,8 +237,10 @@ class SoccerRobot(Robot):
                 distance = Functions.calculateDistance(
                     self.StartLocation, currentSelfPosition
                 )
-
-                if distance <= 0.2:
+                if currentBallPosition[0] > 0.75 or currentBallPosition[0] < -0.75 or currentBallPosition[1] > 0.75 or currentBallPosition[1] < -0.75: # start condition
+                    print('BlueForwardA: Ball is out of the field')
+                    self.gameStarted = True
+                if distance <= 0.2 and self.gameStarted == True:
                     self.AppState = RobotState.LOOK_THE_BALL
                     return self.motions.standInit
                 else:

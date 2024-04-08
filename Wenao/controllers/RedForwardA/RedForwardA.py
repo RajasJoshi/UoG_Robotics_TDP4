@@ -44,6 +44,8 @@ class SoccerRobot(Robot):
         self.TargetPosition = list(map(float, TargetPosition.split(",")))
         StartLocation = config.get("RedForwardA", "StartPos")
         self.StartLocation = list(map(float, StartLocation.split(",")))
+        self.kicked = False
+        self.atPosition = False
 
         self.enableDevices()
         # Load motion files
@@ -193,12 +195,16 @@ class SoccerRobot(Robot):
             return self.motions.turnLeft30
         elif turningAngle > 10:
             return self.motions.turnLeft20
+        elif turningAngle > 0:
+            return self.motions.turnLeft10
         elif turningAngle < -50:
             return self.motions.turnRight60
         elif turningAngle < -30:
             return self.motions.turnRight40
         elif turningAngle < -10:
             return self.motions.turnRight20
+        elif turningAngle < 0:
+            return self.motions.turnRight10
         else:
             return None
 
@@ -286,7 +292,7 @@ class SoccerRobot(Robot):
             case RobotState.INIT:
 
                 # Check if nao robot is away from the ball
-                if BallToRobotdist > 0.2:
+                if BallToRobotdist > 0.5:
                     gridtargetpose = (
                         int((currentBallPosition[0] - (-4.5)) / 0.1),
                         int((currentBallPosition[1] - (-2.8)) / 0.1),
@@ -324,6 +330,7 @@ class SoccerRobot(Robot):
 
                 # Check if the ball is near the goalpost
                 else:
+                    self.motions.backwards
                     self.AppState = RobotState.PASS_TO_PLAYER
                     return self.motions.standInit
 
@@ -405,24 +412,76 @@ class SoccerRobot(Robot):
                         return self.motions.leftSidePass
 
             case RobotState.PASS_TO_PLAYER:
-                currentSelfPosition = self.Supervisor.getSelfPosition()
-                # Get the player's position
-                playerPosition = self.Supervisor.data["RedForwardB"]
+                if self.kicked == False:
+                    currentSelfPosition = self.Supervisor.getSelfPosition()
+                    currentBallPosition = self.Supervisor.getBallData()
+                    # Get the player's position
+                    playerPosition = self.Supervisor.data["RedForwardB"]
+                    playerPosition[0] += 2
+                    approach_vector = np.array([currentBallPosition[0] - playerPosition[0], currentBallPosition[1] - playerPosition[1]]) 
+                    approach_vector_norm = np.linalg.norm(approach_vector)
+                    approach_position = currentBallPosition + 0.3 * approach_vector/approach_vector_norm
 
-                # Determine whether to pass to the right or left
-                if playerPosition[1] > currentSelfPosition[1]:
-                    self.interruptMotion()
-                    # The player is to the right of the robot, so pass to the right
-                    if self.isNewMotionValid(self.motions.rightSidePass):
-                        self.addMotionToQueue(self.motions.rightSidePass)
-                        self.startMotion()
-                    self.AppState = RobotState.BE_A_FORWARD
+                    dist_to_approach = Functions.calculateDistance(currentSelfPosition, approach_position)
 
-                else:
-                    if self.isNewMotionValid(self.motions.leftSidePass):
-                        self.addMotionToQueue(self.motions.leftSidePass)
-                        self.startMotion()
-                    self.AppState = RobotState.BE_A_FORWARD
+                    
+                    if self.atPosition == False:
+
+                        approach_heading = np.degrees(np.arctan2(
+                                approach_position[1] - currentSelfPosition[1],
+                                approach_position[0] - currentSelfPosition[0],
+                        ))
+                        robotAngle = np.degrees(self.getRollPitchYaw()[2]) 
+                        turnAngle = Functions.calculateTurnAngle(
+                                approach_heading, robotAngle
+                            )
+
+                        if abs(turnAngle) > 5:
+                            print('turning')
+                            return self.getTurningMotion(turnAngle)
+                        else:
+                            if dist_to_approach > 0.1:
+                                print('moving')
+                                self.isNewMotionValid(self.motions.forwardLoop)
+                                self.addMotionToQueue(self.motions.forwardLoop)
+                                self.startMotion()
+                                print('robot position', currentSelfPosition)
+                                print('approach position', approach_position)
+                            else:
+                                self.atPosition = True  
+
+                    
+                    if self.atPosition == True:
+                        kick_heading = np.degrees(np.arctan2(
+                                currentBallPosition[1] - currentSelfPosition[1],
+                                currentBallPosition[0] - currentSelfPosition[0],
+                            ))
+                        robotAngle = np.degrees(self.getRollPitchYaw()[2]) 
+                        turnAngle = Functions.calculateTurnAngle(
+                                kick_heading, robotAngle
+                            )
+                        print('robot position', currentSelfPosition)
+                        print('approach position', approach_position)
+                        print('robot angle', robotAngle)
+                        print('kick heading', kick_heading)
+                        print('turn angle', turnAngle)
+                        print('ball to robot dist', BallToRobotdist)
+
+                        if abs(turnAngle) > 5:
+                            return self.getTurningMotion(turnAngle)
+                        else:
+                            if BallToRobotdist > 0.2:
+                                self.isNewMotionValid(self.motions.forwardLoop)
+                                self.addMotionToQueue(self.motions.forwardLoop)
+                                self.startMotion()
+                            else:
+                                print('About to kick')
+                                if self.isNewMotionValid(self.motions.longShoot):
+                                    self.addMotionToQueue(self.motions.longShoot)
+                                    self.startMotion()
+                                    print('kicked')
+                                    self.kicked = True
+                                    self.AppState = RobotState.BE_A_FORWARD     
 
             case _:
                 self.AppState = RobotState.INIT
