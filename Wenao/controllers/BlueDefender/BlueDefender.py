@@ -34,6 +34,8 @@ class SoccerRobot(Robot):
         self.currentlyPlaying = False
         self.config = config
         self.AppState = RobotState.INIT
+        self.initial_ball_position = None
+        self.game_started = False
         self.navigation_functions = NavigationFunctions(self)
         self.navigation_manager = SimpleNavigationManager(self, self.navigation_functions)
 
@@ -265,11 +267,26 @@ class SoccerRobot(Robot):
         # Get the robot's orientation angle
         robotAngle = np.degrees(self.getRollPitchYaw()[2])
 
+        # If the initial ball position is not set, set it to the current position
+        if self.initial_ball_position is None:
+            self.initial_ball_position = currentBallPosition
+
+        # Calculate the ball's velocity
+        ball_distance = Functions.calculateDistance(currentBallPosition, self.initial_ball_position)
+
+        # Update the previous ball position
+        self.initial_ball_position = currentBallPosition
+
+        if ball_distance > 0.0003:
+            self.game_started = True
+
+        #print(f"Blue Forward Defender Current State: {self.AppState}")
+
         match self.AppState:
             case RobotState.INIT:
                 return self.navigation_manager.init_state(currentSelfPosition, self.StartLocation, StartToRobotdist, robotAngle)
             case RobotState.BE_A_DEFENDER:
-                return self.navigation_manager.be_a_defender_state(currentSelfPosition, currentBallPosition, self.TargetPosition, BallToRobotdist, BallToGoaldist, robotAngle)
+                return self.navigation_manager.be_a_defender_state(currentSelfPosition, currentBallPosition, self.TargetPosition, BallToRobotdist, robotAngle)
             case RobotState.PASS_TO_PLAYER:
                 return self.navigation_manager.pass_to_player_state(currentSelfPosition, playerPosition)
             case _:
@@ -388,47 +405,52 @@ class SimpleNavigationManager:
     def init_state(self, current_position, start_location, start_distance, robot_angle):
         targetAngle_start = self.navigation_functions.calculateOptimalAngle(start_location, current_position)                
         turnAngle_start = Functions.calculateTurnAngle(targetAngle_start, robot_angle)
-
+        
         if start_distance <= 0.2:
-                    self.soccer_robot.AppState = RobotState.BE_A_DEFENDER
-                    return self.motions.standInit
+            self.soccer_robot.AppState = RobotState.BE_A_DEFENDER
+            return self.motions.standInit
                 
-        elif abs(turnAngle_start) > 18:
+        if abs(turnAngle_start) > 18:
             return self.soccer_robot.getTurningMotion(turnAngle_start)       
         return self.motions.forwardLoop  
     
-    def be_a_defender_state(self, current_position, ball_position, target_position, ball_to_robot_dist, ball_to_goal_dist, robot_angle):
-        # Calculate the robot angle to the ball position
+    def be_a_defender_state(self, current_position, ball_position, target_position, ball_to_robot_dist, robot_angle):
+        #Calculate the Robot's angle to the ball position
         targetAngle_ball = self.navigation_functions.calculateOptimalAngle(ball_position, current_position)
         turnAngle_ball = Functions.calculateTurnAngle(targetAngle_ball, robot_angle)
 
-        # If the ball is close enough, try to intercept it
-        if ball_to_robot_dist < 0.8:
-            if abs(turnAngle_ball) > 18:
-                return self.soccer_robot.getTurningMotion(turnAngle_ball)
-            return self.motions.forwardLoop
-
-        # If the robot has the ball, try to clear it
-        if self.soccer_robot.Supervisor.data["ballOwner"][0] != "B":
-            return self.motions.shoot
+        if abs(turnAngle_ball) > 18:
+            return self.soccer_robot.getTurningMotion(turnAngle_ball)
         
-        # Detect the closest opponent
-        closest_opponent_distance, closest_opponent_angle = self.navigation_functions.detect_opponent(current_position)
+        # If the robot has the ball, try to clear it
+        if self.soccer_robot.Supervisor.data["ballOwner"][0] != "B" and ball_position[0] > 0:
+            if not self.soccer_robot.game_started:
+                # Game has not started yet, stand and wait
+                return self.motions.standInit
 
-        # Check if an opponent is nearby the current player
-        if closest_opponent_distance < 0.8 and abs(closest_opponent_angle - robot_angle) < 30:
-            # Trigger the pass to another player
-            self.soccer_robot.AppState = RobotState.PASS_TO_PLAYER
-            return
+            # If the ball is close enough, try to intercept it
+            if ball_to_robot_dist < 0.8 and self.soccer_robot.game_started == True:
+                return self.motions.forwardLoop
+            
+            # Detect the closest opponent
+            closest_opponent_distance, closest_opponent_angle = self.navigation_functions.detect_opponent(current_position)
 
-        # Calculate the robot angle to the goal position
-        targetAngle_goal = self.navigation_functions.calculateOptimalAngle(target_position, current_position)
-        turnAngle_goal = Functions.calculateTurnAngle(targetAngle_goal, robot_angle)
+            # Check if an opponent is nearby the current player
+            if closest_opponent_distance < 0.8 and abs(closest_opponent_angle - robot_angle) < 30:
+                # Trigger the pass to another player
+                self.soccer_robot.AppState = RobotState.PASS_TO_PLAYER
+                return
+            
+            # Calculate the robot angle to the goal position
+            targetAngle_goal = self.navigation_functions.calculateOptimalAngle(target_position, current_position)
+            turnAngle_goal = Functions.calculateTurnAngle(targetAngle_goal, robot_angle)
 
-        # If the ball is not close, position the robot between the ball and the goal
-        if abs(turnAngle_goal) > 18:
-            return self.soccer_robot.getTurningMotion(turnAngle_goal)
-        return self.motions.forwardLoop
+            # If the ball is not close, position the robot between the ball and the goal
+            if abs(turnAngle_goal) > 18:
+                return self.soccer_robot.getTurningMotion(turnAngle_goal)
+            return self.motions.forwardLoop
+            
+        #return self.motions.shoot
             
     def pass_to_player_state(self, current_position, player_position):
         # Determine whether to pass to the right or left

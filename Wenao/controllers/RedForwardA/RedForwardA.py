@@ -5,6 +5,7 @@ All robots should be derived from this class.
 
 import os
 import sys
+import random
 
 from matplotlib import animation
 
@@ -23,10 +24,11 @@ import matplotlib.pyplot as plt
 
 
 class RobotState(Enum):
-    INIT = 0
-    BE_A_FORWARD = 1
-    SCORE_GOAL = 2
-    PASS_TO_PLAYER = 3  # Add a new state for passing to a player
+    START_POSITION = 0
+    TRACK_BALL = 1
+    BE_A_FORWARD = 2
+    SCORE_GOAL = 3
+    PASS_TO_PLAYER = 4  # Add a new state for passing to a player
 
 
 class SoccerRobot(Robot):
@@ -37,7 +39,12 @@ class SoccerRobot(Robot):
         self.robotName = self.getName()
         self.currentlyPlaying = False
         self.config = config
-        self.AppState = RobotState.INIT
+        self.AppState = RobotState.START_POSITION
+        self.initial_ball_position = None
+        self.game_started = False
+        red_team_starts, blue_team_starts = Functions.shared_state.game_start()
+        self.red_team_start = red_team_starts
+        self.blue_team_start = blue_team_starts
         self.navigation_manager = PathPlanningManager(self)
         self.robot_state_manager = RobotStateManager(self, self.navigation_manager)
 
@@ -49,6 +56,10 @@ class SoccerRobot(Robot):
         self.TargetPosition = list(map(float, TargetPosition.split(",")))
         StartLocation = config.get("RedForwardA", "StartPos")
         self.StartLocation = list(map(float, StartLocation.split(",")))
+
+        # Write the result to a file
+        with open('globalconfig.ini', 'w') as f:
+            f.write(f'{red_team_starts},{blue_team_starts}')
 
         self.enableDevices()
         # Load motion files
@@ -248,6 +259,11 @@ class SoccerRobot(Robot):
         # Get the current position
         currentSelfPosition = self.Supervisor.getSelfPosition()
         currentBallPosition = self.Supervisor.getBallData()
+
+        # Calculate the ball distance to the robot position
+        StartToRobotdist = Functions.calculateDistance(
+            self.StartLocation, currentSelfPosition
+        )
         
         # Calculate the ball distance to the robot position
         BallToRobotdist = Functions.calculateDistance(
@@ -271,21 +287,41 @@ class SoccerRobot(Robot):
         # Create grid and obstacles
         self.navigation_manager.create_grid()
 
-        print(f"Current State: {self.AppState}")
+        # If the initial ball position is not set, set it to the current position
+        if self.initial_ball_position is None:
+            self.initial_ball_position = currentBallPosition
+
+        # Calculate the ball's velocity
+        ball_distance = Functions.calculateDistance(currentBallPosition, self.initial_ball_position)
+
+        # Update the previous ball position
+        self.initial_ball_position = currentBallPosition
+
+        if ball_distance > 0.0003:
+            self.game_started = True
+
+        #print(f"Red Forward A Current State: {self.AppState}")
+        if self.red_team_start == True:
+            print(f"Red Team Start Status: {self.red_team_start}")
+            print("Red Team Starts")
+
+        print(f"Game Started: {self.game_started}")
         #print(f"currentSelfPosition: {currentSelfPosition}")
 
         # Add Strategies Here
         match self.AppState:
-            case RobotState.INIT:
-                return self.robot_state_manager.init_state(currentSelfPosition, currentBallPosition, BallToRobotdist, robotAngle)
+            case RobotState.START_POSITION:
+                return self.robot_state_manager.start_position_state(currentSelfPosition, self.StartLocation, StartToRobotdist, robotAngle)
+            case RobotState.TRACK_BALL:
+                return self.robot_state_manager.track_ball_state(currentSelfPosition, currentBallPosition, BallToRobotdist, robotAngle)
             case RobotState.BE_A_FORWARD:
-                return self.robot_state_manager.be_a_forward_state(currentSelfPosition, self.TargetPosition, BallToRobotdist, BallToGoaldist, robotAngle)
+                return self.robot_state_manager.be_a_forward_state(currentSelfPosition, currentBallPosition ,self.TargetPosition, BallToRobotdist, BallToGoaldist, robotAngle)
             case RobotState.SCORE_GOAL:
                 return self.robot_state_manager.score_goal_state(currentSelfPosition, BallToRobotdist, goalkeeperPosition, self.TargetPosition, robotAngle)
             case RobotState.PASS_TO_PLAYER:
                 return self.robot_state_manager.pass_to_player_state(currentSelfPosition, playerPosition)
             case _:
-                self.AppState = RobotState.INIT
+                self.AppState = RobotState.START_POSITION
 
     def calculatescore(self, player_name):
         """
@@ -406,13 +442,13 @@ class PathPlanningManager:
     def get_next_move(self, current_position, target_position):
 
         # Print the grid dimensions
-        print(f"Grid dimensions: {self.grid.shape[0]} rows, {self.grid.shape[1]} columns")
+        #print(f"Grid dimensions: {self.grid.shape[0]} rows, {self.grid.shape[1]} columns")
         
         gridselfpose = self.get_grid_position(current_position)
         gridtargetpose = self.get_grid_position(target_position)
 
-        print(f"Grid Self Pose: {gridselfpose}")
-        print(f"Grid Target Pose: {gridtargetpose}")
+        #print(f"Grid Self Pose: {gridselfpose}")
+        #print(f"Grid Target Pose: {gridtargetpose}")
 
         # Use the A* algorithm to find the shortest path to the ball
         path = aStar(self.grid, gridselfpose, gridtargetpose)
@@ -433,18 +469,32 @@ class RobotStateManager:
         self.navigation_manager = navigation_manager
         self.motions = Motions()
 
-    def init_state(self, current_position, ball_position, ball_to_robot_dist, robot_angle):
+    def start_position_state(self, current_position, start_position, start_to_robot_dist, robot_angle):
+        # Check if nao robot is away from the ball
+        if start_to_robot_dist > 0.2:
+            node_position = self.navigation_manager.get_next_move(current_position, start_position)
+            if node_position:
+                # Calculate the angle to the next node
+                target_angle = Functions.calculateTargetAngle(node_position, current_position)
+                turn_angle = Functions.calculateTurnAngle(target_angle, robot_angle)
+                
+                # Turn the robot towards the next node
+                if abs(turn_angle) > 10:
+                    return self.soccer_robot.getTurningMotion(turn_angle)
+                else:
+                    return self.motions.forwardLoop
+                
+        else:
+            self.soccer_robot.AppState = RobotState.BE_A_FORWARD
+            return self.motions.standInit
+
+    def track_ball_state(self, current_position, ball_position, ball_to_robot_dist, robot_angle):
         # Check if nao robot is away from the ball
         if ball_to_robot_dist > 0.2:
             node_position = self.navigation_manager.get_next_move(current_position, ball_position)
             if node_position:
                 # Calculate the angle to the next node
-                target_angle = np.degrees(
-                    np.arctan2(
-                        node_position[1] - current_position[1],
-                        node_position[0] - current_position[0],
-                    )
-                )
+                target_angle = Functions.calculateTargetAngle(node_position, current_position)
                 turn_angle = Functions.calculateTurnAngle(target_angle, robot_angle)
                 
                 # Turn the robot towards the next node
@@ -457,26 +507,32 @@ class RobotStateManager:
             self.soccer_robot.AppState = RobotState.PASS_TO_PLAYER
             return self.motions.standInit
         
-    def be_a_forward_state(self, current_position, target_position, ball_to_robot_dist, ball_to_goal_dist, robot_angle):
+    def be_a_forward_state(self, current_position, ball_position, target_position, ball_to_robot_dist, ball_to_goal_dist, robot_angle):
+        # Game has not started yet, turn to face the ball and wait
+        targetAngle_ball = Functions.calculateTargetAngle(ball_position, current_position)
+        turnAngle_ball = Functions.calculateTurnAngle(targetAngle_ball, robot_angle)
+        
+        if abs(turnAngle_ball) > 18:
+            return self.soccer_robot.getTurningMotion(turnAngle_ball)
+    
+        if not self.soccer_robot.red_team_start and not self.soccer_robot.game_started:
+            return self.motions.standInit
+
         # Check if nao robot is away from the ball
         if ball_to_robot_dist > 0.2:
-            self.soccer_robot.AppState = RobotState.INIT
-            return self.motions.standInit
-        
-        elif ball_to_goal_dist <= 0.2 and abs(current_position[1]) > abs(target_position[1]):
-            self.soccer_robot.AppState = RobotState.SCORE_GOAL
-            return self.motions.standInit
+            if self.soccer_robot.red_team_start or (not self.soccer_robot.red_team_start and self.soccer_robot.game_started):
+                self.soccer_robot.AppState = RobotState.TRACK_BALL
+                return self.motions.standInit
+            
+            elif ball_to_goal_dist <= 0.2 and abs(current_position[1]) > abs(target_position[1]):
+                self.soccer_robot.AppState = RobotState.SCORE_GOAL
+                return self.motions.standInit
         
         else:
             node_position = self.navigation_manager.get_next_move(current_position, target_position)
             if node_position:
                 # Calculate the angle to the next node
-                target_angle = np.degrees(
-                    np.arctan2(
-                        node_position[1] - current_position[1],
-                        node_position[0] - current_position[0],
-                    )
-                )
+                target_angle = target_angle = Functions.calculateTargetAngle(node_position, current_position)
                 turn_angle = Functions.calculateTurnAngle(target_angle, robot_angle)
                 
                 # Kick ball according to the turn angle
@@ -489,16 +545,17 @@ class RobotStateManager:
                         return self.motions.shoot
                 else:              
                     return self.motions.forwards 
+
                 
     def score_goal_state(self, current_position, ball_to_robot_dist, goalkeeper_position, target_position, robot_angle):
         # Check if nao robot is away from the ball
         if ball_to_robot_dist > 0.2:
-            self.soccer_robot.AppState = RobotState.INIT
+            self.soccer_robot.AppState = RobotState.TRACK_BALL
             return self.motions.standInit
         
         else:
             # Calculate the angle to the goalkeeper position
-            target_angle = Functions.calculateAngle(goalkeeper_position, current_position)
+            target_angle = Functions.calculateTargetAngle(goalkeeper_position, current_position)
             turn_angle = Functions.calculateTurnAngle(target_angle, robot_angle)
 
             # If the robot is facing the goal, kick
@@ -537,19 +594,19 @@ class RobotStateManager:
             self.soccer_robot.AppState = RobotState.BE_A_FORWARD
 
     def openGoalSection(self, goalkeeper_position, goal_position, goal_width):
-            # Calculate the distance from the goalkeeper to the left and right posts
-            left_post_position = (goal_position[0] - goal_width / 2, goal_position[1])
-            right_post_position = (goal_position[0] + goal_width / 2, goal_position[1])
-            dist_to_left_post = Functions.calculateDistance(goalkeeper_position, left_post_position)
-            dist_to_right_post = Functions.calculateDistance(goalkeeper_position, right_post_position)
+        # Calculate the distance from the goalkeeper to the left and right posts
+        left_post_position = (goal_position[0] - goal_width / 2, goal_position[1])
+        right_post_position = (goal_position[0] + goal_width / 2, goal_position[1])
+        dist_to_left_post = Functions.calculateDistance(goalkeeper_position, left_post_position)
+        dist_to_right_post = Functions.calculateDistance(goalkeeper_position, right_post_position)
 
-            # Determine which part of the goal the goalkeeper is closer to
-            if dist_to_left_post < dist_to_right_post:
-                return 'right'  # Goalkeeper is closer to the left post, so the right section is open
-            elif dist_to_right_post < dist_to_left_post:
-                return 'left'  # Goalkeeper is closer to the right post, so the left section is open
-            else:
-                return 'center'  # Goalkeeper is in the center, so both sides are equally open
+        # Determine which part of the goal the goalkeeper is closer to
+        if dist_to_left_post < dist_to_right_post:
+            return 'right'  # Goalkeeper is closer to the left post, so the right section is open
+        elif dist_to_right_post < dist_to_left_post:
+            return 'left'  # Goalkeeper is closer to the right post, so the left section is open
+        else:
+            return 'center'  # Goalkeeper is in the center, so both sides are equally open
 
 
 def main():

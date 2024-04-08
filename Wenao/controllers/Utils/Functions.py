@@ -1,5 +1,19 @@
 import numpy as np
+import random
 
+class SharedState:
+    def __init__(self):
+        self.random_team()
+
+    def random_team(self):
+        # Generate a random boolean value
+        self.red_team_starts = random.choice([True, False])
+        self.blue_team_starts = not self.red_team_starts
+
+    def game_start(self):
+        return self.red_team_starts, self.blue_team_starts
+
+shared_state = SharedState()
 
 def calculateDistance(coordinate1, coordinate2) -> float:
     """Calculates the distance between two 2D coordinates.
