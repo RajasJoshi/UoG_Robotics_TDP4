@@ -35,7 +35,7 @@ class SoccerRobot(Robot):
         self.config = config
         self.AppState = RobotState.INIT
 
-        self.bVisionUsed = config.getboolean("RedTeam", "Vision")
+        self.bVisionUsed = False
         self.bAvoidCollision = config.getboolean("RedTeam", "Avoidance")
         self.PlayerMode = config.get("RedForwardB", "PlayerMode")
         self.Strategy = config.get("RedForwardB", "Strategy")
@@ -66,8 +66,7 @@ class SoccerRobot(Robot):
                 self.robotName,  # Pass robot name to ImageServer
                 "Bottom",
             )
-        else:
-            self.Supervisor = SupervisorData(self.robotName)
+        self.Supervisor = SupervisorData(self.robotName)
 
     def run(self):
         try:
