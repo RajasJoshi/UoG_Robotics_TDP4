@@ -69,7 +69,8 @@ class SoccerRobot(Robot):
                 self.robotName,  # Pass robot name to ImageServer
                 "Bottom",
             )
-        self.Supervisor = SupervisorData(self.robotName)
+        else:
+            self.Supervisor = SupervisorData(self.robotName)
 
     def run(self):
         try:
