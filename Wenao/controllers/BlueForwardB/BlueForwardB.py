@@ -295,52 +295,54 @@ class SoccerRobot(Robot):
                         return self.getTurningMotion(turnAngle)
 
             case RobotState.BE_A_FORWARD:
-                # Calculate the ball distance to the goal position
-                ball_distance = Functions.calculateDistance(
-                    self.TargetPosition, currentBallPosition
-                )
+                if self.Supervisor.data["GameStatus"]:
 
-                # Calculate the robot's distance to the ball position
-                robot_distance = Functions.calculateDistance(
-                    currentBallPosition, currentSelfPosition
-                )
-
-                # Check if nao robot is away from the ball
-                if robot_distance > 0.2:
-                    self.AppState = RobotState.LOOK_THE_BALL
-                    return self.motions.forwardLoop
-
-                # Check if the ball is near the goalpost
-                elif ball_distance <= 0.2:
-                    self.AppState = RobotState.SCORE_GOAL
-                    return self.motions.standInit
-
-                else:
-                    # Calculate the robot's angle to the goal position
-                    targetAngle = np.degrees(
-                        np.arctan2(
-                            self.TargetPosition[1] - currentSelfPosition[1],
-                            self.TargetPosition[0] - currentSelfPosition[0],
-                        )
+                    # Calculate the ball distance to the goal position
+                    ball_distance = Functions.calculateDistance(
+                        self.TargetPosition, currentBallPosition
                     )
-                    # Get the robot's orientation angle
-                    robotAngle = np.degrees(self.getRollPitchYaw()[2])
 
-                    # Calculate the turn angle in the range [-180, 180)
-                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+                    # Calculate the robot's distance to the ball position
+                    robot_distance = Functions.calculateDistance(
+                        currentBallPosition, currentSelfPosition
+                    )
 
-                    if abs(turnAngle) > 10:
-                        if turnAngle > 90:
-                            return self.motions.rightSidePass
-                        elif turnAngle > 40:
-                            return self.motions.rightSidePass
-                        elif turnAngle > 20:
-                            return self.motions.rightSidePass
-                        elif turnAngle < -50:
-                            return self.motions.leftSidePass
-                        elif turnAngle < -30:
-                            return self.motions.shoot
-                    return self.motions.forwardLoop
+                    # Check if nao robot is away from the ball
+                    if robot_distance > 0.2:
+                        self.AppState = RobotState.LOOK_THE_BALL
+                        return self.motions.forwardLoop
+
+                    # Check if the ball is near the goalpost
+                    elif ball_distance <= 0.2:
+                        self.AppState = RobotState.SCORE_GOAL
+                        return self.motions.standInit
+
+                    else:
+                        # Calculate the robot's angle to the goal position
+                        targetAngle = np.degrees(
+                            np.arctan2(
+                                self.TargetPosition[1] - currentSelfPosition[1],
+                                self.TargetPosition[0] - currentSelfPosition[0],
+                            )
+                        )
+                        # Get the robot's orientation angle
+                        robotAngle = np.degrees(self.getRollPitchYaw()[2])
+
+                        # Calculate the turn angle in the range [-180, 180)
+                        turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+
+                        if abs(turnAngle) > 10:
+                            if turnAngle > 90:
+                                return self.motions.rightSidePass
+                            elif turnAngle > 40:
+                                return self.motions.rightSidePass
+                            elif turnAngle > 20:
+                                return self.motions.rightSidePass
+                            elif turnAngle < -50:
+                                return self.motions.leftSidePass
+                            elif turnAngle < -30:
+                                return self.motions.shoot
+                        return self.motions.forwardLoop
 
             case RobotState.SCORE_GOAL:
                 # Calculate the Robot's angle to the goalkeeper position

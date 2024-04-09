@@ -21,9 +21,10 @@ from Utils.pathPlanning import aStar
 
 class RobotState(Enum):
     INIT = 0
-    BE_A_FORWARD = 1
-    SCORE_GOAL = 2
-    PASS_TO_PLAYER = 3  # Add a new state for passing to a player
+    GO_TO_BALL = 1
+    BE_A_FORWARD = 2
+    SCORE_GOAL = 3
+    PASS_TO_PLAYER = 4  # Add a new state for passing to a player
 
 
 class SoccerRobot(Robot):
@@ -129,6 +130,8 @@ class SoccerRobot(Robot):
         # Receiver
         self.receiver = self.getDevice("receiver")
         self.receiver.enable(self.timeStep)
+
+        self.emitter = self.getDevice("emitter")
 
     def interruptMotion(self) -> None:
         """Interrupt if the robot is moving."""
@@ -324,14 +327,63 @@ class SoccerRobot(Robot):
 
                 # Check if the ball is near the goalpost
                 else:
-                    self.AppState = RobotState.PASS_TO_PLAYER
+                    msgId = 2
+                    GameState = 1
+                    message = f"{msgId},{GameState}"
+                    self.emitter.send(message.encode("utf-8"))
+
+                    self.AppState = RobotState.BE_A_FORWARD
+                    return self.motions.standInit
+
+            case RobotState.GO_TO_BALL:
+
+                # Check if nao robot is away from the ball
+                if BallToRobotdist > 0.2:
+                    gridtargetpose = (
+                        int((currentBallPosition[0] - (-4.5)) / 0.1),
+                        int((currentBallPosition[1] - (-2.8)) / 0.1),
+                    )
+
+                    # Use the A* algorithm to find the shortest path to the ball
+                    self.path = aStar(grid, gridselfpose, gridtargetpose)
+                    # Calculate the Robot's angle to the ball position
+                    if self.path and len(self.path) > 0:
+                        # Pop the next node from the path
+                        node = self.path.pop(0)
+                        node_position = (
+                            node[0] * 0.1 + (-4.5),
+                            node[1] * 0.1 + (-2.8),
+                        )
+                        # Calculate the angle to the next node in the path
+                        targetAngle = np.degrees(
+                            np.arctan2(
+                                node_position[1] - currentSelfPosition[1],
+                                node_position[0] - currentSelfPosition[0],
+                            )
+                        )
+
+                        # Calculate the turn angle in the range [-180, 180)
+                        turnAngle = Functions.calculateTurnAngle(
+                            targetAngle, robotAngle
+                        )
+
+                        # Turn the robot towards the next node in the path
+                        if abs(turnAngle) > 10:
+                            return self.getTurningMotion(turnAngle)
+
+                        # Move the robot towards the next node in the path
+                        return self.motions.forwardLoop
+
+                # Check if the ball is near the goalpost
+                else:
+                    self.AppState = RobotState.BE_A_FORWARD
                     return self.motions.standInit
 
             case RobotState.BE_A_FORWARD:
 
                 # Check if nao robot is away from the ball
                 if BallToRobotdist > 0.2:
-                    self.AppState = RobotState.INIT
+                    self.AppState = RobotState.GO_TO_BALL
                     return self.motions.standInit
 
                 # Check if the ball is near the goalpost
@@ -384,7 +436,7 @@ class SoccerRobot(Robot):
 
                 # Check if nao robot is away from the ball
                 if BallToRobotdist > 0.2:
-                    self.AppState = RobotState.INIT
+                    self.AppState = RobotState.GO_TO_BALL
                     return self.motions.standInit
 
                 else:
