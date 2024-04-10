@@ -48,7 +48,7 @@ class SoccerRobot(Robot):
         self.navigation_manager = PathPlanningManager(self)
         self.robot_state_manager = RobotStateManager(self, self.navigation_manager)
 
-        self.bVisionUsed = config.getboolean("RedTeam", "Vision")
+        self.bVisionUsed = True
         self.bAvoidCollision = config.getboolean("RedTeam", "Avoidance")
         self.PlayerMode = config.get("RedForwardA", "PlayerMode")
         self.Strategy = config.get("RedForwardA", "Strategy")

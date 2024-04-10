@@ -5,8 +5,11 @@ from threading import Thread
 from ultralytics import YOLO
 
 import cv2
+import os
+import sys
 import numpy as np
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 class ImageServer:
     def __init__(self, width, height, camera, robot_name, position):
@@ -18,6 +21,8 @@ class ImageServer:
         self.running = True
         self.track_history = defaultdict(lambda: [])
         self.track = []
+
+        self.device = 0 if torch.cuda.is_available() else 'cpu'
 
         self.queue = queue.Queue(maxsize=3)
         self.thread = Thread(target=self.run, daemon=True)
@@ -41,24 +46,24 @@ class ImageServer:
                 # Perform some OpenCV operations (e.g., grayscale conversion)
                 frame = cv2.cvtColor(cvimg, cv2.COLOR_BGR2RGB)
             
-                model = YOLO(r"/home/sovik/Desktop/uni/UoG_Robotics_TDP4/Wenao/controllers/Utils/best.engine")
+                model = YOLO(r"../Utils/best.engine")
 
-                results = model.predict(frame, device = 'cuda', conf = 0.5)
-                #results1 = model.track(frame, persist = True, device = 'cuda', tracker = 'bytetrack.yaml', classes = [0], conf = 0.5)
+                results = model.predict(frame, device = self.device, conf = 0.5, verbose=False)
+                '''results1 = model.track(frame, persist = True, device = 'cuda', tracker = 'bytetrack.yaml', classes = [0], conf = 0.5)
 
                 # Get the boxes and track IDs
-                #boxes = results1[0].boxes.xywh.cpu().tolist()
-                #names = results1[0].names
-                #try:
-                #    track_ids = results1[0].boxes.id.cpu().tolist()
-                #except:
-                #    track_ids = None
-                #clss = results1[0].boxes.cls.cpu().tolist()
+                boxes = results1[0].boxes.xywh.cpu().tolist()
+                names = results1[0].names
+                try:
+                    track_ids = results1[0].boxes.id.cpu().tolist()
+                except:
+                    track_ids = None
+                clss = results1[0].boxes.cls.cpu().tolist()
 
                 # Visualize the results on the frame
-                #annotated_frame = results[0].plot()
+                annotated_frame = results[0].plot()
 
-                '''# Plot the tracks
+                # Plot the tracks
                 if track_ids:
                     for box, track_id in zip(boxes, track_ids):
                         x, y, w, h = box
