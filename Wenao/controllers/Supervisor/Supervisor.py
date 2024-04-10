@@ -92,7 +92,9 @@ if __name__ == '__main__':
             break
 
     supervisor = Supervisor(file_name)
-    supervisor.run()
-    supervisor.possession_percentage()
-    supervisor.passing_percentage()
-    supervisor.interrupt_percentage()
+    while file_name:
+        supervisor.run()
+        supervisor.possession_percentage()
+        supervisor.passing_percentage()
+        supervisor.interrupt_percentage()
+        break
