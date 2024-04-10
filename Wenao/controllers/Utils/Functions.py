@@ -1,8 +1,22 @@
 import numpy as np
-import math
+import random
 import csv
 import matplotlib.pyplot as plt
 from mplsoccer import PyPizza, FontManager
+
+class SharedState:
+    def __init__(self):
+        self.random_team()
+
+    def random_team(self):
+        # Generate a random boolean value
+        self.red_team_starts = random.choice([True, False])
+        self.blue_team_starts = not self.red_team_starts
+
+    def game_start(self):
+        return self.red_team_starts, self.blue_team_starts
+
+shared_state = SharedState()
 
 
 def calculateDistance(coordinate1, coordinate2) -> float:
@@ -18,6 +32,14 @@ def calculateDistance(coordinate1, coordinate2) -> float:
     deltaX = coordinate1[0] - coordinate2[0]
     deltaY = coordinate1[1] - coordinate2[1]
     return np.hypot(deltaX, deltaY)
+
+def calculateTargetAngle(target, current):
+        return np.degrees(
+            np.arctan2(
+                target[1] - current[1],
+                target[0] - current[0],
+            )
+        )
 
 
 @staticmethod

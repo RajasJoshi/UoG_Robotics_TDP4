@@ -34,8 +34,10 @@ class SoccerRobot(Robot):
         self.currentlyPlaying = False
         self.config = config
         self.AppState = RobotState.INIT
+        self.initial_ball_position = None
+        self.game_started = False
 
-        self.bVisionUsed = False
+        self.bVisionUsed = config.getboolean("RedTeam", "Vision")
         self.bAvoidCollision = config.getboolean("RedTeam", "Avoidance")
         self.PlayerMode = config.get("RedDefender", "PlayerMode")
         self.Strategy = config.get("RedDefender", "Strategy")
@@ -66,7 +68,8 @@ class SoccerRobot(Robot):
                 self.robotName,  # Pass robot name to ImageServer
                 "Bottom",
             )
-        self.Supervisor = SupervisorData(self.robotName)
+        else:
+            self.Supervisor = SupervisorData(self.robotName)
 
     def run(self):
         try:
@@ -228,92 +231,88 @@ class SoccerRobot(Robot):
         # Get the current position
         currentSelfPosition = self.Supervisor.getSelfPosition()
         currentBallPosition = self.Supervisor.getBallData()
+
+        # Calculate the ball distance to the robot position
+        StartToRobotdist = Functions.calculateDistance(
+            self.StartLocation, currentSelfPosition
+        )
+
+        # Calculate the ball distance to the robot position
+        BallToRobotdist = Functions.calculateDistance(
+            currentBallPosition, currentSelfPosition
+        )
+        
+        # Calculate the ball distance to the goal position
+        BallToGoaldist = Functions.calculateDistance(
+            currentBallPosition, self.TargetPosition
+        )
+
+        # Get the robot's orientation angle
+        robotAngle = np.degrees(self.getRollPitchYaw()[2])
+
+        # If the initial ball position is not set, set it to the current position
+        if self.initial_ball_position is None:
+            self.initial_ball_position = currentBallPosition
+
+        # Calculate the ball's velocity
+        ball_distance = Functions.calculateDistance(currentBallPosition, self.initial_ball_position)
+
+        # Update the previous ball position
+        self.initial_ball_position = currentBallPosition
+
+        if ball_distance > 0.0003:
+            self.game_started = True
+
+        #print(f"Red Forward Defender Current State: {self.AppState}")
+
         match self.AppState:
             case RobotState.INIT:
-                # Calculate the distance to the goal position
-                distance = Functions.calculateDistance(
-                    self.StartLocation, currentSelfPosition
-                )
-
-                if distance <= 0.2:
+                if StartToRobotdist <= 0.2:
                     self.AppState = RobotState.LOOK_THE_BALL
                     return self.motions.standInit
                 else:
-                    # Calculate the angle to the target position
-                    targetAngle = np.degrees(
-                        np.arctan2(
-                            self.StartLocation[1] - currentSelfPosition[1],
-                            self.StartLocation[0] - currentSelfPosition[0],
-                        )
-                    )
+                    targetAngle = Functions.calculateTargetAngle(self.StartLocation, currentSelfPosition)
+                    turnAngle= Functions.calculateTurnAngle(targetAngle, robotAngle)
 
-                    # Get the robot's orientation angle
-                    robotAngle = np.degrees(self.getRollPitchYaw()[2])
-
-                    # Calculate the turn angle in the range [-180, 180)
-                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
-                    if abs(turnAngle) > 10:
+                    if abs(turnAngle) > 18:
                         return self.getTurningMotion(turnAngle)
 
                 return self.motions.forwardLoop
 
             case RobotState.LOOK_THE_BALL:
-                # Calculate the angle to the target position
-                targetAngle = np.degrees(
-                    np.arctan2(
-                        currentBallPosition[1] - currentSelfPosition[1],
-                        currentBallPosition[0] - currentSelfPosition[0],
-                    )
-                )
+                # Game has not started yet, turn to face the ball and wait
+                targetAngle_ball = Functions.calculateTargetAngle(currentBallPosition, currentSelfPosition)
+                turnAngle_ball = Functions.calculateTurnAngle(targetAngle_ball, robotAngle)
 
-                # Get the robot's orientation angle
-                robotAngle = np.degrees(self.getRollPitchYaw()[2])
+                if abs(turnAngle_ball) > 18:
+                    return self.getTurningMotion(turnAngle_ball)
 
-                # Calculate the turn angle in the range [-180, 180)
-                turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
-
-                if abs(turnAngle) > 10:
-                    return self.getTurningMotion(turnAngle)
-
-                # Calculate the distance to the goal position
-                distance = Functions.calculateDistance(
-                    self.StartLocation, currentSelfPosition
-                )
-
-                if distance <= 0.2 and abs(turnAngle) < 10:
+                if StartToRobotdist <= 0.2 and abs(turnAngle_ball) < 10:
                     self.AppState = RobotState.BE_A_DEFENDER
 
                 return self.motions.standInit
 
             case RobotState.BE_A_DEFENDER:
-                targetAngle = np.degrees(
-                    np.arctan2(
-                        currentBallPosition[1] - currentSelfPosition[1],
-                        currentBallPosition[0] - currentSelfPosition[0],
-                    )
-                )
+                # Game has not started yet, turn to face the ball and wait
+                targetAngle_ball = Functions.calculateTargetAngle(currentBallPosition, currentSelfPosition)
+                turnAngle_ball = Functions.calculateTurnAngle(targetAngle_ball, robotAngle)
 
-                # Get the robot's orientation angle
-                robotAngle = np.degrees(self.getRollPitchYaw()[2])
-
-                # Calculate the turn angle in the range [-180, 180)
-                turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
-                turningMotion = self.getTurningMotion(turnAngle)
+                turningMotion = self.getTurningMotion(turnAngle_ball)
                 if turningMotion is not None:
                     return turningMotion
+                
+                if not self.game_started:
+                # Game has not started yet, stand and wait
+                    return self.motions.standInit
 
-                if (
-                    self.Supervisor.data["ballOwner"][0] != "R"
-                    and currentBallPosition[0] < 0
-                ):
-                    # Calculate the distance to the goal position
-                    distance = Functions.calculateDistance(
-                        currentBallPosition, currentSelfPosition
-                    )
+                if (self.Supervisor.data["ballOwner"][0] != "R" and currentBallPosition[0] < 0):
 
-                    if distance <= 0.2 and abs(turnAngle) < 10:
+                    # If the ball is close enough, try to intercept it
+                    if BallToRobotdist < 0.8 and self.game_started == True:
+                        return self.motions.forwardLoop
+        
+                    elif BallToRobotdist <= 0.2 and abs(turnAngle_ball) < 10:
                         return self.motions.shoot
-
                     return self.motions.forwardLoop
 
             case _:
