@@ -1,0 +1,1858 @@
+Supervisor Distance: 3.2598392774296556
+Supervisor Distance: 3.351528760882578
+Supervisor Distance: 3.2598393100573517
+Supervisor Distance: 3.3515584278395
+Supervisor Distance: 3.259839351806007
+Supervisor Distance: 3.3570608249053904
+Supervisor Distance: 3.2598394026594066
+Supervisor Distance: 3.3625799271708763
+distance estimate: 3.0948114738955863
+angle: -37.64583400641003
+Supervisor Distance: 3.2598394623024576
+distance estimate: 3.0948114738955863
+angle: -37.64583400641003
+Supervisor Distance: 3.366071990759552
+distance estimate: 3.3067965485524065
+angle: -43.6825389648569
+Supervisor Distance: 3.2598395302544527
+Supervisor Distance: 3.3683100002574964
+distance estimate: 3.3067965485524065
+angle: -43.6825389648569
+Supervisor Distance: 3.2598396059524983
+Supervisor Distance: 3.3699510061846807
+distance estimate: 3.2099465472857256
+angle: -48.33821213887642
+Supervisor Distance: 3.2598396888028383
+distance estimate: 3.2099465472857256
+angle: -48.33821213887642
+Supervisor Distance: 3.37145714152913
+Supervisor Distance: 3.259839778211821
+distance estimate: 3.1151664861230843
+angle: -50.30353481849564
+Supervisor Distance: 3.373178543988432
+distance estimate: 3.1151664861230843
+angle: -50.30353481849564
+Supervisor Distance: 3.259839873604004
+Supervisor Distance: 3.375355509747853
+distance estimate: 3.133032257064982
+angle: -51.005983059173126
+Supervisor Distance: 3.2598399744321798
+Supervisor Distance: 3.378092757192957
+distance estimate: 3.133032257064982
+angle: -51.005983059173126
+Supervisor Distance: 3.2598400801823777
+Supervisor Distance: 3.380884677711634
+distance estimate: 3.08081857574089
+angle: -51.47276724691713
+Supervisor Distance: 3.2598401903757694
+Supervisor Distance: 3.3832408381539656
+distance estimate: 3.08081857574089
+angle: -51.47276724691713
+Supervisor Distance: 3.259840304568712
+Supervisor Distance: 3.384851927352944
+distance estimate: 3.1068611668032906
+angle: -51.989422356285644
+Supervisor Distance: 3.259840422351704
+Supervisor Distance: 3.386626984701249
+distance estimate: 3.1068611668032906
+angle: -51.989422356285644
+Supervisor Distance: 3.259840543347732
+Supervisor Distance: 3.3883880167809024
+distance estimate: 3.1607309361770533
+angle: -51.69012044883459
+Supervisor Distance: 3.2598406672103213
+Supervisor Distance: 3.3895761741519688
+distance estimate: 3.1607309361770533
+angle: -51.69012044883459
+Supervisor Distance: 3.259840793621466
+Supervisor Distance: 3.3899183619360884
+distance estimate: 3.215708060154637
+angle: -48.58827224252433
+Supervisor Distance: 3.2598409222895586
+Supervisor Distance: 3.389390299898665
+distance estimate: 3.215708060154637
+angle: -48.58827224252433
+Supervisor Distance: 3.259841052947375
+distance estimate: 3.353158084860687
+angle: -42.30194298563678
+Supervisor Distance: 3.388123974207159
+Supervisor Distance: 3.2598411853501656
+Supervisor Distance: 3.385932821876842
+distance estimate: 3.353158084860687
+angle: -42.30194298563678
+Supervisor Distance: 3.2598413192738516
+distance estimate: 3.3766777506905647
+angle: -33.56026310910427
+Supervisor Distance: 3.3834971295306975
+Supervisor Distance: 3.2598414545133494
+distance estimate: 3.3766777506905647
+angle: -33.56026310910427
+Supervisor Distance: 3.381854328351071
+Supervisor Distance: 3.259841590881017
+distance estimate: 3.471246024408964
+angle: -26.477388977451927
+Supervisor Distance: 3.3806203595141544
+distance estimate: 3.471246024408964
+angle: -26.477388977451927
+Supervisor Distance: 3.259841728205218
+Supervisor Distance: 3.379235471383917
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.4562214985701596
+angle: -18.065468599834087
+Supervisor Distance: 3.3778999671431693
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.4562214985701596
+angle: -18.065468599834087
+Supervisor Distance: 3.377176187651802
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.4497759169857116
+angle: -7.7934651534353
+Supervisor Distance: 3.377621430708762
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.4497759169857116
+angle: -7.7934651534353
+Supervisor Distance: 3.378803069468584
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.3952730220710627
+angle: 0.29852686422131
+Supervisor Distance: 3.380113219857754
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.3952730220710627
+angle: 0.29852686422131
+Supervisor Distance: 3.381209900951242
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.4444875404227564
+angle: 13.140594529715822
+Supervisor Distance: 3.3817268234936724
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.4444875404227564
+angle: 13.140594529715822
+Supervisor Distance: 3.381361274833894
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.320987584808986
+angle: 25.499691020607532
+Supervisor Distance: 3.3800172672265494
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.320987584808986
+angle: 25.499691020607532
+Supervisor Distance: 3.377835031378909
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.3130285810576767
+angle: 32.58530180562589
+Supervisor Distance: 3.3753571109396554
+distance estimate: 3.3130285810576767
+angle: 32.58530180562589
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.372266917616958
+distance estimate: 3.2520557701011055
+angle: 32.297576462688355
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.369289529099599
+distance estimate: 3.2520557701011055
+angle: 32.297576462688355
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.3664486660748163
+distance estimate: 3.4231723123948075
+angle: 30.920892181348606
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.3644699950717847
+distance estimate: 3.4231723123948075
+angle: 30.920892181348606
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.363129938574201
+distance estimate: 3.2851345079182366
+angle: 30.551912179926024
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.2851345079182366
+angle: 30.551912179926024
+Supervisor Distance: 3.3629368847391348
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.3642439254686494
+distance estimate: 3.3254813520142075
+angle: 31.903268461281403
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.3666784080662757
+distance estimate: 3.3254813520142075
+angle: 31.903268461281403
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.370745043383331
+distance estimate: 3.3172131781401655
+angle: 30.76731920373758
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.375385708510609
+distance estimate: 3.3172131781401655
+angle: 30.76731920373758
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.377625124983266
+distance estimate: 3.3784184474685324
+angle: 31.597021864838734
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.3784184474685324
+angle: 31.597021864838734
+Supervisor Distance: 3.3782423633308154
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.3792045952221335
+distance estimate: 3.3583806636204465
+angle: 15.627725520163217
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.3583806636204465
+angle: 15.627725520163217
+Supervisor Distance: 3.379397165584153
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.4412051701546815
+angle: 6.635282942244576
+Supervisor Distance: 3.375565406389318
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.4412051701546815
+angle: 6.635282942244576
+Supervisor Distance: 3.374498876927361
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.3741575635760497
+distance estimate: 3.449902028640781
+angle: -7.34362613105344
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.373599385935802
+distance estimate: 3.449902028640781
+angle: -7.34362613105344
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.373312941255075
+distance estimate: 3.352479111801595
+angle: -12.424350015968058
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.3676117558309433
+distance estimate: 3.352479111801595
+angle: -12.424350015968058
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.3525075668369135
+distance estimate: 3.4243150535813633
+angle: -14.289602869635397
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.3326673619584173
+distance estimate: 3.4243150535813633
+angle: -14.289602869635397
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.32003570399904
+distance estimate: 3.3826325498704843
+angle: -13.982717108527671
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.314752880145457
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.3826325498704843
+angle: -13.982717108527671
+Supervisor Distance: 3.3154951667413637
+distance estimate: 3.333343380302916
+angle: -11.129075136663102
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.333343380302916
+angle: -11.129075136663102
+Supervisor Distance: 3.3162504709452136
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.3445898819593425
+angle: -12.153884982708062
+Supervisor Distance: 3.3095405957124533
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.3445898819593425
+angle: -12.153884982708062
+Supervisor Distance: 3.3013829793449267
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.34697807264353
+angle: -10.228549582415699
+Supervisor Distance: 3.2934217287808654
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.34697807264353
+angle: -10.228549582415699
+Supervisor Distance: 3.2864952213377983
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.282113450927876
+distance estimate: 3.398337774576881
+angle: -9.525587527764348
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.279489755053078
+distance estimate: 3.398337774576881
+angle: -9.525587527764348
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.315216607259118
+angle: -9.155668914870285
+Supervisor Distance: 3.276132455651367
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.315216607259118
+angle: -9.155668914870285
+Supervisor Distance: 3.270250873875625
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.263325332102034
+distance estimate: 3.4015224913494806
+angle: -9.366876555543826
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.252163087302814
+distance estimate: 3.4015224913494806
+angle: -9.366876555543826
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.2448410451307272
+distance estimate: 3.2572864414111753
+angle: -11.290678708490715
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.2572864414111753
+angle: -11.290678708490715
+Supervisor Distance: 3.2406443277982815
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.2924850328648976
+angle: -11.895477556662106
+Supervisor Distance: 3.2381143684424463
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.2924850328648976
+angle: -11.895477556662106
+Supervisor Distance: 3.2347978976509126
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.2283101662049543
+distance estimate: 3.253707713312463
+angle: -12.017578118850302
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.2206238897471495
+distance estimate: 3.253707713312463
+angle: -12.017578118850302
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.212861176661288
+distance estimate: 3.2391004695351326
+angle: -11.26725928172202
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.2052138764261593
+distance estimate: 3.2391004695351326
+angle: -11.26725928172202
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.1983153779718654
+distance estimate: 3.2682737395729196
+angle: -9.498506679558469
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.1939706893613553
+distance estimate: 3.2682737395729196
+angle: -9.498506679558469
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.191373550234426
+distance estimate: 3.306103402612507
+angle: -8.925452487520143
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.306103402612507
+angle: -8.925452487520143
+Supervisor Distance: 3.1880301458829248
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.297639248025718
+angle: -8.779220055392836
+Supervisor Distance: 3.182146066698432
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.1752028623849826
+distance estimate: 3.297639248025718
+angle: -8.779220055392836
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.164015304117079
+distance estimate: 3.2492267011885247
+angle: -10.327055055775057
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.1566832170855776
+distance estimate: 3.2492267011885247
+angle: -10.327055055775057
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.152474116518324
+distance estimate: 3.1801870939333754
+angle: -11.470148397807934
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.1499363805801095
+distance estimate: 3.1801870939333754
+angle: -11.470148397807934
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.146619528505257
+distance estimate: 3.2012446969217265
+angle: -11.75242559125949
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.2012446969217265
+angle: -11.75242559125949
+Supervisor Distance: 3.1401418709847797
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.1806229679843074
+angle: -11.62026346871478
+Supervisor Distance: 3.132474319362851
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.1806229679843074
+angle: -11.62026346871478
+Supervisor Distance: 3.124737245938597
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.1171124010151
+distance estimate: 3.1965604140509973
+angle: -9.770728790842512
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.1102294196924514
+distance estimate: 3.1965604140509973
+angle: -9.770728790842512
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.066901808192111
+angle: -8.942753438318018
+distance estimate: 4.5
+angle: -14.337181912197988
+Supervisor Distance: 3.1058952005654166
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.066901808192111
+angle: -8.942753438318018
+distance estimate: 4.5
+angle: -14.337181912197988
+Supervisor Distance: 3.103302457515228
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.1761341913249503
+angle: -8.47278959811768
+Supervisor Distance: 3.099956439848035
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.1761341913249503
+angle: -8.47278959811768
+Supervisor Distance: 3.094058362664911
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.087091048653576
+distance estimate: 3.1778382904593747
+angle: -8.772878974089732
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.1778382904593747
+angle: -8.772878974089732
+Supervisor Distance: 3.0758702748767632
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.0997008859556536
+angle: -10.88397651762146
+Supervisor Distance: 3.0685146507514767
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.0997008859556536
+angle: -10.88397651762146
+Supervisor Distance: 3.06429198722878
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.0617488629155805
+distance estimate: 3.0575483068309937
+angle: -11.551122257658353
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.0575483068309937
+angle: -11.551122257658353
+Supervisor Distance: 3.0584334423502217
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.051966513911651
+distance estimate: 3.105051821143026
+angle: -11.627190006001628
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.0443174232417625
+distance estimate: 3.105051821143026
+angle: -11.627190006001628
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.036605051152092
+distance estimate: 3.1113647053651885
+angle: -10.976994887284247
+distance estimate: 4.5
+angle: -41.737521090278264
+distance estimate: 4.5
+angle: -15.705689252675466
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.029000733350122
+distance estimate: 3.1113647053651885
+angle: -10.976994887284247
+distance estimate: 4.5
+angle: -41.737521090278264
+distance estimate: 4.5
+angle: -15.705689252675466
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.0221327733836802
+distance estimate: 3.06700812479688
+angle: -8.914348812122192
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.017809711078723
+distance estimate: 3.06700812479688
+angle: -8.914348812122192
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.015222068864443
+distance estimate: 3.037524622878355
+angle: -8.41862363180047
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 3.0118739645342223
+distance estimate: 3.037524622878355
+angle: -8.41862363180047
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.0760453200172098
+angle: -8.236322086927403
+Supervisor Distance: 3.0059623594251947
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.0760453200172098
+angle: -8.236322086927403
+Supervisor Distance: 2.9989713788121644
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.987717913031354
+distance estimate: 3.0373551676193418
+angle: -9.643517265706196
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.0373551676193418
+angle: -9.643517265706196
+Supervisor Distance: 2.9803393026315312
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.976103555696135
+distance estimate: 3.0370228295219763
+angle: -11.202477496196563
+distance estimate: 4.5
+angle: -22.294610510771406
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.0370228295219763
+angle: -11.202477496196563
+distance estimate: 4.5
+angle: -22.294610510771406
+Supervisor Distance: 2.973555317369262
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.9702413757323143
+distance estimate: 3.0018398116928555
+angle: -11.477728202362037
+distance estimate: 4.5
+angle: -43.426346774104005
+distance estimate: 4.5
+angle: -22.37542069907931
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.0018398116928555
+angle: -11.477728202362037
+distance estimate: 4.5
+angle: -43.426346774104005
+distance estimate: 4.5
+angle: -22.37542069907931
+Supervisor Distance: 2.963784952715119
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.9561539227263633
+distance estimate: 2.9946638459911146
+angle: -11.440364075572367
+distance estimate: 4.5
+angle: -22.43957711127612
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.9946638459911146
+angle: -11.440364075572367
+distance estimate: 4.5
+angle: -22.43957711127612
+Supervisor Distance: 2.94846585754279
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.938126509975176
+angle: -9.203694590489686
+Supervisor Distance: 2.9408818158169927
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.938126509975176
+angle: -9.203694590489686
+Supervisor Distance: 2.934028746532047
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.0046177945128134
+angle: -8.357018672499272
+Supervisor Distance: 2.929716763047289
+distance estimate: 3.0046177945128134
+angle: -8.357018672499272
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.9271341957416457
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.018166854647679
+angle: -7.782515028000643
+Supervisor Distance: 2.923784038731457
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.018166854647679
+angle: -7.782515028000643
+Supervisor Distance: 2.917859054309978
+distance estimate: 2.9763411198250664
+angle: -8.248660250886013
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.9108447133163318
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.9763411198250664
+angle: -8.248660250886013
+Supervisor Distance: 2.8995591409084374
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.892158088708244
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.887909629747829
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.8853564385569905
+distance estimate: 3.0165268052353205
+angle: -10.412214284435883
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.8820439385195677
+distance estimate: 3.0165268052353205
+angle: -10.412214284435883
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.8755977357769673
+distance estimate: 2.9765664228910746
+angle: -11.158486916442365
+distance estimate: 4.5
+angle: -22.447811347372806
+distance estimate: 4.5
+angle: -43.86543017005663
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.867984336461825
+distance estimate: 2.9765664228910746
+angle: -11.158486916442365
+distance estimate: 4.5
+angle: -22.447811347372806
+distance estimate: 4.5
+angle: -43.86543017005663
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.860320160894663
+distance estimate: 2.9645231682952673
+angle: -11.34008457487587
+distance estimate: 4.5
+angle: -22.624149777153324
+distance estimate: 4.5
+angle: -44.747340919667316
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.8527561306994587
+distance estimate: 2.9645231682952673
+angle: -11.34008457487587
+distance estimate: 4.5
+angle: -22.624149777153324
+distance estimate: 4.5
+angle: -44.747340919667316
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.845917806835372
+distance estimate: 3.010022794542918
+angle: -10.493330626935059
+Supervisor Distance: 3.2598417971764304
+distance estimate: 3.010022794542918
+angle: -10.493330626935059
+Supervisor Distance: 2.8416168209153154
+distance estimate: 2.9707071385400576
+angle: -8.35348713459629
+distance estimate: 4.5
+angle: -16.761874568199506
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.8390393046994147
+distance estimate: 2.9707071385400576
+angle: -8.35348713459629
+distance estimate: 4.5
+angle: -16.761874568199506
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.8356871275806346
+distance estimate: 2.9766978654324543
+angle: -7.752575365106166
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.9766978654324543
+angle: -7.752575365106166
+Supervisor Distance: 2.829748903335052
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.9324903360526346
+angle: -7.650871578839849
+Supervisor Distance: 2.822711496001611
+distance estimate: 2.9324903360526346
+angle: -7.650871578839849
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.8113943960059
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.9433314481519677
+angle: -9.30509350086237
+Supervisor Distance: 2.8039714519681107
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.9433314481519677
+angle: -9.30509350086237
+Supervisor Distance: 2.7997106448914426
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.930292868321037
+angle: -10.848614529958127
+Supervisor Distance: 2.7971526838565333
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.930292868321037
+angle: -10.848614529958127
+Supervisor Distance: 2.7938415899007674
+distance estimate: 2.9012969551886405
+angle: -11.1321216656225
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.7874053129604137
+distance estimate: 2.9012969551886405
+angle: -11.1321216656225
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.779809105828222
+distance estimate: 2.8868718262465585
+angle: -11.041923569697794
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.7721683854551156
+distance estimate: 2.8868718262465585
+angle: -11.041923569697794
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.764624096103226
+distance estimate: 2.8228785201788353
+angle: -8.8798593725455
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.7578003795500416
+distance estimate: 2.8228785201788353
+angle: -8.8798593725455
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.753510315278378
+distance estimate: 2.901927405566967
+angle: -7.802858286690711
+distance estimate: 4.5
+angle: -20.828520672590862
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.7509378258324904
+distance estimate: 2.901927405566967
+angle: -7.802858286690711
+distance estimate: 4.5
+angle: -20.828520672590862
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.747583655814432
+distance estimate: 2.8995616586508914
+angle: -7.309810750604681
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.7416323186352107
+distance estimate: 2.8995616586508914
+angle: -7.309810750604681
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.838632157101806
+angle: -7.582832129016917
+distance estimate: 4.5
+angle: -20.545010686501453
+Supervisor Distance: 2.7345721252341226
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.838632157101806
+angle: -7.582832129016917
+distance estimate: 4.5
+angle: -20.545010686501453
+Supervisor Distance: 2.723224070925213
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.7157797927193177
+distance estimate: 2.8382053019700932
+angle: -10.147347187223527
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.7115070416597944
+distance estimate: 2.8382053019700932
+angle: -10.147347187223527
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.8709581639854944
+angle: -10.962899680535182
+distance estimate: 4.5
+angle: -47.033962809133584
+distance estimate: 4.5
+angle: -46.43074142557321
+Supervisor Distance: 2.7089444635034696
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.8709581639854944
+angle: -10.962899680535182
+distance estimate: 4.5
+angle: -47.033962809133584
+distance estimate: 4.5
+angle: -46.43074142557321
+Supervisor Distance: 2.7056347305579944
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.699208073922589
+distance estimate: 2.8387403141193266
+angle: -11.178939782777132
+distance estimate: 4.5
+angle: -20.78961859428234
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.6916286110092495
+distance estimate: 2.8387403141193266
+angle: -11.178939782777132
+distance estimate: 4.5
+angle: -20.78961859428234
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.8209883579579196
+angle: -10.257707698713437
+Supervisor Distance: 2.684010931952316
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.8209883579579196
+angle: -10.257707698713437
+Supervisor Distance: 2.6764861358004226
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.6696769109499803
+distance estimate: 2.7802870678073957
+angle: -7.786599752730369
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.6653977092639645
+distance estimate: 2.7802870678073957
+angle: -7.786599752730369
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.662830230276677
+distance estimate: 2.763849926587735
+angle: -7.121696744434196
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.6594740939438437
+distance estimate: 2.763849926587735
+angle: -7.121696744434196
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.6535097591458063
+distance estimate: 2.7582599071732257
+angle: -6.9961743689613805
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.7582599071732257
+angle: -6.9961743689613805
+Supervisor Distance: 2.646427044961489
+distance estimate: 2.780068658334446
+angle: -8.854701316573157
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.63504860244043
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.780068658334446
+angle: -8.854701316573157
+Supervisor Distance: 2.6275835552470697
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.705821545989754
+angle: -10.497584602425773
+distance estimate: 4.5
+angle: -48.19592713615805
+Supervisor Distance: 2.6232992585623562
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.705821545989754
+angle: -10.497584602425773
+distance estimate: 4.5
+angle: -48.19592713615805
+Supervisor Distance: 2.620732237000682
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.733999783686902
+angle: -10.961290407944148
+Supervisor Distance: 2.617423820147879
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.733999783686902
+angle: -10.961290407944148
+Supervisor Distance: 2.6110064661080696
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.717863766746921
+angle: -10.893220759288933
+distance estimate: 4.5
+angle: -48.091438591756955
+Supervisor Distance: 2.6034432877087434
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.717863766746921
+angle: -10.893220759288933
+distance estimate: 4.5
+angle: -48.091438591756955
+Supervisor Distance: 2.595848223873878
+distance estimate: 2.6915908321703053
+angle: -8.421310883837856
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.5883426732639196
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.6915908321703053
+angle: -8.421310883837856
+Supervisor Distance: 2.5815478303856336
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.6818613427706435
+angle: -7.389606241653166
+Supervisor Distance: 2.5772794348280392
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.6818613427706435
+angle: -7.389606241653166
+Supervisor Distance: 2.574716955868352
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.6203336369088603
+angle: -6.829441627535184
+Supervisor Distance: 2.5713588860231087
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.6203336369088603
+angle: -6.829441627535184
+Supervisor Distance: 2.565381657138248
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.5582766731435473
+distance estimate: 2.6394124436207282
+angle: -7.207936631628708
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.5468684036907416
+distance estimate: 2.6394124436207282
+angle: -7.207936631628708
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.539383162349983
+distance estimate: 2.606520085952446
+angle: -9.89299922242773
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.606520085952446
+angle: -9.89299922242773
+Supervisor Distance: 2.535087720718421
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.607542762830691
+angle: -10.775464598761603
+distance estimate: 4.5
+angle: -49.55482022340289
+Supervisor Distance: 2.532516425885037
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.607542762830691
+angle: -10.775464598761603
+distance estimate: 4.5
+angle: -49.55482022340289
+Supervisor Distance: 2.5292092703952136
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.522800883197029
+distance estimate: 2.5644150084781376
+angle: -10.98567070254095
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.5644150084781376
+angle: -10.98567070254095
+Supervisor Distance: 2.515253526818763
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.5076806475900892
+distance estimate: 2.5694421049574534
+angle: -9.947676136209173
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.5694421049574534
+angle: -9.947676136209173
+Supervisor Distance: 2.500194096549357
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.493413532826181
+distance estimate: 2.5681555286246107
+angle: -7.450934004177238
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.5681555286246107
+angle: -7.450934004177238
+Supervisor Distance: 2.4891559053166588
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.4865984164273818
+distance estimate: 2.562469973408251
+angle: -6.6872998738556655
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.562469973408251
+angle: -6.6872998738556655
+Supervisor Distance: 2.483238424609738
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.53989069469514
+angle: -6.558911504262084
+Supervisor Distance: 2.477248388187366
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.53989069469514
+angle: -6.558911504262084
+Supervisor Distance: 2.4701213650175196
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.565033023782559
+angle: -8.266109326636348
+Supervisor Distance: 2.4586838234457256
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.565033023782559
+angle: -8.266109326636348
+Supervisor Distance: 2.4511789779331035
+distance estimate: 2.4938341986255153
+angle: -10.483053875160662
+distance estimate: 4.5
+angle: -50.680804707424734
+distance estimate: 4.5
+angle: -51.087957516610025
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.4468728265238586
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.4938341986255153
+angle: -10.483053875160662
+distance estimate: 4.5
+angle: -50.680804707424734
+distance estimate: 4.5
+angle: -51.087957516610025
+Supervisor Distance: 2.4442974555284542
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.440991516922919
+distance estimate: 2.465192450359266
+angle: -10.780795448064206
+distance estimate: 4.5
+angle: -51.52626888459175
+distance estimate: 4.5
+angle: -51.21359195388566
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.465192450359266
+angle: -10.780795448064206
+distance estimate: 4.5
+angle: -51.52626888459175
+distance estimate: 4.5
+angle: -51.21359195388566
+Supervisor Distance: 2.434591752085689
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.4500032884147416
+angle: -10.712687632907972
+distance estimate: 4.5
+angle: -51.268510398551975
+Supervisor Distance: 2.427059590399005
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.4500032884147416
+angle: -10.712687632907972
+distance estimate: 4.5
+angle: -51.268510398551975
+Supervisor Distance: 2.4195084043809105
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.497860656836934
+angle: -8.113517054154467
+Supervisor Distance: 2.4120406207063203
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.497860656836934
+angle: -8.113517054154467
+Supervisor Distance: 2.4052742627135566
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.490543491073769
+angle: -6.872371015350123
+Supervisor Distance: 2.4010273860285816
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.490543491073769
+angle: -6.872371015350123
+Supervisor Distance: 2.3984748925328354
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.48997398467224
+Supervisor Distance:angle: -6.295024547884119
+ 2.395112995851166
+distance estimate: 4.5
+angle: -14.482342847578257
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.48997398467224
+angle: -6.295024547884119
+distance estimate: 4.5
+angle: -14.482342847578257
+Supervisor Distance: 2.3891102115563547
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.4460407587753705
+angle: -6.660704428916495
+Supervisor Distance: 2.38196133858002
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.4460407587753705
+angle: -6.660704428916495
+Supervisor Distance: 2.370495039820623
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.3629711672548868
+distance estimate: 2.414585994974934
+angle: -9.810844201111294
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.414585994974934
+angle: -9.810844201111294
+Supervisor Distance: 2.358654734396171
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.3972930955647
+angle: -10.716229045881501
+Supervisor Distance: 2.356075478325643
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.3972930955647
+angle: -10.716229045881501
+Supervisor Distance: 2.352770704929276
+distance estimate: 2.384938059031352
+angle: -10.963214999269809
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.3463792092124187
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.384938059031352
+angle: -10.963214999269809
+Supervisor Distance: 2.3388616957596415
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.3766495024503915
+angle: -9.921204762970907
+Supervisor Distance: 2.331331756671334
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.3766495024503915
+angle: -9.921204762970907
+Supervisor Distance: 2.323882531990778
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.3873634361307774
+angle: -7.097717575156335
+Supervisor Distance: 2.317130324327921
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.3873634361307774
+angle: -7.097717575156335
+Supervisor Distance: 2.3128941978631885
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.3103467131065023
+distance estimate: 2.344195474153991
+angle: -6.083511803654386
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.306982923715286
+distance estimate: 2.344195474153991
+angle: -6.083511803654386
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.3009674264390574
+distance estimate: 2.3245593350039244
+angle: -5.915738853762885
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.2937968597891585
+distance estimate: 2.3245593350039244
+angle: -5.915738853762885
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.282302296922875
+distance estimate: 2.385303762018542
+angle: -8.010420498289584
+distance estimate: 4.5
+angle: -47.957371068604004
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.2747599804919587
+distance estimate: 2.385303762018542
+angle: -8.010420498289584
+distance estimate: 4.5
+angle: -47.957371068604004
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.2704337068817915
+distance estimate: 2.332341902084905
+angle: -10.439559752387808
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.2678507631418046
+distance estimate: 2.332341902084905
+angle: -10.439559752387808
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.2645470992031584
+distance estimate: 2.340068437670474
+angle: -10.966379327982564
+distance estimate: 4.5
+angle: -54.47714787613901
+distance estimate: 4.5
+angle: -54.12285872420718
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.2581635045554083
+distance estimate: 2.340068437670474
+angle: -10.966379327982564
+distance estimate: 4.5
+angle: -54.47714787613901
+distance estimate: 4.5
+angle: -54.12285872420718
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.2506601528415446
+distance estimate: 2.3203375328238867
+angle: -10.765763554843508
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.3203375328238867
+angle: -10.765763554843508
+Supervisor Distance: 2.2431510469296985
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.3194858904993954
+angle: -7.716936577977152
+Supervisor Distance: 2.235720192073564
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.3194858904993954
+angle: -7.716936577977152
+Supervisor Distance: 2.2289820954203066
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.2247567341106027
+distance estimate: 2.2604105721694916
+angle: -6.230175701520135
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.2222142797272753
+distance estimate: 2.2604105721694916
+angle: -6.230175701520135
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.2188486068675655
+distance estimate: 2.301078708670633
+angle: -5.749078268203324
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.301078708670633
+angle: -5.749078268203324
+Supervisor Distance: 2.2128204128083464
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.255753169912404
+angle: -6.022984235250903
+Supervisor Distance: 2.2056282870527806
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.255753169912404
+angle: -6.022984235250903
+Supervisor Distance: 2.194105952733386
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.1865458013625894
+distance estimate: 2.240844936648747
+angle: -9.560921894727665
+distance estimate: 4.5
+angle: -54.087830332699895
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.240844936648747
+angle: -9.560921894727665
+Supervisor Distance: 2.1822101535970972
+distance estimate: 4.5
+angle: -54.087830332699895
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.23065065875831
+angle: -10.795835566759802
+Supervisor Distance: 2.179623731761144
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.23065065875831
+angle: -10.795835566759802
+Supervisor Distance: 2.1763211162567817
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.1699450274568215
+distance estimate: 2.220973754565651
+angle: -10.937703404819045
+distance estimate: 4.5
+angle: -55.39122674183488
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.162455321707126
+distance estimate: 2.220973754565651
+angle: -10.937703404819045
+distance estimate: 4.5
+angle: -55.39122674183488
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.154966619484195
+distance estimate: 2.163314159264987
+angle: -9.789273018557001
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.163314159264987
+angle: -9.789273018557001
+Supervisor Distance: 2.1475539515457647
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.1408299419869414
+distance estimate: 2.1800588298707897
+angle: -6.470603816328746
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.1800588298707897
+angle: -6.470603816328746
+Supervisor Distance: 2.136615377451053
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.1340779840166144
+distance estimate: 2.172857577032059
+angle: -5.520578638072056
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.172857577032059
+angle: -5.520578638072056
+Supervisor Distance: 2.1307104329930886
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.1246695363760804
+distance estimate: 2.1587877900592924
+angle: -5.509187561846752
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.120412037340925
+distance estimate: 2.1587877900592924
+angle: -5.509187561846752
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.125158940240471
+distance estimate: 2.1451005588623935
+angle: -9.079752671336125
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.132428984264118
+distance estimate: 2.1451005588623935
+angle: -9.079752671336125
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.1338211953333457
+distance estimate: 2.170249208527209
+angle: 16.96197478295289
+distance estimate: 4.5
+angle: -47.26977664141502
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.1355709755906838
+distance estimate: 2.170249208527209
+angle: 16.96197478295289
+distance estimate: 4.5
+angle: -47.26977664141502
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.1367054230682574
+distance estimate: 2.1661047293626905
+angle: 16.360053662792208
+distance estimate: 4.5
+angle: -48.16466855202361
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.1374012886782836
+distance estimate: 2.1661047293626905
+angle: 16.360053662792208
+distance estimate: 4.5
+angle: -48.16466855202361
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.140297677451137
+distance estimate: 2.16385648250055
+angle: -9.458067974920711
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.16385648250055
+angle: -9.458067974920711
+Supervisor Distance: 2.1396146381014747
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.1404097660526147
+distance estimate: 2.166512496365111
+angle: -29.380169738123573
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.166512496365111
+angle: -29.380169738123573
+Supervisor Distance: 2.1415446029043697
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.1413581761146627
+distance estimate: 2.138037614108009
+angle: -48.02719148028479
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.138037614108009
+angle: -48.02719148028479
+Supervisor Distance: 2.1408863961169136
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.078832099637491
+angle: -51.108649582607356
+Supervisor Distance: 2.1396340161544347
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.078832099637491
+angle: -51.108649582607356
+Supervisor Distance: 2.133885143417922
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.120779825521014
+distance estimate: 1.9981192877458693
+angle: -56.770960619725386
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.9981192877458693
+angle: -56.770960619725386
+Supervisor Distance: 2.102937440797947
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.9929249762248846
+angle: -54.20134474906373
+Supervisor Distance: 2.091395039508267
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.9929249762248846
+angle: -54.20134474906373
+Supervisor Distance: 2.0867711788756855
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.087183287002737
+distance estimate: 1.955841711927424
+angle: -48.445533844177284
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.955841711927424
+angle: -48.445533844177284
+Supervisor Distance: 2.086548446346748
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.0780017034669807
+distance estimate: 2.012958161063375
+angle: -51.89867208659772
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.012958161063375
+angle: -51.89867208659772
+Supervisor Distance: 2.06771892385284
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.0580884772122627
+distance estimate: 2.011483656081438
+angle: -50.94508762684514
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.0499855773697786
+distance estimate: 2.011483656081438
+angle: -50.94508762684514
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.0447307519766076
+distance estimate: 2.008229102900671
+angle: -50.093652234070106
+Supervisor Distance: 3.2598417971764304
+distance estimate: 2.008229102900671
+angle: -50.093652234070106
+Supervisor Distance: 2.0417197636381377
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.9432588538352717
+angle: -49.08273268954558
+Supervisor Distance: 2.0385984330816056
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.9432588538352717
+angle: -49.08273268954558
+Supervisor Distance: 2.0340073396218057
+distance estimate: 1.9644620472305447
+angle: -50.12362778430974
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.0294020462214486
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.9644620472305447
+angle: -50.12362778430974
+Supervisor Distance: 2.0217449363780937
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.017109971694427
+distance estimate: 1.9297603029646198
+angle: -53.21171235131735
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.9297603029646198
+angle: -53.21171235131735
+Supervisor Distance: 2.0145409399953054
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.8852800396346578
+angle: -54.45787622063522
+Supervisor Distance: 2.0126833581531334
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.8852800396346578
+angle: -54.45787622063522
+Supervisor Distance: 2.00924793659128
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 2.001626751738248
+distance estimate: 1.875011722320092
+angle: -54.52165455824137
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.875011722320092
+angle: -54.52165455824137
+Supervisor Distance: 1.9919049877708161
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.8896212021096386
+angle: -53.48622832699549
+Supervisor Distance: 1.9817931513522025
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.8896212021096386
+angle: -53.48622832699549
+Supervisor Distance: 1.9722755422659466
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.9294183711994721
+angle: -52.31361025852805
+Supervisor Distance: 1.9641128789716495
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.958852192346958
+distance estimate: 1.9294183711994721
+angle: -52.31361025852805
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.9558570623264528
+distance estimate: 1.8637473289508157
+angle: -51.162682507569414
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.952761722460583
+distance estimate: 1.8637473289508157
+angle: -51.162682507569414
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.9482076397116188
+distance estimate: 1.8649922400550176
+angle: -50.8912144552329
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.9436443574973337
+distance estimate: 1.8649922400550176
+angle: -50.8912144552329
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.8549966191247462
+angle: -53.679827261906205
+Supervisor Distance: 1.9360507483709262
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.8549966191247462
+angle: -53.679827261906205
+Supervisor Distance: 1.9314726318170878
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.8067808962699135
+angle: -56.1105402805419
+Supervisor Distance: 1.9289367030704243
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.8067808962699135
+angle: -56.1105402805419
+Supervisor Distance: 1.927095243060996
+distance estimate: 1.7945326484354003
+angle: -56.590208863938614
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.9236630957539576
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.7945326484354003
+angle: -56.590208863938614
+Supervisor Distance: 1.91602905135891
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.7800074189106774
+angle: -56.16510172284396
+Supervisor Distance: 1.9062905031634092
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.7800074189106774
+angle: -56.16510172284396
+Supervisor Distance: 1.8961523261035484
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.792478461047545
+angle: -54.467138872497834
+Supervisor Distance: 1.8866109430490454
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.792478461047545
+angle: -54.467138872497834
+Supervisor Distance: 1.8784316181897374
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.8731585002393725
+distance estimate: 1.7609818661776906
+angle: -53.90663431268671
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.7609818661776906
+angle: -53.90663431268671
+Supervisor Distance: 1.8701581832472685
+distance estimate: 1.7604365593590894
+angle: -52.543741479957596
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.8670672522704745
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.7604365593590894
+angle: -52.543741479957596
+Supervisor Distance: 1.862534527889621
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.8580111182951464
+distance estimate: 1.7446069888908333
+angle: -53.861228525002886
+distance estimate: 4.5
+angle: -41.22137295578268
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.7446069888908333
+angle: -53.861228525002886
+distance estimate: 4.5
+angle: -41.22137295578268
+Supervisor Distance: 1.8504842430259456
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.7391285545445831
+angle: -57.121964122477664
+Supervisor Distance: 1.8459617688356111
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.7391285545445831
+angle: -57.121964122477664
+Supervisor Distance: 1.8434612650384163
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.8416352291407447
+distance estimate: 1.7066360602196713
+angle: -58.582605480397035
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.7066360602196713
+angle: -58.582605480397035
+Supervisor Distance: 1.8382021272450046
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.679612719506407
+angle: -58.70323658865308
+Supervisor Distance: 1.8305471420009514
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.679612719506407
+angle: -58.70323658865308
+Supervisor Distance: 1.8207821294102575
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.695292363518781
+angle: -57.522593126240444
+Supervisor Distance: 1.8106065302120795
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.695292363518781
+angle: -57.522593126240444
+Supervisor Distance: 1.8010311881965428
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.6732852868897512
+angle: -56.57029061675296
+Supervisor Distance: 1.7928289826905384
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.6732852868897512
+angle: -56.57029061675296
+Supervisor Distance: 1.7875396991756265
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.6610880791927705
+angle: -55.427711624373046
+Supervisor Distance: 1.784532754602939
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.6610880791927705
+angle: -55.427711624373046
+Supervisor Distance: 1.7814475707193476
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.6746006405839189
+angle: -55.28793099285992
+Supervisor Distance: 1.7769423673630294
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.6746006405839189
+angle: -55.28793099285992
+Supervisor Distance: 1.7724698606118658
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.7650267580629333
+distance estimate: 1.6375149080300346
+angle: -58.143660000928456
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.7605732772049734
+distance estimate: 1.6375149080300346
+angle: -58.143660000928456
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.609190583426075
+angle: -60.58709793240591
+Supervisor Distance: 1.7581165311947582
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.609190583426075
+angle: -60.58709793240591
+Supervisor Distance: 1.7563095800736441
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5686128413370817
+angle: -61.20847159310675
+Supervisor Distance: 1.7528754885374318
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5686128413370817
+angle: -61.20847159310675
+Supervisor Distance: 1.7451950652236445
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.735395870713427
+distance estimate: 1.597740824639639
+angle: -60.72822047153672
+distance estimate: 4.5
+angle: -57.04569350494305
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.597740824639639
+angle: -60.72822047153672
+distance estimate: 4.5
+angle: -57.04569350494305
+Supervisor Distance: 1.7251731760544042
+Supervisor Distance: 3.2598417971764304
+angle: -59.30953143300167
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5958153712956114
+angle: -59.30953143300167
+Supervisor Distance: 1.7073254690649193
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.7020161207478555
+distance estimate: 1.5704699058768188
+angle: -58.80135366008494
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5704699058768188
+angle: -58.80135366008494
+Supervisor Distance: 1.699000936166417
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.695923045436914
+distance estimate: 1.5792864314880513
+angle: -57.225427219995794
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5792864314880513
+angle: -57.225427219995794
+Supervisor Distance: 1.691452405633961
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.687043223504004
+distance estimate: 1.550312126269861
+angle: -58.86657421345416
+distance estimate: 4.5
+angle: -37.654497580359696
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.6797033651881943
+distance estimate: 1.550312126269861
+angle: -58.86657421345416
+distance estimate: 4.5
+angle: -37.654497580359696
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5521579967459098
+angle: -62.14857945177239
+Supervisor Distance: 1.675334099796801
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5521579967459098
+angle: -62.14857945177239
+Supervisor Distance: 1.6729304874917312
+distance estimate: 1.5408142084562169
+angle: -63.77630913921669
+distance estimate: 4.5
+angle: -38.14968058570028
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.6711466819405714
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5408142084562169
+angle: -63.77630913921669
+distance estimate: 4.5
+angle: -38.14968058570028
+Supervisor Distance: 1.667711526422527
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5296207710141136
+angle: -63.862799058520714
+Supervisor Distance: 1.6600006090040467
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5296207710141136
+angle: -63.862799058520714
+Supervisor Distance: 1.6501585950474018
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5040441615433375
+angle: -62.87233929191829
+Supervisor Distance: 1.6398777952912214
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.5040441615433375
+angle: -62.87233929191829
+Supervisor Distance: 1.6302095211735843
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.6219449990250319
+distance estimate: 1.503881778318411
+angle: -62.27023850573144
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.503881778318411
+angle: -62.27023850573144
+Supervisor Distance: 1.6166112179108585
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.520498863850577
+angle: -60.8197766675465
+distance estimate: 4.5
+angle: -55.03200169847349
+Supervisor Distance: 1.6135859993952113
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.6105172079596517
+distance estimate: 1.520498863850577
+angle: -60.8197766675465
+distance estimate: 4.5
+angle: -55.03200169847349
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.6060892303793737
+distance estimate: 1.5028447913437486
+angle: -60.71213837392212
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.6017576659092296
+distance estimate: 1.5028447913437486
+angle: -60.71213837392212
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.5945434315383213
+distance estimate: 1.465738278587092
+angle: -63.86872778278007
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.5902758701707211
+distance estimate: 1.465738278587092
+angle: -63.86872778278007
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.587936175651031
+distance estimate: 1.4230784687238347
+angle: -66.76639383112818
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.5861802077878424
+distance estimate: 1.4230784687238347
+angle: -66.76639383112818
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.5827439752167218
+distance estimate: 1.4057437198080824
+angle: -67.37217989600873
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.5749969225918707
+distance estimate: 1.4057437198080824
+angle: -67.37217989600873
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.4157177560578496
+angle: -66.87711870532043
+Supervisor Distance: 1.5651023820126437
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.4157177560578496
+angle: -66.87711870532043
+Supervisor Distance: 1.5547513541860063
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.410298675769261
+angle: -65.7878357418665
+Supervisor Distance: 1.5450218752705362
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.410298675769261
+angle: -65.7878357418665
+Supervisor Distance: 1.5367164402993545
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.3948240135030874
+angle: -65.29293262773949
+Supervisor Distance: 1.5313532052399002
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.3948240135030874
+angle: -65.29293262773949
+Supervisor Distance: 1.5283158845951248
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.4072510713173987
+angle: -63.76209820929218
+Supervisor Distance: 1.5252582914533992
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.4072510713173987
+angle: -63.76209820929218
+Supervisor Distance: 1.5208823622630727
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.5166449477950157
+distance estimate: 1.3916962660368408
+angle: -65.41256844360959
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.3916962660368408
+angle: -65.41256844360959
+Supervisor Distance: 1.5095822804789414
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.3560672660624808
+angle: -68.75257762061285
+Supervisor Distance: 1.5054366981889153
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.3560672660624808
+angle: -68.75257762061285
+Supervisor Distance: 1.5031734153185856
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.3311544534102673
+angle: -70.6567573008238
+Supervisor Distance: 1.501450737004402
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.3311544534102673
+angle: -70.6567573008238
+Supervisor Distance: 1.4980134951010438
+distance estimate: 1.3177976716615487
+angle: -70.76540915867346
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.4902239830785948
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.3177976716615487
+angle: -70.76540915867346
+Supervisor Distance: 1.4802659417039805
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.317442003853923
+angle: -69.88675619237266
+Supervisor Distance: 1.4698304309549
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.317442003853923
+angle: -69.88675619237266
+Supervisor Distance: 1.4600281988649864
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.4516743003614898
+distance estimate: 1.2994377520362554
+angle: -69.72416411628024
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.4462760123486824
+distance estimate: 1.2994377520362554
+angle: -69.72416411628024
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.443224324904657
+distance estimate: 1.2994343226691238
+angle: -68.22365799159896
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.440180473950251
+distance estimate: 1.2994343226691238
+angle: -68.22365799159896
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.4358676124962901
+distance estimate: 1.2993353261349083
+angle: -67.94831463873047
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.4317436360929163
+distance estimate: 1.2993353261349083
+angle: -67.94831463873047
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.424862884233302
+distance estimate: 1.2885684054749094
+angle: -71.40833365507432
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.2885684054749094
+angle: -71.40833365507432
+Supervisor Distance: 1.4208629820493581
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.2506676856406393
+angle: -74.22666007697903
+distance estimate: 4.35700421979889
+angle: -33.17792623742843
+Supervisor Distance: 1.4186907217806652
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.2506676856406393
+angle: -74.22666007697903
+distance estimate: 4.35700421979889
+angle: -33.17792623742843
+Supervisor Distance: 1.417007734345797
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.413569674554808
+distance estimate: 1.2550170000930903
+angle: -74.9681597615137
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.405730606045161
+distance estimate: 1.2550170000930903
+angle: -74.9681597615137
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.3956964055357255
+distance estimate: 1.2330310518646013
+angle: -74.36858564072121
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.3851605070162436
+distance estimate: 1.2330310518646013
+angle: -74.36858564072121
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.3752722712504395
+distance estimate: 1.228820800352089
+angle: -73.97571094641285
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.228820800352089
+angle: -73.97571094641285
+Supervisor Distance: 1.3668612278654717
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.2133420018316987
+angle: -73.83767333615037
+Supervisor Distance: 1.3614214111038587
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.2133420018316987
+angle: -73.83767333615037
+Supervisor Distance: 1.3583527427165516
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.2128066388420409
+angle: -71.95778027044771
+Supervisor Distance: 1.3553256780097165
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.2128066388420409
+angle: -71.95778027044771
+Supervisor Distance: 1.3510889271385917
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.2208885994833822
+angle: -74.07430221478008
+Supervisor Distance: 1.347101191751557
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.2208885994833822
+angle: -74.07430221478008
+Supervisor Distance: 1.3404382411761304
+distance estimate: 1.1911016834169743
+angle: -77.16301340110988
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.3366120201730223
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.1911016834169743
+angle: -77.16301340110988
+Supervisor Distance: 1.3345480391407551
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.3329123477118245
+distance estimate: 1.1810357169674366
+angle: -79.10055465023021
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.1810357169674366
+angle: -79.10055465023021
+Supervisor Distance: 1.3294738711170946
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.3215772640483339
+distance estimate: 1.164642790809987
+angle: -79.02706491542695
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.164642790809987
+angle: -79.02706491542695
+Supervisor Distance: 1.3114529251201648
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.1566438006106057
+angle: -78.69700846210398
+Supervisor Distance: 1.3007980959592385
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.1566438006106057
+angle: -78.69700846210398
+Supervisor Distance: 1.2908086232840028
+distance estimate: 1.1374083275942088
+angle: -78.9305396272522
+Supervisor Distance: 3.2598417971764304
+Supervisor Distance: 1.2823305390565758
+Supervisor Distance: 3.2598417971764304
+distance estimate: 1.1374083275942088
+angle: -78.9305396272522
+Supervisor Distance: 1.2768417661476137

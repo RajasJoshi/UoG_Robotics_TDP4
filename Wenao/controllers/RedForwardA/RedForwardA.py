@@ -37,7 +37,7 @@ class SoccerRobot(Robot):
         self.config = config
         self.AppState = RobotState.INIT
 
-        self.bVisionUsed = True
+        self.bVisionUsed = config.getboolean("RedTeam", "Vision")
         self.bAvoidCollision = config.getboolean("RedTeam", "Avoidance")
         self.PlayerMode = config.get("RedForwardA", "PlayerMode")
         self.Strategy = config.get("RedForwardA", "Strategy")
