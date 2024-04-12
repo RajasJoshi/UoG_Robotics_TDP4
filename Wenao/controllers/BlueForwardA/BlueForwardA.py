@@ -285,8 +285,8 @@ class SoccerRobot(Robot):
                     # Calculate the angle to the target position
                     targetAngle = np.degrees(
                         np.arctan2(
-                            currentBallPosition[1] - currentSelfPosition[1],
                             currentBallPosition[0] - currentSelfPosition[0],
+                            currentBallPosition[1] - currentSelfPosition[1],
                         )
                     )
 

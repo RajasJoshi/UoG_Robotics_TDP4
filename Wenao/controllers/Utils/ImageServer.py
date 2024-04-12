@@ -15,7 +15,7 @@ class ImageServer:
         self.robot_name = robot_name
         self.position = position
         self.running = True
-        self.model = YOLO("../best.pt")
+        self.model = YOLO(r"C:\Users\thima\OneDrive\Documents\TDP\UoG_Robotics_TDP4\Wenao\controllers\Utils\best.pt",verbose=False)
 
         self.queue = queue.Queue(maxsize=3)
         self.thread = Thread(target=self.run, daemon=True)
