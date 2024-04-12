@@ -34,8 +34,8 @@ class ImageServer:
                     (self.height, self.width, 4)
                 )
                 # Display the image using OpenCV
-                # cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
-                # cv2.waitKey(1)
+                cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
+                cv2.waitKey(1)
                 self.queue.task_done()
             except queue.Empty:
                 continue
