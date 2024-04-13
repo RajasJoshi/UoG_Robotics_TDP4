@@ -8,7 +8,6 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-
 import configparser
 from enum import Enum
 import numpy as np
@@ -17,6 +16,7 @@ from Utils import Functions
 from Utils.Consts import Motions
 from Utils.ImageServer import ImageServer
 from Utils.ProcessSupervisor import SupervisorData
+from Utils.pathPlanning import aStar
 
 
 class RobotState(Enum):
@@ -110,6 +110,13 @@ class SoccerRobot(Robot):
             self.cameraTop.enable(4 * self.timeStep)
             self.cameraBottom.enable(4 * self.timeStep)
 
+        # ultrasonic sensors
+        self.ultrasound = []
+        self.ultrasound.append(self.getDevice("Sonar/Left"))
+        self.ultrasound.append(self.getDevice("Sonar/Right"))
+        self.ultrasound[0].enable(self.timeStep)
+        self.ultrasound[1].enable(self.timeStep)
+
         # accelerometer
         self.accelerometer = self.getDevice("accelerometer")
         self.accelerometer.enable(4 * self.timeStep)
@@ -124,10 +131,6 @@ class SoccerRobot(Robot):
 
         # Emitter
         self.emitter = self.getDevice("emitter")
-
-        # keyboard
-        self.keyboard = self.getKeyboard()
-        self.keyboard.enable(10 * self.timeStep)
 
     def interruptMotion(self) -> None:
         """Interrupt if the robot is moving."""
@@ -233,9 +236,54 @@ class SoccerRobot(Robot):
         ):
             return self.motions.standUpFromBack
 
+        if self.bAvoidCollision:
+            collision = self.avoidcollision()
+            if self.isNewMotionValid(collision):
+                self.addMotionToQueue(collision)
+                self.startMotion()
+
         # Get the current position
         currentSelfPosition = self.Supervisor.getSelfPosition()
         currentBallPosition = self.Supervisor.getBallData()
+
+        # Get the robot's orientation angle
+        robotAngle = np.degrees(self.getRollPitchYaw()[2])
+
+        BallToRobotdist = Functions.calculateDistance(
+            currentBallPosition, currentSelfPosition
+        )
+
+        # Calculate the ball distance to the goal position
+        BallToGoaldist = Functions.calculateDistance(
+            currentBallPosition, self.TargetPosition
+        )
+
+        # Detect collision
+        obstacles = self.detect_collision()
+
+        x_range = 4.5 - (-4.5)
+        y_range = 2.8 - (-2.8)
+
+        # Define the resolution of the grid
+        resolution = 0.05
+
+        # Calculate the size of the grid
+        grid_size_x = int(x_range / resolution)
+        grid_size_y = int(y_range / resolution)
+
+        # Create the grid
+        grid = np.zeros((grid_size_y, grid_size_x))
+
+        # Add the obstacles to the grid
+        for obstacle in obstacles:
+            grid[obstacle[1]][obstacle[0]] = 1
+
+        # Convert the coordinates from meters to grid cells
+        gridselfpose = (
+            int((currentSelfPosition[0] - (-4.5)) / 0.1),
+            int((currentSelfPosition[1] - (-2.8)) / 0.1),
+        )
+
         match self.AppState:
             case RobotState.INIT:
                 # Calculate the distance to the goal position
@@ -243,45 +291,77 @@ class SoccerRobot(Robot):
                     self.StartLocation, currentSelfPosition
                 )
 
+                # Check if nao robot is away from the ball
                 if distance <= 0.2:
                     self.AppState = RobotState.LOOK_THE_BALL
                     return self.motions.standInit
                 else:
-                    # Calculate the angle to the target position
+                    gridtargetpose = (
+                        int((self.StartLocation[0] - (-4.5)) / 0.1),
+                        int((self.StartLocation[1] - (-2.8)) / 0.1),
+                    )
+
+                    # Use the A* algorithm to find the shortest path to the ball
+                    self.path = aStar(grid, gridselfpose, gridtargetpose)
+                    # Calculate the Robot's angle to the ball position
+                    if self.path and len(self.path) > 0:
+                        # Pop the next node from the path
+                        node = self.path.pop(0)
+                        node_position = (
+                            node[0] * 0.1 + (-4.5),
+                            node[1] * 0.1 + (-2.8),
+                        )
+                        # Calculate the angle to the next node in the path
+                        targetAngle = np.degrees(
+                            np.arctan2(
+                                node_position[1] - currentSelfPosition[1],
+                                node_position[0] - currentSelfPosition[0],
+                            )
+                        )
+
+                        # Calculate the turn angle in the range [-180, 180)
+                        turnAngle = Functions.calculateTurnAngle(
+                            targetAngle, robotAngle
+                        )
+
+                        # Turn the robot towards the next node in the path
+                        if abs(turnAngle) > 10:
+                            return self.getTurningMotion(turnAngle)
+
+                        # Move the robot towards the next node in the path
+                        return self.motions.forwardLoop
+
+            case RobotState.LOOK_THE_BALL:
+
+                gridtargetpose = (
+                    int((currentBallPosition[0] - (-4.5)) / 0.1),
+                    int((currentBallPosition[1] - (-2.8)) / 0.1),
+                )
+
+                # Use the A* algorithm to find the shortest path to the ball
+                self.path = aStar(grid, gridselfpose, gridtargetpose)
+                # Calculate the Robot's angle to the ball position
+                if self.path and len(self.path) > 0:
+                    # Pop the next node from the path
+                    node = self.path.pop(0)
+                    node_position = (
+                        node[0] * 0.1 + (-4.5),
+                        node[1] * 0.1 + (-2.8),
+                    )
+                    # Calculate the angle to the next node in the path
                     targetAngle = np.degrees(
                         np.arctan2(
-                            self.StartLocation[1] - currentSelfPosition[1],
-                            self.StartLocation[0] - currentSelfPosition[0],
+                            node_position[1] - currentSelfPosition[1],
+                            node_position[0] - currentSelfPosition[0],
                         )
                     )
 
-                    # Get the robot's orientation angle
-                    robotAngle = np.degrees(self.getRollPitchYaw()[2])
-
                     # Calculate the turn angle in the range [-180, 180)
-                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+                    turnAngle = Functions.calculateTurnAngle(targetAngle, robotAngle)
+
+                    # Turn the robot towards the next node in the path
                     if abs(turnAngle) > 10:
                         return self.getTurningMotion(turnAngle)
-
-                return self.motions.forwardLoop
-
-            case RobotState.LOOK_THE_BALL:
-                # Calculate the angle to the target position
-                targetAngle = np.degrees(
-                    np.arctan2(
-                        currentBallPosition[1] - currentSelfPosition[1],
-                        currentBallPosition[0] - currentSelfPosition[0],
-                    )
-                )
-
-                # Get the robot's orientation angle
-                robotAngle = np.degrees(self.getRollPitchYaw()[2])
-
-                # Calculate the turn angle in the range [-180, 180)
-                turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
-
-                if abs(turnAngle) > 10:
-                    return self.getTurningMotion(turnAngle)
 
                 # Calculate the distance to the goal position
                 distance = Functions.calculateDistance(
@@ -297,57 +377,103 @@ class SoccerRobot(Robot):
                 if self.Supervisor.data["GameStatus"]:
 
                     if self.Supervisor.data["ballOwner"][0] != "R":
-                        # Calculate the ball distance to the goal position
-                        ball_distance = Functions.calculateDistance(
-                            self.TargetPosition, currentBallPosition
-                        )
-
-                        # Calculate the robot's distance to the ball position
-                        robot_distance = Functions.calculateDistance(
-                            currentBallPosition, currentSelfPosition
-                        )
-
-                        # Check if nao robot is near the ball
-                        if robot_distance > 0.2:
+                        # Check if nao robot is away from the ball
+                        if BallToRobotdist > 0.2:
                             self.AppState = RobotState.LOOK_THE_BALL
                             return self.motions.forwards50
 
                         # Check if the ball is near the goalpost
-                        elif ball_distance <= 0.2:
+                        elif BallToGoaldist <= 0.2:
                             return self.motions.shoot
 
                         else:
-                            # Calculate the robot's angle to the goal position
-                            targetAngle = np.degrees(
-                                np.arctan2(
-                                    self.TargetPosition[1] - currentSelfPosition[1],
-                                    self.TargetPosition[0] - currentSelfPosition[0],
-                                )
+                            gridtargetpose = (
+                                int((self.TargetPosition[0] - (-4.5)) / 0.1),
+                                int((self.TargetPosition[1] - (-2.8)) / 0.1),
                             )
 
-                            # Get the robot's orientation angle
-                            robotAngle = np.degrees(self.getRollPitchYaw()[2])
+                            # Use the A* algorithm to find the shortest path to the ball
+                            self.path = aStar(grid, gridselfpose, gridtargetpose)
+                            # Calculate the Robot's angle to the ball position
+                            if self.path and len(self.path) > 0:
+                                # Pop the next node from the path
+                                node = self.path.pop(0)
+                                node_position = (
+                                    node[0] * 0.1 + (-4.5),
+                                    node[1] * 0.1 + (-2.8),
+                                )
+                                # Calculate the angle to the next node in the path
+                                targetAngle = np.degrees(
+                                    np.arctan2(
+                                        node_position[1] - currentSelfPosition[1],
+                                        node_position[0] - currentSelfPosition[0],
+                                    )
+                                )
 
-                            # Calculate the turn angle in the range [-180, 180)
-                            turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+                                # Calculate the turn angle in the range [-180, 180)
+                                turnAngle = Functions.calculateTurnAngle(
+                                    targetAngle, robotAngle
+                                )
 
-                            if abs(turnAngle) > 10:
-                                if turnAngle > 90:
-                                    return self.motions.rightSidePass
-                                elif turnAngle > 50:
-                                    return self.motions.rightSidePass
-                                elif turnAngle > 30:
-                                    return self.motions.rightSidePass
-                                elif turnAngle < -50:
-                                    return self.motions.leftSidePass
-                                elif turnAngle < -30:
-                                    return self.motions.leftSidePass
-                                else:
-                                    return self.motions.longShoot
+                                if abs(turnAngle) > 10:
+                                    if turnAngle > 90:
+                                        return self.motions.rightSidePass
+                                    elif turnAngle > 50:
+                                        return self.motions.rightSidePass
+                                    elif turnAngle > 30:
+                                        return self.motions.rightSidePass
+                                    elif turnAngle < -50:
+                                        return self.motions.leftSidePass
+                                    elif turnAngle < -30:
+                                        return self.motions.leftSidePass
+                                    else:
+                                        return self.motions.longShoot
 
                             return self.motions.forwards50
+
             case _:
                 self.AppState = RobotState.INIT
+
+    def detect_collision(self):
+        obstacles = []
+        for robot_name in self.Supervisor.robot_list:
+            if robot_name != self.robotName:
+                robot_position = self.Supervisor.data[robot_name]
+
+                # Calculate the distance between robots
+                self.robot_distance = Functions.calculateDistance(
+                    robot_position, self.Supervisor.getSelfPosition()
+                )
+
+                # Define a safe distance threshold
+                safe_distance = 0.5
+
+                # Check if the robot is too close to an obstacle
+                if self.robot_distance < safe_distance:
+                    # Convert the robot position to grid position
+                    grid_position = (
+                        int((robot_position[0] - (-4.5)) / 0.1),
+                        int((robot_position[1] - (-2.8)) / 0.1),
+                    )
+                    obstacles.append(grid_position)
+        return obstacles
+
+    def avoidcollision(self):
+        if self.ultrasound[1].getValue() < 0.5 and self.ultrasound[0].getValue() < 0.5:
+            self.interruptMotion()
+            return self.motions.backwards
+
+        # If only the right sensor detects an obstacle, sidestep left
+        elif self.ultrasound[1].getValue() < 0.5:
+            self.interruptMotion()
+            return self.motions.sideStepLeft
+
+        # If only the left sensor detects an obstacle, sidestep right
+        elif self.ultrasound[0].getValue() < 0.5:
+            self.interruptMotion()
+            return self.motions.sideStepRight
+        else:
+            return None
 
     def calculatescore(self, player_name):
         """
@@ -385,6 +511,7 @@ class SoccerRobot(Robot):
         score = 1 / (enemy_count + 1)
 
         return score
+
 
 def main():
     # Create the robot and initialize the camera
