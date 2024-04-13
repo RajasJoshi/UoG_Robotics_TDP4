@@ -36,7 +36,7 @@ class SoccerRobot(Robot):
         self.config = config
         self.AppState = RobotState.INIT
 
-        self.bVisionUsed = True #config.getboolean("BlueTeam", "Vision")
+        self.bVisionUsed = False #config.getboolean("BlueTeam", "Vision")
         self.bAvoidCollision = config.getboolean("BlueTeam", "Avoidance")
         self.PlayerMode = config.get("BlueForwardA", "PlayerMode")
         self.Strategy = config.get("BlueForwardA", "Strategy")
@@ -239,12 +239,12 @@ class SoccerRobot(Robot):
                     self.StartLocation, currentSelfPosition
                 )
                 ball_distance = Functions.calculateDistance(
-                    self.TargetPosition, currentBallPosition
+                    currentSelfPosition, currentBallPosition
                 )
                 ball_angle = np.degrees(
                     np.arctan2(
-                        currentBallPosition[1] - currentSelfPosition[1],
                         currentBallPosition[0] - currentSelfPosition[0],
+                        currentBallPosition[1] - currentSelfPosition[1],
                     )
                 )
                 print('Supervisor Ball Distance:', ball_distance)

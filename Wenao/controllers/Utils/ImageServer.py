@@ -2,10 +2,11 @@ import queue
 from collections import defaultdict
 from threading import Thread
 from ultralytics import YOLO
+import time
 
 import cv2
 import numpy as np
-
+import csv
 
 class ImageServer:
     def __init__(self, width, height, camera, robot_name, position):
@@ -15,13 +16,14 @@ class ImageServer:
         self.robot_name = robot_name
         self.position = position
         self.running = True
-        self.model = YOLO(r"C:\Users\thima\OneDrive\Documents\TDP\UoG_Robotics_TDP4\Wenao\controllers\Utils\best.pt",verbose=False)
+        self.model = YOLO(r"/home/jamiemilsom/UoG_Robotics_TDP4/Wenao/controllers/Utils/best.pt",verbose=False)
 
         self.queue = queue.Queue(maxsize=3)
         self.thread = Thread(target=self.run, daemon=True)
         self.thread.start()
 
         # Ball distance Parameters
+        self.data_buffer = []
         self.ball_diameter = 0.48 #meters
         self.vertical_fov = 47.64 #degrees
         self.horizontal_fov = 60.97 #degrees
@@ -47,13 +49,19 @@ class ImageServer:
         
         distance = self.ball_diameter * focal_length / ball_width
     
-        print(f'distance estimate: {min(4.5,distance)}') #stop noise from being larger than field
+        self.data_buffer.append({
+            'timestamp': time.time(),
+            'distance_estimate': min(4.5, distance)
+        }) 
     
     def ball_heading(self, ball_center_x, ball_center_y):
         y = self.height - ball_center_y
         x = ball_center_x - self.width/2
         angle = np.arctan2(x, y)
-        print(f'angle: {np.rad2deg(angle)}')
+        self.data_buffer.append({
+            'timestamp': time.time(),
+            'angle_estimate': np.rad2deg(angle)
+        })
     
 
     def run(self):
@@ -79,13 +87,16 @@ class ImageServer:
                                 ball_center_y = (y1 + y2) / 2
                                 self.ball_distance(ball_width)
                                 self.ball_heading(ball_center_x, ball_center_y)   
-                                print(f'ball width: {ball_width}')
-                                print(f'ball height: {ball_height}')
-                                print(f'x1: {x1}')
-                                print(f'y1: {y1}')
-                                print(f'x2: {x2}')
-                                print(f'y2: {y2}')
-                                print(f'score: {score}')
+                                self.data_buffer.append({
+                                        'timestamp': time.time(),
+                                        'ball_width': ball_width,
+                                        'ball_height': ball_height,
+                                        'x1': x1,
+                                        'y1': y1,
+                                        'x2': x2,
+                                        'y2': y2,
+                                        'score': score
+                                    })
                                 
 
 
@@ -98,14 +109,27 @@ class ImageServer:
                 self.queue.task_done()
             except queue.Empty:
                 continue
+            finally:
+                self.save_data_to_csv()
+
+    def save_data_to_csv(self):
+        """Saves the collected data points into a CSV file"""
+        if self.data_buffer:
+            filename = f'data_{self.robot_name}_{self.position}_{time.strftime("%Y%m%d_%H%M%S")}.csv'
+            with open(filename, 'w', newline='') as csvfile:
+                fieldnames = self.data_buffer[0].keys()
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(self.data_buffer)
+            self.data_buffer = []  
 
 
 # Example usage:
 # Uncomment and modify the following lines as needed for testing
-# if __name__ == "__main__":
-#     server = ImageServer(width=640, height=480, camera="front", robot_name="Robot1", position=(0, 0))
-#     # Simulate sending images to the server
-#     for i in range(5):
-#         fake_image = np.random.randint(0, 255, (480, 640, 4), dtype=np.uint8).tobytes()
-#         server.send(fake_image)
-#     server.stop()
+if __name__ == "__main__":
+    server = ImageServer(width=640, height=480, camera="front", robot_name="Robot1", position=(0, 0))
+    # Simulate sending images to the server
+    for i in range(5):
+        fake_image = np.random.randint(0, 255, (480, 640, 4), dtype=np.uint8).tobytes()
+        server.send(fake_image)
+    server.stop()
