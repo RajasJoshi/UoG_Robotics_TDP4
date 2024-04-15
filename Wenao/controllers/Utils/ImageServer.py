@@ -49,7 +49,7 @@ class ImageServer:
                 model = YOLO(r"../Utils/best.engine")
 
                 results = model.predict(frame, device = self.device, conf = 0.5, verbose=False)
-                '''results1 = model.track(frame, persist = True, device = 'cuda', tracker = 'bytetrack.yaml', classes = [0], conf = 0.5)
+                results1 = model.track(frame, persist = True, device = 'cuda', tracker = 'bytetrack.yaml', classes = [0], conf = 0.5)
 
                 # Get the boxes and track IDs
                 boxes = results1[0].boxes.xywh.cpu().tolist()
@@ -77,10 +77,10 @@ class ImageServer:
                             points = np.hstack(self.track).astype(np.int32).reshape((-1, 1, 2))
                             cv2.polylines(annotated_frame, [points], isClosed=False, color=(230, 230, 230), thickness=10)
                         else: continue
-                else: continue'''
+                else: continue
                 # Display the image using OpenCV
-                # cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
-                # cv2.waitKey(1)
+                cv2.imshow(f"Image Stream - {self.robot_name} - {self.position}", cvimg)
+                cv2.waitKey(1)
                 self.queue.task_done()
             except queue.Empty:
                 continue
