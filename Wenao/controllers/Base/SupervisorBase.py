@@ -146,14 +146,14 @@ class SupervisorBase(Supervisor):
 
     def sendSupervisorData(self) -> None:
         """Send Data (ballPosition, ballOwner, ballPriority, ...) to Robots. Channel is '0'."""
-
+        msgId = 1
         # Pack the values into a string to transmit
         robot_positions = [
             coord
             for name in self.RobotList
             for coord in self.getRobotPosition(name)[:2]
         ]
-        message = f"{self.getTime()},{self.getBallOwner()},{','.join(map(str, self.getBallPosition()[:2] + robot_positions))}"
+        message = f"{msgId},{self.getBallOwner()},{','.join(map(str, self.getBallPosition()[:2] + robot_positions))}"
 
         self.emitter.send(message.encode("utf-8"))
 

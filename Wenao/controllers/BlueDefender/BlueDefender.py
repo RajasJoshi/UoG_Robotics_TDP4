@@ -74,13 +74,13 @@ class SoccerRobot(Robot):
             while self.step(self.timeStep) != -1:
                 self.clearMotionQueue()
 
-                # if self.isNewDataAvailable():
-                #     self.Supervisor.updateData(self.receiver)
-                #     whatToDoNext = self.NextMotion()
+                if self.isNewDataAvailable():
+                    self.Supervisor.updateData(self.receiver)
+                    whatToDoNext = self.NextMotion()
 
-                #     if self.isNewMotionValid(whatToDoNext):
-                #         self.addMotionToQueue(whatToDoNext)
-                #         self.startMotion()
+                    if self.isNewMotionValid(whatToDoNext):
+                        self.addMotionToQueue(whatToDoNext)
+                        self.startMotion()
 
                 if self.bVisionUsed:
                     try:
@@ -287,35 +287,36 @@ class SoccerRobot(Robot):
                 return self.motions.standInit
 
             case RobotState.BE_A_DEFENDER:
-                targetAngle = np.degrees(
-                    np.arctan2(
-                        currentBallPosition[1] - currentSelfPosition[1],
-                        currentBallPosition[0] - currentSelfPosition[0],
-                    )
-                )
-
-                # Get the robot's orientation angle
-                robotAngle = np.degrees(self.getRollPitchYaw()[2])
-
-                # Calculate the turn angle in the range [-180, 180)
-                turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
-                turningMotion = self.getTurningMotion(turnAngle)
-                if turningMotion is not None:
-                    return turningMotion
-
-                if (
-                    self.Supervisor.data["ballOwner"][0] != "B"
-                    and currentBallPosition[0] > 0
-                ):
-                    # Calculate the distance to the goal position
-                    distance = Functions.calculateDistance(
-                        currentBallPosition, currentSelfPosition
+                if self.Supervisor.data["GameStatus"]:
+                    targetAngle = np.degrees(
+                        np.arctan2(
+                            currentBallPosition[1] - currentSelfPosition[1],
+                            currentBallPosition[0] - currentSelfPosition[0],
+                        )
                     )
 
-                    if distance <= 0.2 and abs(turnAngle) < 10:
-                        return self.motions.shoot
+                    # Get the robot's orientation angle
+                    robotAngle = np.degrees(self.getRollPitchYaw()[2])
 
-                    return self.motions.forwardLoop
+                    # Calculate the turn angle in the range [-180, 180)
+                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+                    turningMotion = self.getTurningMotion(turnAngle)
+                    if turningMotion is not None:
+                        return turningMotion
+
+                    if (
+                        self.Supervisor.data["ballOwner"][0] != "B"
+                        and currentBallPosition[0] > 0
+                    ):
+                        # Calculate the distance to the goal position
+                        distance = Functions.calculateDistance(
+                            currentBallPosition, currentSelfPosition
+                        )
+
+                        if distance <= 0.2 and abs(turnAngle) < 10:
+                            return self.motions.shoot
+
+                        return self.motions.forwardLoop
 
             case _:
                 self.AppState = RobotState.INIT

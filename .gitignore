@@ -49,3 +49,5 @@ output_image.jpg
 
 # Catkin custom files
 CATKIN_IGNORE
+
+ball_distance_results/data/
