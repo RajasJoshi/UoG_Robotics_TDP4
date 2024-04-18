@@ -36,7 +36,7 @@ class SoccerRobot(Robot):
         self.config = config
         self.AppState = RobotState.INIT
 
-        self.bVisionUsed = config.getboolean("BlueTeam", "Vision")
+        self.bVisionUsed = False #config.getboolean("BlueTeam", "Vision")
         self.bAvoidCollision = config.getboolean("BlueTeam", "Avoidance")
         self.PlayerMode = config.get("BlueForwardA", "PlayerMode")
         self.Strategy = config.get("BlueForwardA", "Strategy")
@@ -51,7 +51,7 @@ class SoccerRobot(Robot):
         self.currentlyMoving = False
         self.motionQueue = [self.motions.standInit]
         self.startMotion()
-
+        self.Supervisor = SupervisorData(self.robotName)
         if self.bVisionUsed:
             self.TopCamServer = ImageServer(
                 self.cameraTop.getWidth(),
@@ -238,6 +238,17 @@ class SoccerRobot(Robot):
                 distance = Functions.calculateDistance(
                     self.StartLocation, currentSelfPosition
                 )
+                ball_distance = Functions.calculateDistance(
+                    currentSelfPosition, currentBallPosition
+                )
+                ball_angle = np.degrees(
+                    np.arctan2(
+                        currentBallPosition[0] - currentSelfPosition[0],
+                        currentBallPosition[1] - currentSelfPosition[1],
+                    )
+                )
+                print('Supervisor Ball Distance:', ball_distance)
+                print('Supervisor Ball Angle:', ball_angle)
 
                 if distance <= 0.2:
                     self.AppState = RobotState.LOOK_THE_BALL
@@ -274,8 +285,8 @@ class SoccerRobot(Robot):
                     # Calculate the angle to the target position
                     targetAngle = np.degrees(
                         np.arctan2(
-                            currentBallPosition[1] - currentSelfPosition[1],
                             currentBallPosition[0] - currentSelfPosition[0],
+                            currentBallPosition[1] - currentSelfPosition[1],
                         )
                     )
 
