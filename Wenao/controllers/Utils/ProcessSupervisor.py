@@ -2,7 +2,7 @@ class SupervisorData:
     def __init__(self, robotName):
         self.robotName = robotName
         self.data = {
-            "time": 0,
+            "msgID": 0,
             "ballPriority": "",
             "ballOwner": "",
             "ballPosition": [0, 0, 0],
@@ -14,6 +14,7 @@ class SupervisorData:
             "BlueDefender": [0, 0, 0],
             "BlueForwardB": [0, 0, 0],
             "BlueForwardA": [0, 0, 0],
+            "GameStatus": 0,
         }
 
         self.robot_list = [
@@ -40,13 +41,16 @@ class SupervisorData:
         values = message.split(",")
 
         # Extract and process received values
-        self.data["time"] = float(values[0])
-        self.data["ballPriority"] = values[1]
-        self.data["ballOwner"] = values[2]
-        self.data["ballPosition"] = [float(values[i]) for i in range(3, 6)]
+        if values[0] == "1":
+            self.data["ballOwner"] = values[1]
+            self.data["ballPosition"] = [float(values[i]) for i in range(2, 4)]
 
-        for i, robot in enumerate(self.robot_list):
-            self.data[robot] = [float(values[j]) for j in range(6 + i * 3, 9 + i * 3)]
+            for i, robot in enumerate(self.robot_list):
+                self.data[robot] = [
+                    float(values[j]) for j in range(4 + i * 2, 6 + i * 2)
+                ]
+        elif values[0] == "2":
+            self.data["GameStatus"] = values[1]
 
     def getBallData(self):
         return self.data.get("ballPosition")

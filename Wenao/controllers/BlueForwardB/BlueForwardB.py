@@ -9,7 +9,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 
-import math
+import configparser
 from enum import Enum
 import numpy as np
 from controller import Robot
@@ -29,15 +29,22 @@ class RobotState(Enum):
 class SoccerRobot(Robot):
     PHALANX_MAX = 8
 
-    def __init__(self):
+    def __init__(self, config):
         Robot.__init__(self)
         self.robotName = self.getName()
         self.currentlyPlaying = False
-
+        self.config = config
         self.AppState = RobotState.INIT
 
-        self.StartLocation = [0.278889, -1.8676]
-        self.TargetgoalPosition = [-3.25978, 0.0196566]
+        self.bVisionUsed = config.getboolean("BlueTeam", "Vision")
+        self.bAvoidCollision = config.getboolean("BlueTeam", "Avoidance")
+        self.PlayerMode = config.get("BlueForwardB", "PlayerMode")
+        self.Strategy = config.get("BlueForwardB", "Strategy")
+        TargetPosition = config.get("BlueForwardB", "TargetPos")
+        self.TargetPosition = list(map(float, TargetPosition.split(",")))
+        StartLocation = config.get("BlueForwardB", "StartPos")
+        self.StartLocation = list(map(float, StartLocation.split(",")))
+
         self.enableDevices()
         # Load motion files
         self.motions = Motions()
@@ -45,22 +52,23 @@ class SoccerRobot(Robot):
         self.motionQueue = [self.motions.standInit]
         self.startMotion()
 
-        self.TopCamServer = ImageServer(
-            self.cameraTop.getWidth(),
-            self.cameraTop.getHeight(),
-            self.cameraTop,
-            self.robotName,  # Pass robot name to ImageServer
-            "Top",
-        )
-        self.BottomCamServer = ImageServer(
-            self.cameraBottom.getWidth(),
-            self.cameraBottom.getHeight(),
-            self.cameraBottom,
-            self.robotName,  # Pass robot name to ImageServer
-            "Bottom",
-        )
-
-        self.Supervisor = SupervisorData(self.robotName)
+        if self.bVisionUsed:
+            self.TopCamServer = ImageServer(
+                self.cameraTop.getWidth(),
+                self.cameraTop.getHeight(),
+                self.cameraTop,
+                self.robotName,  # Pass robot name to ImageServer
+                "Top",
+            )
+            self.BottomCamServer = ImageServer(
+                self.cameraBottom.getWidth(),
+                self.cameraBottom.getHeight(),
+                self.cameraBottom,
+                self.robotName,  # Pass robot name to ImageServer
+                "Bottom",
+            )
+        else:
+            self.Supervisor = SupervisorData(self.robotName)
 
     def run(self):
         try:
@@ -75,16 +83,17 @@ class SoccerRobot(Robot):
                         self.addMotionToQueue(whatToDoNext)
                         self.startMotion()
 
-                try:
-                    top_image = self.cameraTop.getImage()
-                    bottom_image = self.cameraBottom.getImage()
+                if self.bVisionUsed:
+                    try:
+                        top_image = self.cameraTop.getImage()
+                        bottom_image = self.cameraBottom.getImage()
 
-                    self.TopCamServer.send(top_image)
-                    self.BottomCamServer.send(bottom_image)
+                        self.TopCamServer.send(top_image)
+                        self.BottomCamServer.send(bottom_image)
 
-                except ValueError as e:
-                    # Handle the exception (e.g., print an error message)
-                    print(f"Error getting camera image: {e}")
+                    except ValueError as e:
+                        # Handle the exception (e.g., print an error message)
+                        print(f"Error getting camera image: {e}")
 
                 if self.step(self.timeStep) == -1:
                     break
@@ -96,10 +105,11 @@ class SoccerRobot(Robot):
         self.timeStep = int(self.getBasicTimeStep())
 
         # camera
-        self.cameraTop = self.getDevice("CameraTop")
-        self.cameraBottom = self.getDevice("CameraBottom")
-        self.cameraTop.enable(4 * self.timeStep)
-        self.cameraBottom.enable(4 * self.timeStep)
+        if self.bVisionUsed:
+            self.cameraTop = self.getDevice("CameraTop")
+            self.cameraBottom = self.getDevice("CameraBottom")
+            self.cameraTop.enable(4 * self.timeStep)
+            self.cameraBottom.enable(4 * self.timeStep)
 
         # accelerometer
         self.accelerometer = self.getDevice("accelerometer")
@@ -108,13 +118,6 @@ class SoccerRobot(Robot):
         # inertial unit
         self.inertialUnit = self.getDevice("inertial unit")
         self.inertialUnit.enable(self.timeStep)
-
-        # ultrasound sensors
-        self.ultrasound = []
-        self.ultrasound.append(self.getDevice("Sonar/Left"))
-        self.ultrasound.append(self.getDevice("Sonar/Right"))
-        self.ultrasound[0].enable(self.timeStep)
-        self.ultrasound[1].enable(self.timeStep)
 
         # Receiver
         self.receiver = self.getDevice("receiver")
@@ -219,14 +222,14 @@ class SoccerRobot(Robot):
         # Fall Detection
         acc = self.accelerometer.getValues()
         if (
-            math.fabs(acc[0]) > math.fabs(acc[1])
-            and math.fabs(acc[0]) > math.fabs(acc[2])
+            np.abs(acc[0]) > np.abs(acc[1])
+            and np.abs(acc[0]) > np.abs(acc[2])
             and acc[0] < -5
         ):
             return self.motions.standUpFromFront
         elif (
-            math.fabs(acc[0]) > math.fabs(acc[1])
-            and math.fabs(acc[0]) > math.fabs(acc[2])
+            np.abs(acc[0]) > np.abs(acc[1])
+            and np.abs(acc[0]) > np.abs(acc[2])
             and acc[2] > 0
         ):
             return self.motions.standUpFromBack
@@ -292,66 +295,68 @@ class SoccerRobot(Robot):
                         return self.getTurningMotion(turnAngle)
 
             case RobotState.BE_A_FORWARD:
-                # Calculate the ball distance to the goal position
-                ball_distance = Functions.calculateDistance(
-                    self.TargetgoalPosition, currentBallPosition
-                )
+                if self.Supervisor.data["GameStatus"]:
 
-                # Calculate the robot's distance to the ball position
-                robot_distance = Functions.calculateDistance(
-                    currentBallPosition, currentSelfPosition
-                )
-
-                # Check if nao robot is away from the ball
-                if robot_distance > 0.2:
-                    self.AppState = RobotState.LOOK_THE_BALL
-                    return self.motions.forwardLoop
-
-                # Check if the ball is near the goalpost
-                elif ball_distance <= 0.2:
-                    self.AppState = RobotState.SCORE_GOAL
-                    return self.motions.standInit
-
-                else:
-                    # Calculate the robot's angle to the goal position
-                    targetAngle = np.degrees(
-                        np.arctan2(
-                            self.TargetgoalPosition[1] - currentSelfPosition[1],
-                            self.TargetgoalPosition[0] - currentSelfPosition[0],
-                        )
+                    # Calculate the ball distance to the goal position
+                    ball_distance = Functions.calculateDistance(
+                        self.TargetPosition, currentBallPosition
                     )
-                    # Get the robot's orientation angle
-                    robotAngle = np.degrees(self.getRollPitchYaw()[2])
 
-                    # Calculate the turn angle in the range [-180, 180)
-                    turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+                    # Calculate the robot's distance to the ball position
+                    robot_distance = Functions.calculateDistance(
+                        currentBallPosition, currentSelfPosition
+                    )
 
-                    if abs(turnAngle) > 10:
-                        if turnAngle > 90:
-                            return self.motions.rightSidePass
-                        elif turnAngle > 40:
-                            return self.motions.rightSidePass
-                        elif turnAngle > 20:
-                            return self.motions.rightSidePass
-                        elif turnAngle < -50:
-                            return self.motions.leftSidePass
-                        elif turnAngle < -30:
-                            return self.motions.shoot
-                    return self.motions.forwardLoop
+                    # Check if nao robot is away from the ball
+                    if robot_distance > 0.2:
+                        self.AppState = RobotState.LOOK_THE_BALL
+                        return self.motions.forwardLoop
+
+                    # Check if the ball is near the goalpost
+                    elif ball_distance <= 0.2:
+                        self.AppState = RobotState.SCORE_GOAL
+                        return self.motions.standInit
+
+                    else:
+                        # Calculate the robot's angle to the goal position
+                        targetAngle = np.degrees(
+                            np.arctan2(
+                                self.TargetPosition[1] - currentSelfPosition[1],
+                                self.TargetPosition[0] - currentSelfPosition[0],
+                            )
+                        )
+                        # Get the robot's orientation angle
+                        robotAngle = np.degrees(self.getRollPitchYaw()[2])
+
+                        # Calculate the turn angle in the range [-180, 180)
+                        turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
+
+                        if abs(turnAngle) > 10:
+                            if turnAngle > 90:
+                                return self.motions.rightSidePass
+                            elif turnAngle > 40:
+                                return self.motions.rightSidePass
+                            elif turnAngle > 20:
+                                return self.motions.rightSidePass
+                            elif turnAngle < -50:
+                                return self.motions.leftSidePass
+                            elif turnAngle < -30:
+                                return self.motions.shoot
+                        return self.motions.forwardLoop
 
             case RobotState.SCORE_GOAL:
                 # Calculate the Robot's angle to the goalkeeper position
-                targetAngle = math.degrees(
-                    math.atan2(
-                        self.getSelfPosition("RedGoalkeeper")[1]
+                targetAngle = np.degrees(
+                    np.arctan2(
+                        self.Supervisor.data["RedGoalkeeper"][1]
                         - currentSelfPosition[1],
-                        self.getSelfPosition("RedGoalkeeper")[0]
+                        self.Supervisor.data["RedGoalkeeper"][0]
                         - currentSelfPosition[0],
                     )
                 )
 
                 # Get the robot's orientation angle
-                robotAngle = math.degrees(self.getRollPitchYaw()[2])
+                robotAngle = np.degrees(self.getRollPitchYaw()[2])
 
                 # Calculate the turn angle in the range [-180, 180)
                 turnAngle = (targetAngle - robotAngle + 180) % 360 - 180
@@ -372,10 +377,49 @@ class SoccerRobot(Robot):
             case _:
                 self.AppState = RobotState.INIT
 
+    def calculatescore(self, player_name):
+        """
+        Calculate the score based on the number of enemy players around a team player.
+
+        Args:
+            player_name (str): The name of the player.
+
+        Returns:
+            float: The score.
+        """
+        # Get the player's position
+        player_position = self.Supervisor.data[player_name]
+
+        # Initialize the count of enemy players
+        enemy_count = 0
+
+        # Iterate over all the robots
+        for robot_name in self.Supervisor.robot_list:
+            # Skip if the robot is the player itself or a teammate
+            if robot_name == player_name or robot_name.startswith("Blue"):
+                continue
+
+            # Get the robot's position
+            robot_position = self.Supervisor.data[robot_name]
+
+            # Calculate the distance between the player and the robot
+            distance = Functions.calculateDistance(player_position, robot_position)
+
+            # If the distance is less than a threshold, increment the enemy count
+            if distance < 1:  # You can adjust this threshold as needed
+                enemy_count += 1
+
+        # Calculate the score as the inverse of the enemy count, add 1 to avoid division by zero
+        score = 1 / (enemy_count + 1)
+
+        return score
+
 
 def main():
     # Create the robot and initialize the camera
-    robot = SoccerRobot()
+    config = configparser.ConfigParser()
+    config.read("../Utils/globalconfig.ini")
+    robot = SoccerRobot(config)
     robot.run()
 
 
